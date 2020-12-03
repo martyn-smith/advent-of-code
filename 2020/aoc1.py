@@ -1,5 +1,3 @@
-target = 2020
-
 with open("1.txt") as f:
     entries = [int(l) for l in f.readlines()]
 
@@ -10,18 +8,20 @@ Due to the sliding approach, it's not quite n**2?
 """
 
 #part 1
-for i, entry in enumerate(entries):
-    for complement in enumerate(entries[i:]):
-        if entry + complement == target:
-            print(f"{entry * complement}")
-            exit()
+target = 2020
+complements = {}
+for entry in entries:
+    if complements.get(target - entry):
+        print(f"{entry * (target - entry)}")
+    else:
+        complements[entry] = True
 
 #time: 57 ms. (On the tested platform the python startup time is about 50)
 
 #part 2
 for i, entry in enumerate(entries):
     for j, complement_1 in enumerate(entries[i:]):
-        for complement_2 in enumerate(entries[i+j:]):
+        for complement_2 in entries[i+j:]:
             if entry + complement_1 + complement_2 == target:
-                print(f"{entry * complement}")
+                print(f"{entry * complement_1 * complement_2}")
                 exit()
