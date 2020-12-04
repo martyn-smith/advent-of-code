@@ -28,9 +28,8 @@ ranges = {
 
 def parse_input():
     with open("4.txt") as f:
-        lines = f.readlines()
         entry = ""
-        for line in lines:
+        for line in f.readlines():
             if line.strip() == "":
                 yield entry
                 entry = ""
@@ -55,7 +54,5 @@ def is_valid(entry):
         return False
     return True
 
-entries = parse_input()
 #278 entries, 213 initially valid, 147 secondary valid
-
-print(sum(1 for entry in entries if is_valid(entry)))
+print(sum(1 for entry in parse_input() if is_valid(entry)))
