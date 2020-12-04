@@ -19,38 +19,41 @@ pid = re.compile(".*pid:\d{9} ")
 # cid (Country ID) unused
 validation = [byr, iyr, eyr, hgt, hcl, ecl, pid]
 
+ranges = { 
+    "birth_year": range(1920, 2002+1),
+    "issue_year": range(2002, 2020+1),
+    "expiration_year": range(2020, 2030+1),
+    "height" : {"cm": range(150, 193+1), "in": range(59, 76+1)}
+}
+
 def parse_input():
     with open("4.txt") as f:
         lines = f.readlines()
-        entries = []
         entry = ""
         for line in lines:
             if line.strip() == "":
-                entries.append(entry)
+                yield entry
                 entry = ""
             else:
                 entry += line.strip("\n")+ " "
-        entries.append(entry)
-    return entries
+        yield entry
 
 def is_valid(entry):
     if not all(v.match(entry) for v in validation):
         return False
 
     birth_year = int(byr.match(entry).group(1))
-    if birth_year not in range(1920, 2002+1):
+    if birth_year not in ranges["birth_year"]:
         return False
     issue_year = int(iyr.match(entry).group(1))
-    if issue_year not in range(2002, 2020+1):
+    if issue_year not in ranges["issue_year"]:
         return False
     expiration_year = int(eyr.match(entry).group(1))
-    if expiration_year not in range(2020, 2030+1):
+    if expiration_year not in ranges["expiration_year"]:
         return False
     height, units = int(hgt.match(entry).group(1)), hgt.match(entry).group(2)
-    if ((units == "cm" and height not in range(150, 193+1)) or
-        (units == "in") and height not in range(59, 76+1)):
+    if height not in ranges["height"][units]:
         return False
-    print(entry)
     return True
 
 entries = parse_input()
