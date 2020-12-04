@@ -43,16 +43,15 @@ def is_valid(entry):
         return False
 
     birth_year = int(byr.match(entry).group(1))
-    if birth_year not in ranges["birth_year"]:
-        return False
     issue_year = int(iyr.match(entry).group(1))
-    if issue_year not in ranges["issue_year"]:
-        return False
     expiration_year = int(eyr.match(entry).group(1))
-    if expiration_year not in ranges["expiration_year"]:
-        return False
     height, units = int(hgt.match(entry).group(1)), hgt.match(entry).group(2)
-    if height not in ranges["height"][units]:
+
+    if not all((
+            birth_year in ranges["birth_year"],
+            issue_year in ranges["issue_year"],
+            expiration_year in ranges["expiration_year"],
+            height in ranges["height"][units])):
         return False
     return True
 
