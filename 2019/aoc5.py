@@ -95,8 +95,6 @@ class Interpreter():
         print(self.codes[0])
         exit()
 
-    
-
 if __name__ == "__main__":
     interpreter = Interpreter()
     interpreter.run()
