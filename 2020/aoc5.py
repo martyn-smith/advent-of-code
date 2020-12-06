@@ -15,8 +15,8 @@ def get_id(p: str) -> int:
 with open("5.txt") as f:
     IDs = [get_id(p) for p in f.readlines()]
 
-print(max(IDs))
 IDs.sort()
+print(IDs[-1])
 for i, _ in enumerate(IDs[1:-1]):
     if IDs[i] - IDs[i-1] > 1:
         print(IDs[i] - 1)
