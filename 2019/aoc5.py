@@ -1,5 +1,5 @@
 class Interpreter():
-    #CURRENT STATE: illegally accesses var 6.
+    #CURRENT STATE: illegally accesses var 6. This matches hand calculation, so I don't understand the spec.
 
     #number of values.  Note, we cast to int() so leading zeros are ALWAYS dropped.
     #additionally, the parameter to write to is ALWAYS positional, so is
