@@ -19,12 +19,10 @@ deleted_bags = []
 for bag in bag_colours:
     to_delete = False
     if bag_colours[bag] == []:
-        #print(bag)
         to_delete = True
     else:
         for cag in bag_colours:
             if bag in bag_colours[cag]:
-                #to_delete = True
                 bag_colours[cag] += bag_colours[bag]
     if to_delete:
         deleted_bags.append(bag)
