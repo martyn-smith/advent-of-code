@@ -1,33 +1,44 @@
 import re
 
-new_bag_srch = re.compile("^(\w.* \w.*) bags contain")
-contained_bag_srch = re.compile("\d (\w.*? \w.*?) bag")
-root_bag_srch = re.compile("no other bags")
-
-bag_colours = {}
-
 with open("7.txt") as f:
-    bag_list = f.readlines()
+    lines = f.readlines()
 
-for bag_colour in bag_list:
-    new_bag = new_bag_srch.match(bag_colour).group(1)
-    root_bag = bool(root_bag_srch.match(bag_colour))
-    contained_bags = re.findall(contained_bag_srch, bag_colour)
-    bag_colours[new_bag] = contained_bags
+#part 1 regexes
+new_bag_srch = re.compile("^(\w.* \w.*) bags contain")
+child_bag_srch = re.compile("\d (\w.*? \w.*?) bag")
+leaf_bag_srch = re.compile("no other bags")
 
-deleted_bags = []
-for bag in bag_colours:
-    to_delete = False
-    if bag_colours[bag] == []:
-        to_delete = True
-    else:
-        for cag in bag_colours:
-            if bag in bag_colours[cag]:
-                bag_colours[cag] += bag_colours[bag]
-    if to_delete:
-        deleted_bags.append(bag)
+#part 2 regexes
+numerical_child_bag_search = re.compile("(\d \w.*? \w.*?) bag")
+numbers_split = re.compile("(\d) (\w.*? \w.*)")
 
-for b in deleted_bags:
-    bag_colours.pop(b)
+#part 1
+def contains_colour(colour: str) -> int:
+    bags = {}
 
-print(len([b for b in bag_colours if "shiny gold" in bag_colours[b]]))
+    for line in lines:
+        new_bag = new_bag_srch.match(line).group(1)
+        #leaf_bag = bool(leaf_bag_srch.match(line))
+        child_bags = re.findall(child_bag_srch, line)
+        if child_bags != None:
+            bags[new_bag] = child_bags
+
+    for bag_1 in bags:
+        for bag_2 in bags:
+            if bag_1 in bags[bag_2]:
+                bags[bag_2] += bags[bag_1]
+    
+    return [b for b in bags if colour in bags[b]]
+
+#part 2
+def bag_numbers(colour: str) -> int:
+    this_colour_srch = re.compile(f"^{colour} bags contain.*")
+    this_bag = next(line for line in lines if this_colour_srch.match(line))
+    if leaf_bag_srch.match(this_bag):
+        return 1
+    bag_colours = [numbers_split.match(b).groups() 
+                   for b in re.findall(numerical_child_bag_search, this_bag)]
+    return 1 + sum(int(bag[0])*bag_numbers(bag[1]) for bag in bag_colours)
+
+print(len(contains_colour("shiny gold")))
+print(bag_numbers("shiny gold") - 1)
