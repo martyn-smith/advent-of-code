@@ -27,7 +27,7 @@ def contains_colour(colour: str) -> int:
         for bag_2 in bags:
             if bag_1 in bags[bag_2]:
                 bags[bag_2] += bags[bag_1]
-    
+
     return [b for b in bags if colour in bags[b]]
 
 #part 2
