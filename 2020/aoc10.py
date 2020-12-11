@@ -11,22 +11,18 @@ print(deltas.count(1) * deltas.count(3))
 
 paths = {}
 def find_valid_paths(jolts):
-    if jolts[0] in paths: #already calculated
-        return 1
     if len(jolts) == 1: #endpoint
-        paths[jolts[-1]] = 0
+        paths[jolts[-1]] = 1
         return 1
-    path_count = sum(1 for i in range(1,4) if jolts[0]+i in paths)
-    if path_count:
-        paths[jolts[0]] = path_count
-        return 1
-    else: #no precalculation yet
-        for i in range(len(jolts) - 1):
-            path_count = 0
-            if jolts[i+1] - jolts[0] <= 3:
-                find_valid_paths(jolts[i+1:])
-                paths[jolts[i+1]] = 1
-            return 1
+    #print(f"no precache found")
+    count = 0
+    for i in range(3):
+        if jolts[0] + i + 1 in paths: #precache test
+            count += paths[jolts[0] + i + 1]
+        elif jolts[0] + i + 1 in jolts:
+            count += find_valid_paths(jolts[jolts.index(jolts[0] + i + 1):])
+    if count > 0:
+        paths[jolts[0]] = count
+    return count
 
-find_valid_paths(jolts)
-print(paths)
+print(find_valid_paths(jolts))
