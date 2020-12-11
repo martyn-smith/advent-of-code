@@ -27,17 +27,15 @@ def gravity_assist(noun = 12, verb = 2):
     while True:
         op = opcodes[codes[i]]
         if op == terminate:
-            break
+            return codes[0]
         op(codes[i+1], codes[i+2], codes[i+3])
         i += 4
-
-    return codes[0]
 
 def hunt(target=19690720):
     for n, v in combinations(range(100), 2):
         if gravity_assist(n, v) == target:
-            return n + v
+            return (100 * n) + v
 
 if __name__ == "__main__":
     print(gravity_assist())
-    print(100 * hunt())
+    print(hunt())
