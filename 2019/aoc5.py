@@ -1,7 +1,5 @@
 class Interpreter():
-    #CURRENT STATE: illegally accesses var 6. This matches hand calculation, so I don't understand the spec.
-
-    #number of values.  Note, we cast to int() so leading zeros are ALWAYS dropped.
+    #Note, we cast to int() so leading zeros are ALWAYS dropped.
     #additionally, the parameter to write to is ALWAYS positional, so is
     #ALWAYS zero, so is ALWAYS dropped.
     opcode_args = {
@@ -54,42 +52,45 @@ class Interpreter():
                 print(f"counter = {self.ctr}, code = {opcode}")
                 exit()
             num_args = self.opcode_args[opcode]
-            self.modes = ["immediate" if code // 10**i else "position" for i in range(num_args + 2, 1, -1)]
+            self.modes = ["immediate" if code // 10**i % 10 else "position" for i in range(num_args + 1, 1, -1)]
             try:
                 assert(self.modes != [])
             except AssertionError:
                 print(f"counter = {self.ctr}, code = {code}, args = {num_args}")
                 exit()
+            try:
+                operation()
+            except IndexError:
+                print( f"counter = {self.ctr}, code = {code}, args = {num_args}")
             self.ctr += num_args + 1
-            operation()
 
     def add(self):
         args = [self.ctr + 1, self.ctr + 2, self.ctr + 3]
+        args = [self.codes[arg] for arg in args]
         if self.modes[0] == "position":
             args[0] = self.codes[args[0]]
         if self.modes[1] == "position":
             args[1] = self.codes[args[1]]
-        args[2] = self.codes[args[2]]
-        #print(f"writing {a} + {b} to pos {write_idx}")
+        #print(f"writing {args[0]} + {args[1]} to pos {args[2]}")
         self.codes[args[2]] = args[0] + args[1]
 
     def multiply(self):
         args = [self.ctr + 1, self.ctr + 2, self.ctr + 3]
+        args = [self.codes[arg] for arg in args]
         if self.modes[0] == "position":
             args[0] = self.codes[args[0]]
         if self.modes[1] == "position":
             args[1] = self.codes[args[1]]
-        args[2] = self.codes[args[2]]
-        #print(f"writing {a} * {b} to pos {write_idx}")
-        self.codes[write_idx] = self.codes[a] * self.codes[b]
+        #print(f"writing {args[0]} + {args[1]} to pos {args[2]}")
+        self.codes[args[2]] = args[0] * args[1]
 
     def read(self):
         a = self.ctr + 1 #MUST be position mode
-        print(self.codes[a])
+        print(self.codes[self.codes[a]])
 
     def write(self):
         a = self.ctr + 1 #MUST be position mode
-        self.codes[a] = int(input("enter a value to write: \n"))
+        self.codes[self.codes[a]] = int(input("enter a value to write: \n"))
 
     def terminate(self, _, __, ___):
         print(self.codes[0])
