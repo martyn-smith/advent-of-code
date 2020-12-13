@@ -23,17 +23,20 @@ def get_timestamp():
             return trial_time
         trial_time += 1
 
+def chinese_remainder():
+    times = [b - i for b, i in zip(buses, ids)]
+    B = prod(buses)
+    y = [B // b for b in buses]
+    z = [pow(i, -1, b) for i, b in zip(y, buses)]
+    return sum(prod(x) for x in zip(times, y, z)) % B
+
 #part 1
 w = min(get_wait_times(arrival), key= lambda x: x[1])
 print(w[0] * w[1])
 
+#part 2
 if any(b % c == 0 and b != c for b, c in permutations(buses, 2)):
     print("not coprime. Quitting...")
     exit(1)
 
-#<923468884334109
-B = prod(b for b in buses) # == 1748774091859561, higher than true answer
-y = [B // b for b in buses]
-z = [pow(i, -1, b) for i, b in zip(y, buses)]
-print(B)
-print(sum(i*j*k for i, j, k in zip(ids, y, z)) % B)
+print(chinese_remainder())
