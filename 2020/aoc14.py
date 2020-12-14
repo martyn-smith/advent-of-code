@@ -30,16 +30,14 @@ def get_addresses(address, mask):
     # If the bitmask bit is 0, the corresponding memory address bit is unchanged.
     # If the bitmask bit is 1, the corresponding memory address bit is overwritten with 1.
     # If the bitmask bit is X, the corresponding memory address bit takes all values
-    addresses = []
     def address_overwrite(address):
         if address.find("X") == -1:
-            addresses.append(int(address, 2))
+            return [int(address, 2)]
         else:
-            address_overwrite(address.replace("X", "1", 1)) 
-            address_overwrite(address.replace("X", "0", 1))
+            return (address_overwrite(address.replace("X", "1", 1)) 
+                   + address_overwrite(address.replace("X", "0", 1)))
     address = ''.join([m if m == "1" or m == "X" else a for a, m in zip(bin(address)[2:].zfill(36), mask)])
-    address_overwrite(address)
-    return addresses
+    return address_overwrite(address)
 
 def part_2():
     memory = {}
