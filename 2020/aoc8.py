@@ -1,3 +1,6 @@
+"""
+Advent of code day 8: building a basic interpreter for someone's not-a-Game-Boy(TM)
+"""
 from enum import Enum, auto
 
 class RetCode(Enum):
@@ -30,7 +33,7 @@ class Interpreter():
             self.ops = [l[:3] for l in lines]
             self.args = [int(l[4:]) for l in lines]
 
-    def run(self):
+    def run(self) -> (RetCode, int):
         while(True):
             try:
                 self.executed_lines.append(self.cursor)
@@ -47,7 +50,7 @@ class Interpreter():
         self.accumulator = 0
         self.executed_lines = []
 
-    def hunt(self):
+    def hunt(self) -> int:
         self.nop_lines = [i for i, op in enumerate(self.ops) if op == "nop"]
         self.jmp_lines = [i for i, op in enumerate(self.ops) if op == "jmp"]
         for i in self.nop_lines:
@@ -66,5 +69,8 @@ class Interpreter():
             self.ops[i] = "jmp"
 
 i = Interpreter()
+#part 1
 print(i.run()[1])
+
+#part 2
 print(i.hunt())

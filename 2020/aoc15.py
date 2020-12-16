@@ -1,10 +1,19 @@
+"""
+Advent of code day 15: playing a memory game with elves.
+"""
 class SpeakingGame:
+    """
+    Class to hold the seed numbers and game history. Dict-based.
+    """
     def __init__(self, target, seed):
         self.target = target
         self.seed = seed
         self.spoken_numbers = {}
 
-    def run(self):
+    def run(self) -> int:
+        """
+        Runs the game.
+        """
         for i in range(1, self.target+1):
             if self.seed != []:
                 last = self.seed[0]

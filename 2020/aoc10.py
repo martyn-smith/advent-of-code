@@ -1,3 +1,6 @@
+"""
+Advent of code day 10: playing with voltage.
+"""
 from functools import lru_cache
 with open("10.txt") as f:
     lines = f.readlines()
@@ -8,7 +11,10 @@ jolts.insert(0, 0)
 jolts.append(max(jolts) + 3)
 
 @lru_cache(None)
-def find_valid_paths(jolt):
+def find_valid_paths(jolt: list) -> int:
+    """
+    dynamic/recursive cached path-finding solution.
+    """
     if jolt == jolts[-1]:
         return 1
     return sum(find_valid_paths(jolt + i + 1) for i in range(3) if jolt + i + 1 in jolts)

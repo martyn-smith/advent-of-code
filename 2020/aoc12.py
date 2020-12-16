@@ -1,3 +1,6 @@
+"""
+Advent of code day 12: steering a ferry.
+"""
 from itertools import cycle
 
 directions = {
@@ -10,7 +13,10 @@ directions = {
 with open("12.txt") as f:
         lines = f.readlines()
 
-def move():
+def move() -> (int, int):
+    """
+    moves the ferry.
+    """
     pos = [0,0]
     direction = "E"
     rotations = {"L": -1, "R": 1}
@@ -32,7 +38,10 @@ def move():
             pass
         yield pos
 
-def move_with_waypoint():
+def move_with_waypoint() -> (int, int):
+    """
+    moves the waypoint around the ferry, and occasionally the ferry itself.
+    """
     ship_pos = [0,0]
     waypoint_pos = [10,1]
     waypoint_direction = "E"

@@ -1,9 +1,12 @@
+"""
+Advent of code day 11. Ferry seats.... as game of life?
+"""
 from itertools import product
-"""
-.... game of life?
-"""
 
 class Ferry:
+    """
+    Class to hold the Ferry deck's state.
+    """
     def __init__(self, tolerance, visibility):
         with open("11.txt") as f:
             self.state = [list(line.strip("\n")) for line in f.readlines()]
@@ -15,7 +18,7 @@ class Ferry:
         self.tolerance = tolerance
         self.visibility = visibility
 
-    def count_occupied(self, i, j):
+    def count_occupied(self, i, j) -> int:
         if self.visibility == "immediate":
             cells_to_check = [c for c in product((i-1,i,i+1), (j-1,j,j+1))
                               if all(i >= 0 for i in c)
@@ -56,10 +59,9 @@ class Ferry:
                 cells_to_check.append(next((ix, jx) for ix, jx in zip(range(i+1, self.dimensions[0]), range(j+1, self.dimensions[1])) if self.prev_state[ix][jx] != self.floor))
             except StopIteration:
                 pass
-
         return sum(1 for cell in cells_to_check if self.prev_state[cell[0]][cell[1]] == self.occupied)
 
-    def count_all_occupied(self):
+    def count_all_occupied(self) -> int:
         return sum(sum(1 for cell in row if cell == self.occupied) for row in self.state)
 
     def update_all(self):
@@ -70,9 +72,11 @@ class Ferry:
                 self.update_cell(i, j)
 
     def update_cell(self, i, j) -> bool:
-        #If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
-        #If a seat is occupied (#) and [tolerance] or more seats adjacent to it are also occupied, the seat becomes empty.
-        #Otherwise, the seat's state does not change.
+        """
+        If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+        If a seat is occupied (#) and [tolerance] or more seats adjacent to it are also occupied, the seat becomes empty.
+        Otherwise, the seat's state does not change.
+        """
         cell = self.state[i][j]
         if cell == self.floor:
             return False
