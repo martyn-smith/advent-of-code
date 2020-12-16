@@ -13,33 +13,46 @@ def parse_tickets(tickets):
     return [[int(i) for i in line.split(",")] for line in tickets.split("\n")[1:]]
 
 def invalid_fields(ticket):
-    return sum(t for t in ticket if not any(t in range(f[1], f[2]+1) or t in range(f[3], f[4]+1) for f in fields))
-
-def zeros(ticket):
-    return any(t == 0 for t in ticket)
+    return [t for t in ticket if not any(t in range(f[1], f[2]+1) or t in range(f[3], f[4]+1) for f in fields)]
 
 def valid_fields(ticket):
     return [[f[0] for f in fields if t in range(f[1], f[2]+1) or t in range(f[3], f[4]+1)] for t in ticket]
 
+def get_candidate_maps(valid_ticket_fields):
+    return dict((f[0], [i for i in range(len(fields))
+                                if all(f[0] in t[i] for t in valid_ticket_fields)])
+                    for f in fields)
+    
+def solve(candidates):
+    updated = True
+    completed = []
+    while updated:
+        updated = False
+        for f in candidates:
+            if len(candidates[f]) == 1 and f not in completed:
+                #print(f"eliminating... {f}")
+                to_remove = candidates[f][0]
+                for g in candidates:
+                    if g != f and to_remove in candidates[g]:
+                        candidates[g].remove(to_remove)
+                        updated = True
+                completed += f
+    return candidates
+
+def get_indices():
+    valid_ticket_fields = [valid_fields(t) for t in nearby_tickets if invalid_fields(t) == []]
+    possible_maps = get_candidate_maps(valid_ticket_fields)
+    mapping = solve(possible_maps)
+    return [mapping[f][0] for f in mapping if "departure" in f]
+
 with open("16.txt") as f:
     tickets_file = f.read().split("\n\n")
-    fields, my_ticket , nearby_tickets = (parse_fields(tickets_file[0]), 
+    fields, my_ticket, nearby_tickets = (parse_fields(tickets_file[0]), 
                                            parse_tickets(tickets_file[1])[0], 
                                            parse_tickets(tickets_file[2]))
 
 #part 1
-print(sum(invalid_fields(t) for t in nearby_tickets))
+print(sum(sum(invalid_fields(t)) for t in nearby_tickets))
 
-#part 2 I completed manually
-with open("16.options.txt", "w") as g:
-    valid_ticket_fields = [valid_fields(t) for t in nearby_tickets if invalid_fields(t) == 0 and not zeros(t)]
-    for f in fields:
-        valid = f"{f[0]}: "
-        for i in range(len(fields)):
-            if all(f[0] in t[i] for t in valid_ticket_fields):
-                valid += f" {i} "
-            else:
-                valid += "   "
-        g.write(valid + "\n")
-
-print(prod(my_ticket [i] for i in (6,10,11,13,16,19)))
+#part 2
+print(prod(my_ticket[i] for i in get_indices()))
