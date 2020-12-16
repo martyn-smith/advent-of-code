@@ -9,6 +9,16 @@ with open("13.txt") as f:
 def get_wait_times(arrival):
     return [bus - arrival % bus for bus in buses]
 
+def incremental_prime_search():
+    delta = 1
+    x = 1
+    for i, b in zip(ids, buses):
+        while x % b != (b - i) % b:
+            x += delta
+        delta *= b
+    return x
+
+#keeping, but unused.
 def chinese_remainder():
     times = [b - i for b, i in zip(buses, ids)]
     B = prod(buses)
@@ -25,4 +35,4 @@ if any(b % c == 0 and b != c for b, c in permutations(buses, 2)):
     print("not coprime! Quitting...")
     exit(1)
 
-print(chinese_remainder())
+print(incremental_prime_search())

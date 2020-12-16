@@ -22,7 +22,7 @@ def get_candidate_maps(valid_ticket_fields):
     return dict((f[0], [i for i in range(len(fields))
                                 if all(f[0] in t[i] for t in valid_ticket_fields)])
                     for f in fields)
-    
+
 def solve(candidates):
     updated = True
     completed = []
@@ -41,8 +41,8 @@ def solve(candidates):
 
 def get_indices():
     valid_ticket_fields = [valid_fields(t) for t in nearby_tickets if invalid_fields(t) == []]
-    possible_maps = get_candidate_maps(valid_ticket_fields)
-    mapping = solve(possible_maps)
+    possible_map = get_candidate_maps(valid_ticket_fields)
+    mapping = solve(possible_map)
     return [mapping[f][0] for f in mapping if "departure" in f]
 
 with open("16.txt") as f:
