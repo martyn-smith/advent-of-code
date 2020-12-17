@@ -7,12 +7,10 @@ from itertools import product
 
 class ConwayCube:
     def __init__(self):
-        with open("17.test.txt") as f:
+        with open("17.txt") as f:
             lines = f.readlines()
         self.cube =  [[line.strip("\n") for line in lines]]
         self.dimensions = {"x": len(self.cube[0][0]), "y": len(self.cube[0]), "z": len(self.cube)}
-        #print(self.cube[0])
-        #print(self.dimensions) #x, y, z
 
     def __repr__(self):
         ret = "" 
@@ -34,7 +32,6 @@ class ConwayCube:
         for slice_ in self.cube:
             new_cube.append(self.expand_slice(slice_))
         new_cube.append(self.new_slice())
-       # print(new_cube)
         to_activate = []
         to_deactivate = []
         
@@ -45,6 +42,7 @@ class ConwayCube:
                     If a cube is active and exactly 2 or 3 of its neighbors are also active, the cube remains active. Otherwise, the cube becomes inactive.
                     If a cube is inactive but exactly 3 of its neighbors are active, the cube becomes active. Otherwise, the cube remains inactive.
                     """
+
                     active_count = sum(1 for neighbours in product((x-1, x, x+1), (y-1, y, y+1), (z-1, z, z+1))
                                           if not all((neighbours[0] == x, 
                                                       neighbours[1] == y, 
@@ -55,12 +53,12 @@ class ConwayCube:
                                           and new_cube[neighbours[2]][neighbours[1]][neighbours[0]] == "#")
                     if active_count == 3 and new_cube[z][y][x] == ".":
                         to_activate.append((x,y,z))
-                    elif (active_count < 1 or active_count > 3) and new_cube[z][y][x] == "#":
+                    elif (active_count < 2 or active_count > 3) and new_cube[z][y][x] == "#":
                         to_deactivate.append((x,y,z)) 
         for a in to_activate:
             new_cube[a[2]][a[1]] = new_cube[a[2]][a[1]][:a[0]] + "#" + new_cube[a[2]][a[1]][a[0]+1:]
         for d in to_deactivate:
-            new_cube[a[2]][a[1]] = new_cube[a[2]][a[1]][:a[0]] + "." + new_cube[a[2]][a[1]][a[0]+1:]
+            new_cube[d[2]][d[1]] = new_cube[d[2]][d[1]][:d[0]] + "." + new_cube[d[2]][d[1]][d[0]+1:]
         self.cube = new_cube
         self.dimensions["x"] += 2
         self.dimensions["y"] += 2
@@ -75,12 +73,12 @@ class ConwayCube:
                         active_count += 1
         return active_count
 
-#<347
+#part 1
 c = ConwayCube()
 print(c)
-for i in range(1):
+for i in range(6):
     c.step()
-    print(f"after {i}:")
+    print(f"after {i+1} cycle(s):")
     print(c)
 print(c.count_actives())
 
