@@ -70,7 +70,7 @@ def solve(expression: list, precedence="equal") -> int:
     if value in ("+", "*"):
         raise ValueError(f"{expression} is invalid")
 
-# #part 1
+#part 1
 print(sum(solve(tokenise(line)) for line in lines))
 
 #part 2
