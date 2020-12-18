@@ -70,11 +70,6 @@ def solve(expression: list, precedence="equal") -> int:
     if value in ("+", "*"):
         raise ValueError(f"{expression} is invalid")
 
-# for line in lines:
-#     if line[0] != "#":
-#         print("==========================================================")
-#         print(solve(tokenise(line), "AM"))
-
 # #part 1
 print(sum(solve(tokenise(line)) for line in lines))
 
