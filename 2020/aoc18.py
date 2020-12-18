@@ -1,81 +1,82 @@
 """
-Advent of code day 18: implementing a tokenizer.
+Advent of code day 18: horrible stack-based order of operations.
 """
-def find_matching_close(expression_string) -> int:
-    """
-    Self-explanatory, although it expects to given the subexpression_string immediately after the open bracket:
-    '( foo)' -> ' foo)'. This has some neat behaviour for part 2.
-    """
-    braces_depth = 1
-    for i, c in enumerate(expression_string):
-        if c == "(":
-            braces_depth += 1
-        if c == ")":
-            braces_depth -= 1
-        if braces_depth == 0:
-            return i + 1
-
-def accumulate(accumulator: int, op: str, c: int) -> int:
-    """
-    Does the accumulation.
-    """
-    #print(f"{accumulator} {op} {c}")
-    if op == "+":
-        return accumulator + c
-    if op == "*":
-        return accumulator * c
-
-def accumulate_expression(expression_string: str, precedence="equal") -> int:
-    """
-    Traverses a expression_string and evaluates according to strict left- precedence rules.
-    """
-    op = ""
-    accumulator = 0
-    i = 0
-    expression_string = list(expression_string)
-    if expression_string[0] == "(":
-        expression_string = ["0", " ",  "+", " "] + expression_string
-    #print(f"parsing... {expression_string}")
-    while i in range(len(expression_string)):
-        c = expression_string[i]
-        if c == " ":
-            pass
-        if c == "+":
-            op = c
-        if c == "*":
-            op = c
-            if precedence == "AM":
-                j = find_matching_close(expression_string[i+2:])
-                if j is not None:
-                    j += i
-                    expression_string = expression_string[:i+1] + ["("] + expression_string[i+2:j] + [")"] + expression_string[j+2:]
-                else:
-                    expression_string = expression_string[:i+1] + ["("] + expression_string[i+2:] + [")"]
-        if c.isdigit():
-            if op == "":
-                if accumulator == 0:
-                    #print(f"initialising with {c}")
-                    accumulator = int(c)
-                else:
-                    print("no operation! quitting...")
-                    exit(1)
-            else:
-                accumulator = accumulate(accumulator, op, int(c))
-        if c == "(":
-            j = i + find_matching_close(expression_string[i+1:])
-            expression_string = (expression_string[:i]
-             + [accumulate_expression(expression_string[i+1:j], precedence)] 
-             + expression_string[j+1:])
-            accumulator = accumulate(accumulator, op, expression_string[i])
-        i += 1
-    #print(f"returning {accumulator}")
-    return accumulator
-
 with open("18.txt") as f:
     lines = f.readlines()
 
-#part 1
-print(sum(accumulate_expression(line) for line in lines))
+def find_closing_brace(expression) -> int:
+    braces_level = 1
+    for i, c in enumerate(expression):
+        if c == "(":
+            braces_level += 1
+        if c == ")":
+            braces_level -= 1
+        if braces_level == 0:
+            return i
+    return None
+
+def find_operator(expression, operator) -> int:
+    braces_level = 0
+    for i, c in enumerate(expression):
+        if c == "(":
+            braces_level += 1
+        if c == ")":
+            braces_level -= 1
+        if c == operator and braces_level == 0:
+            return i
+        if braces_level < 0:
+            return i
+    return None
+
+def accumulate(value, operator, operand) -> int:
+    if operator == "+":
+        return value + operand
+    if operator == "*":
+        return value * operand
+
+def tokenise(expression: str) -> list:
+        l = list(expression.rstrip().replace(" ", ""))
+        l = [int(c) if c.isdigit() else c for c in l]
+        return l
+
+def solve(expression: list, precedence="equal") -> int:
+    if len(expression) == 1:
+        return expression[0]
+    value, operator, operand = expression[0], expression[1], expression[2]
+    if value == "(":
+        j = find_closing_brace(expression[1:]) + 1
+        operand = solve(expression[1:j], precedence)
+        acc = accumulate(0, "+", operand)
+        return solve([acc] + expression[j+1:], precedence)
+    #careful, order of precedence HERE is also killer.
+    if operator == "*" and precedence == "AM":
+        j = find_operator(expression[2:], "*")
+        if j is not None:
+            j += 2
+            operand = solve(expression[2:j], precedence)
+            acc = accumulate(value, operator, operand)
+            return solve([acc] + expression[j:], precedence)
+        else: 
+            operand = solve(expression[2:], precedence)
+            return accumulate(value, operator, operand)
+    if operand == "(":
+        j = find_closing_brace(expression[3:]) + 3
+        operand = solve(expression[3:j], precedence)
+        acc = accumulate(value, operator, operand)
+        return solve([acc] + expression[j+1:], precedence)
+    else:
+        acc = accumulate(value, operator, operand)
+        return solve([acc] + expression[3:], precedence)
+    if value in ("+", "*"):
+        raise ValueError(f"{expression} is invalid")
+
+# for line in lines:
+#     if line[0] != "#":
+#         print("==========================================================")
+#         print(solve(tokenise(line), "AM"))
+
+# #part 1
+print(sum(solve(tokenise(line)) for line in lines))
 
 #part 2
-print(sum(accumulate_expression(line, "AM") for line in lines))
+print(sum(solve(tokenise(line), "AM") for line in lines))
