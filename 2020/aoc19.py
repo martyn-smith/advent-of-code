@@ -42,7 +42,7 @@ def builder(root="0") -> str:
     elif sr := sequence_rec_rule.match(rule):
         return "(" + "|".join(["((" + builder(sr.group(2)) + "){" + str(i) + "}(" 
                               + builder(sr.group(3)) + "){" + str(i) + "})" 
-                             for i in range(1,8)]) + ")"
+                             for i in range(1,6)]) + ")"
     elif s := sequence_rule.match(rule):
         return builder(s.group(2)) + builder(s.group(3))
     elif lc := lone_compound_rule.match(rule):
