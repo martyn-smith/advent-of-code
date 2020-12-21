@@ -1,7 +1,5 @@
 from math import prod
 
-
-
 sea_monster = """
                   # 
 #    ##    ##    ###
@@ -19,63 +17,72 @@ class Image:
     def corner_tiles(self):
         return [t for t in self.tiles if t.matching_edges(self.tiles) == 2]
 
-    def hunt(self):
+    def solve(self):
         tile = self.corner_tiles()[0]
         row = 0
         checked = False
         self.grid.append([tile])
         while self.tiles != []:
+            self.tiles.remove(tile)
             try:
-                self.tiles.remove(tile)
-            except ValueError:
-                print(f"{tile.ID}: already removed")
-            print([t.ID for t in self.grid[row]])
-            try:
-                print(f"checking right... {tile.ID}")
+                #print(f"checking right... {tile.ID}")
                 next_tile = next(test_tile for test_tile in self.tiles 
                                     if tile.right_edge in test_tile.all_edges 
                                     or tile.right_edge[::-1] in test_tile.all_edges)
-                print(f"found {next_tile.ID}")
+                #print(f"found {next_tile.ID}")
                 next_tile.find_transform(tile.right_edge, 3)
                 tile = next_tile
                 self.grid[row] += [tile]
             except StopIteration:
-                print(f"{tile.ID} has no rightmost match")
                 tile = self.grid[-1][0]
-                print(f"checking down... {tile.ID}")
                 try:
+                    #print(f"checking down... {tile.ID}")
                     next_tile = next(test_tile for test_tile in self.tiles 
                                         if tile.bottom_edge in test_tile.all_edges 
                                         or tile.bottom_edge[::-1] in test_tile.all_edges)
-                    print(f"found {next_tile.ID}")
-                    print(next_tile)
-                    print("===========")
+                    #print(f"found {next_tile.ID}")
                     next_tile.find_transform(tile.bottom_edge, 0)
-                    if next_tile.ID == "1117":
-                        print(next_tile)
                     tile = next_tile
                     self.grid.append([])
                     row += 1
                     self.grid[row] += [tile]
-                    
                 except StopIteration:
-                    print("ended")
                     continue
-        # for row in self.grid:
-        #     print("========================\n")
-        #     print([tile for tile in row])
-
 
     def __repr__(self):
         image = ""
         for row in self.grid:
-            #image += "\n"
             for i in range(1, len(row[0].tile)-1):
                 for tile in row:
                     image += tile.tile[i][1:-1]
                 image += "\n"
+        #image = ""
+        # for row in self.grid:
+        #     for tile in row:
+        #         image = '\n'.join([i + t[1:-1] for i, t in zip(image.split("\n"), repr(tile).split("\n"))])
+        #         image += "\n"
         return image
 
+    def hunt(self, monster):
+        monster = [m for m in monster.strip("\n").split("\n")]
+        grid = repr(self).strip("\n").split("\n")
+        monster_count = 0
+        for r in range(8):
+            if r == 4:
+                grid = flip_horizontal(grid)
+            grid = rot90(grid)
+            for y in range(len(grid) - len(monster)):
+                for x in range(len(grid[0]) - len(monster[0])):
+                    candidate_monster = ["".join("#" if grid[y+i][x+j] == "#" 
+                                                        and monster[i][j] == "#" 
+                                                        else " " 
+                                                    for j in range(len(monster[0]))) 
+                                                for i in range(len(monster))]
+                    #print("\n".join(m + "\t" + c for m, c in zip(monster, candidate_monster)))
+                    if candidate_monster == monster:
+                        #print(f"found match! r = {r}")
+                        monster_count += 1
+        return monster_count
 
 class Tile:
 
@@ -85,7 +92,6 @@ class Tile:
 
     def __repr__(self):
         return self.body
-        #return '\n'.join(self.tile)
 
     @property
     def top_edge(self):
@@ -123,36 +129,23 @@ class Tile:
         left_match = any(self.left_edge in t.all_edges or self.left_edge[::-1] in t.all_edges for t in tiles)
         return sum((top_match, bottom_match, left_match, right_match))
 
-    def flip_vertical(self):
-        self.tile = self.tile[::-1]
-
-    def flip_horizontal(self):
-        self.tile = [l[::-1] for l in self.tile]
-
-    def rotate(self, r):
-        for _ in range(r):
-            self.tile = [''.join([t[i] for t in self.tile][::-1]) for i in range(len(self.tile[0]))]
-
     def find_transform(self, edge, idx):
-        found = (True if edge == self.all_edges[idx] else False)
-        if not found:
-            for i in range(4):
-                self.rotate(1)
-                if edge == self.all_edges[idx]:
-                    found = True
-                    break
-        if not found:
-            self.flip_horizontal()
-            for _ in range(4):
-                self.rotate(1)
-                if edge == self.all_edges[idx]:
-                    found = True
-                    break
+        for r in range(8):
+            if r == 4:
+                self.tile = flip_horizontal(self.tile)
+            self.tile = rot90(self.tile)
+            if edge == self.all_edges[idx]:
+                break
 
-"""
-Dimension checks:
-144 is a 12x12 grid. That means 4 corner tiles, 40 edge tiles, 100 body tiles.
-"""
+
+def rot90(tile):
+    return [''.join([t[i] for t in tile][::-1]) for i in range(len(tile[0]))]
+
+def flip_vertical(tile):
+        return tile[::-1]
+
+def flip_horizontal(tile):
+        return [l[::-1] for l in tile]
 
 #part 1
 im = Image()
@@ -160,6 +153,9 @@ print(prod(int(c.ID) for c in im.corner_tiles()))
 
 
 #part 2
-im.hunt()
-with open("20.out.txt", "w") as f:
-    f.write(im.__repr__())
+im.solve()
+#with open("20.out.txt", "w") as f:
+#    f.write(repr(im))
+monster_count = im.hunt(sea_monster)
+monster_tiles = monster_count * sum(1 for i in sea_monster if i == "#")
+print(sum(1 for i in repr(im) if i == "#") - monster_tiles)
