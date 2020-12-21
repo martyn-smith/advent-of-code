@@ -1,3 +1,6 @@
+"""
+Advent of code day 20: rotating images to find Nessy.
+"""
 from math import prod
 
 sea_monster = """
@@ -30,7 +33,7 @@ class Image:
                                     if tile.right_edge in test_tile.all_edges 
                                     or tile.right_edge[::-1] in test_tile.all_edges)
                 #print(f"found {next_tile.ID}")
-                next_tile.find_transform(tile.right_edge, 3)
+                next_tile.find_transform(tile.right_edge, "left")
                 tile = next_tile
                 self.grid[row] += [tile]
             except StopIteration:
@@ -41,7 +44,7 @@ class Image:
                                         if tile.bottom_edge in test_tile.all_edges 
                                         or tile.bottom_edge[::-1] in test_tile.all_edges)
                     #print(f"found {next_tile.ID}")
-                    next_tile.find_transform(tile.bottom_edge, 0)
+                    next_tile.find_transform(tile.bottom_edge, "top")
                     tile = next_tile
                     self.grid.append([])
                     row += 1
@@ -129,7 +132,8 @@ class Tile:
         left_match = any(self.left_edge in t.all_edges or self.left_edge[::-1] in t.all_edges for t in tiles)
         return sum((top_match, bottom_match, left_match, right_match))
 
-    def find_transform(self, edge, idx):
+    def find_transform(self, edge, seek):
+        idx = self.edge_enum.index(seek)
         for r in range(8):
             if r == 4:
                 self.tile = flip_horizontal(self.tile)
