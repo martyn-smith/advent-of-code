@@ -1,11 +1,7 @@
-from datetime import datetime
-from random import randint
-#from sense_hat import SenseHat
-import time
-import cProfile
-#######012345678
+"""
+Advent of code day 23: playing find-the-lady with a crab.
+"""
 line = 463528179
-#line = 389125467
 
 def make_cups(line: str) -> list:
     return [int(c) for c in str(line)]
@@ -28,6 +24,7 @@ def unlinkify(cup_dict: dict) -> list:
 
 def move_linked(curr_cup) -> int:
     """
+    Implements a *crab* moving a circular array of cups, similar to part 1.
     Linked-list approach. Credit to u/fsed123 and u/Nastapoka - the basic idea is a dictionary,
     where the value is the next node. This spares the modular arithmetic, and any rearrangement,
     as you just have to detach/reattach rather than reassign.
@@ -51,6 +48,8 @@ def move_linked(curr_cup) -> int:
 
 def move(curr_cup) -> int:
     """
+    Implements a *crab* moving a circular array of cups according to the following rules:
+
     The crab picks up the three cups that are immediately clockwise of the current cup. 
     They are removed from the circle; cup spacing is adjusted as necessary to maintain the circle.
     The crab selects a destination cup: the cup with a label equal to the current cup's label minus one. 
