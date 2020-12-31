@@ -29,7 +29,7 @@ pub fn find_triple(target: &usize, input: &Vec<usize>) -> Option<usize> {
 }
 
 fn main() {
-    let input = fs::read_to_string("../../1.txt").unwrap();
+    let input = fs::read_to_string("data/1.txt").unwrap();
     let target = 2020;
     let entries = input.lines()
                        .map(|l| l.parse::<usize>().unwrap())
