@@ -1,4 +1,4 @@
-from itertools import permutations
+from itertools import product
 
 def gravity_assist(noun = 12, verb = 2):
 
@@ -32,7 +32,7 @@ def gravity_assist(noun = 12, verb = 2):
         i += 4
 
 def hunt(target=19690720):
-    for n, v in permutations(range(100), 2):
+    for n, v in product(range(100), range(100)):
         if gravity_assist(n, v) == target:
             return (100 * n) + v
 
