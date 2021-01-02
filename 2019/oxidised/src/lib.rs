@@ -1,6 +1,7 @@
 mod aoc1;
 mod aoc2;
 mod aoc4;
+mod aoc5;
 
 #[cfg(test)]
 mod tests {
@@ -8,10 +9,11 @@ mod tests {
     use super::aoc1;
     use super::aoc2;
     use super::aoc4;
+    use super::aoc5;
 
     #[test]
     fn day_1() {
-        let input = fs::read_to_string("data/1.txt").unwrap();
+        let input = fs::read_to_string("../data/1.txt").unwrap();
         let entries = input.lines()
                         .map(|l| l.parse::<usize>().unwrap())
                         .collect();
@@ -21,18 +23,28 @@ mod tests {
 
     #[test]
     fn day_2() {
-        let input = fs::read_to_string("data/2.txt").unwrap();
+        let input = fs::read_to_string("../data/2.txt").unwrap();
         let mut entries = input.trim().split(",")
                             .map(|l| l.parse::<usize>().unwrap())
-                            .collect();
-        aoc2::prepro(&mut entries, 12, 2);
-        assert_eq!(3409710, aoc2::run_intcode(&mut entries).unwrap());
-        assert_eq!(7912, aoc2::hunt(&mut entries, 19690720).unwrap());
+                            .collect::<Vec<usize>>();
+
+        assert_eq!(3409710, aoc2::twelve_oh_two(entries.clone()).unwrap());
+        assert_eq!(7912, aoc2::hunt(entries, 19690720).unwrap());
     }
 
     #[test]
     fn day_4() {
         let (low, high) = (271973, 785961);
         assert_eq!(925, aoc4::valid_passwords(low, high));
+    }
+
+    #[test]
+    fn day_5() {
+        let input = fs::read_to_string("../data/5.txt").unwrap();
+        let mut entries = input.trim().split(",")
+                            .map(|l| l.parse::<isize>().unwrap())
+                            .collect::<Vec<isize>>();
+
+        assert_eq!(0, aoc5::run_intcode(entries).unwrap());
     }
 }

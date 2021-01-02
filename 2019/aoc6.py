@@ -10,7 +10,7 @@ def check_orbits():
     where "PLAN" is the planet and "SAT" the satellite.
     """
     num_orbits = 0
-    with open("./6.txt") as f:
+    with open("data/6.txt") as f:
         orbits = [line.strip("\n").split(")") for line in f.readlines()]
     while len(orbits):
         num_orbits += len(orbits)

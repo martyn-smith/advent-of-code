@@ -19,12 +19,13 @@ def gravity_assist(noun = 12, verb = 2):
         99 : terminate
     }
 
-    with open("./2.txt") as f:
+    with open("data/2.txt") as f:
         codes = [int(c) for c in f.read().strip("\n").split(",")]
         codes[1], codes[2] = noun, verb
 
     i = 0
     while True:
+        print(codes[i])
         op = opcodes[codes[i]]
         if op == terminate:
             return codes[0]

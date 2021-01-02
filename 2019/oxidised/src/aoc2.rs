@@ -14,34 +14,37 @@ fn mult(intcodes: &mut Vec<usize>, pos: usize) {
     intcodes[write_pos] = a * b;
 }
 
-pub fn prepro(intcodes: &mut Vec<usize>, noun: usize, verb: usize) {
+fn prepro(intcodes: &mut Vec<usize>, noun: usize, verb: usize) {
     intcodes[1] = noun;
     intcodes[2] = verb;
 }
 
-pub fn run_intcode(mut intcodes: &mut Vec<usize>) -> Result<usize, &'static str> {
+pub fn run_intcode(mut intcodes: Vec<usize>) -> Result<usize, usize> {
     let mut i = 0usize;
     'a: loop {
+       // println!("{}", intcodes[i]);
         match intcodes[i] {
             1 => add(&mut intcodes, i),
             2 => mult(&mut intcodes, i),
             99 => {break 'a;},
-            _ => {return Err("intcode panicked!");}
+            _ => {return Err(0);}
         }
         i += 4;
     }
     Ok(intcodes[0])
 }
 
-pub fn hunt(mut intcodes: &mut Vec<usize>, target: usize) -> Option<usize> {
-    let range = (0..100).cartesian_product(0..100);
+pub fn twelve_oh_two(mut program: Vec<usize>) -> Result<usize, usize> {
+    prepro(&mut program, 12, 2);
+    run_intcode(program)
+}
+
+pub fn hunt(program: Vec<usize>, target: usize) -> Option<usize> {
+    let range = (79..80).cartesian_product(12..13);
     for it in range {
-        //println!("trying {} {}", it.0, it.1);
-        prepro(&mut intcodes, it.0, it.1);
-        let q = run_intcode(&mut intcodes);
-        //println!("{:?}", q);
-        if let Ok(r) = q {//run_intcode(&mut intcodes) {
-            println!("{}", r);
+        let mut candidate = program.clone();
+        prepro(&mut candidate, 79, 12);
+        if let Ok(r) = run_intcode(candidate) {
             if r == target {
                 return Some(it.0 * 100 + it.1);
             }
