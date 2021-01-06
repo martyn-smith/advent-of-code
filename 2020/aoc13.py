@@ -4,11 +4,6 @@ Advent of code day 13: playing with buses and modular arithmetic.
 from math import prod
 from itertools import permutations
 
-with open("13.txt") as f:
-    arrival = int(f.readline())
-    buses = [(i, int(j)) for i, j in enumerate(f.readline().split(",")) if j != "x"]
-    ids, buses = [b[0] for b in buses], [b[1] for b in buses]
-
 def get_wait_times(arrival: int) -> list:
     """
     Self-explanatory, returns the wait time for each bus.
@@ -37,6 +32,12 @@ def chinese_remainder() -> int:
     y = [B // b for b in buses]
     z = [pow(i, -1, b) for i, b in zip(y, buses)]
     return sum(prod(x) for x in zip(times, y, z)) % B
+
+#setup
+with open("13.txt") as f:
+    arrival = int(f.readline())
+    buses = [(i, int(j)) for i, j in enumerate(f.readline().split(",")) if j != "x"]
+    ids, buses = [b[0] for b in buses], [b[1] for b in buses]
 
 #part 1
 w = min(zip(buses, get_wait_times(arrival)), key = lambda x: x[1])

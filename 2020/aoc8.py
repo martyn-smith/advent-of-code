@@ -68,7 +68,9 @@ class Interpreter():
             self.reset()
             self.ops[i] = "jmp"
 
+#setup
 i = Interpreter()
+
 #part 1
 print(i.run()[1])
 

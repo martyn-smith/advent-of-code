@@ -3,9 +3,6 @@ import re
 mask_srch = re.compile("^mask = (.*)")
 mem_srch = re.compile("^mem\[(\d+)\] = (\d+)")
 
-with open("14.txt") as f:
-    lines = f.readlines()
-
 def mask_overwite(value, mask):
     """
     Returns the masked value for part 1.
@@ -50,6 +47,10 @@ def part_2():
             for addr in addresses:
                 memory[addr] = value
     return memory
+
+#setup
+with open("14.txt") as f:
+    lines = f.readlines()
 
 #part 1
 memory = part_1()

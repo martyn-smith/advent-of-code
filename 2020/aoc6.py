@@ -3,8 +3,6 @@ Advent of code 6: we're fudging some declarations forms.
 slight pain point here: since part 1 doesn't require knowing *who* selected a response,
 that information can be dropped. In part 2 it can't.
 """
-with open("6.txt") as f:
-    lines = f.readlines()
 
 def parse_input():
     entry = ""
@@ -44,6 +42,10 @@ def count_positives_2(group: list) -> int:
             return 0
         responses.intersection_update(set(g))
     return len(responses) if responses is not None else 0
+
+#setup
+with open("6.txt") as f:
+    lines = f.readlines()
 
 #part 1
 print(sum(count_positives(entry) for entry in parse_input()))

@@ -35,8 +35,13 @@ class SpeakingGame:
         else:
             self.spoken_numbers[last] = i
 
+#setup
 seed = [7,14,0,17,11,1,2]
+
+#part 1
 s = SpeakingGame(2020, seed)
 print(s.run())
+
+#part 2
 s = SpeakingGame(30000000, seed)
 print(s.run())

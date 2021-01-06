@@ -1,5 +1,6 @@
 mod aoc1;
 mod aoc2;
+mod aoc3;
 mod aoc4;
 mod aoc5;
 
@@ -8,6 +9,7 @@ mod tests {
     use std::fs;
     use super::aoc1;
     use super::aoc2;
+    use super::aoc3;
     use super::aoc4;
     use super::aoc5;
 
@@ -24,12 +26,20 @@ mod tests {
     #[test]
     fn day_2() {
         let input = fs::read_to_string("../data/2.txt").unwrap();
-        let mut entries = input.trim().split(",")
+        let mut entries = input.trim().split(',')
                             .map(|l| l.parse::<usize>().unwrap())
                             .collect::<Vec<usize>>();
 
         assert_eq!(3409710, aoc2::twelve_oh_two(entries.clone()).unwrap());
         assert_eq!(7912, aoc2::hunt(entries, 19690720).unwrap());
+    }
+
+    #[test]
+    fn day_3() {
+        let input = fs::read_to_string("../data/3.txt").unwrap();
+        let entries = aoc3::parse_line(input.lines().nth(0).unwrap().to_string());
+        println!("{:?}", entries);
+        assert!(false);
     }
 
     #[test]
@@ -41,7 +51,7 @@ mod tests {
     #[test]
     fn day_5() {
         let input = fs::read_to_string("../data/5.txt").unwrap();
-        let mut entries = input.trim().split(",")
+        let mut entries = input.trim().split(',')
                             .map(|l| l.parse::<isize>().unwrap())
                             .collect::<Vec<isize>>();
 

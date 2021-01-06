@@ -10,9 +10,6 @@ directions = {
     "W" : (-1,0)
 }
 
-with open("12.txt") as f:
-        lines = f.readlines()
-
 def move() -> (int, int):
     """
     moves the ferry.
@@ -66,6 +63,10 @@ def move_with_waypoint() -> (int, int):
         else:
             pass
         yield ship_pos
+
+#setup
+with open("12.txt") as f:
+        lines = f.readlines()
 
 #part 1
 pos = [p for p in move()][-1]

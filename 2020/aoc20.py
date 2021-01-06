@@ -17,11 +17,12 @@ class Image:
         self.tiles = [Tile(p) for p in pre_tiles]
         self.grid = []
 
+    @property
     def corner_tiles(self):
         return [t for t in self.tiles if t.matching_edges(self.tiles) == 2]
 
     def solve(self):
-        tile = self.corner_tiles()[0]
+        tile = self.corner_tiles[0]
         row = 0
         checked = False
         self.grid.append([tile])
@@ -153,13 +154,10 @@ def flip_horizontal(tile):
 
 #part 1
 im = Image()
-print(prod(int(c.ID) for c in im.corner_tiles()))
-
+print(prod(int(c.ID) for c in im.corner_tiles))
 
 #part 2
 im.solve()
-#with open("20.out.txt", "w") as f:
-#    f.write(repr(im))
 monster_count = im.hunt(sea_monster)
 monster_tiles = monster_count * sum(1 for i in sea_monster if i == "#")
 print(sum(1 for i in repr(im) if i == "#") - monster_tiles)

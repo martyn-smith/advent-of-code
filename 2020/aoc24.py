@@ -4,9 +4,6 @@ but no penrose tiles and no crabs.
 """
 import re
 
-with open("24.txt") as f:
-    lines = f.readlines()
-
 #not actually used, but a useful illustation so I'm keeping it.
 directions = {
     "e" : (1,0),
@@ -74,6 +71,9 @@ def play(positions: set) -> set:
         positions.add(position)
     return positions
 
+#setup
+with open("24.txt") as f:
+    lines = f.readlines()
 
 #part 1
 positions = build(lines)

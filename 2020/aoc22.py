@@ -2,9 +2,6 @@
 Advent of code day 22: recursive crab
 """
 
-with open("22.txt") as f:
-    player_a, player_b = f.read().split("\n\n")
-
 def make_decks():
     deck_a = [int(c) for c in player_a.split("\n")[1:]]
     deck_b = [int(c) for c in player_b.split("\n")[1:]]
@@ -16,7 +13,6 @@ def score(deck):
 def play_combat(deck_a, deck_b):
     while deck_a != [] and deck_b != []:
         card_a, card_b = deck_a.pop(0), deck_b.pop(0)
-        #print(card_a, card_b)
         if card_a > card_b:
             deck_a += [card_a, card_b]
         elif card_b > card_a:
@@ -74,6 +70,10 @@ def play_recursive_combat(deck_a, deck_b, g = 1):
         return game_winner
     else:
         return score(deck_b)
+
+#setup
+with open("22.txt") as f:
+    player_a, player_b = f.read().split("\n\n")
 
 #part 1
 deck_a, deck_b = make_decks()

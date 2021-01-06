@@ -6,7 +6,7 @@ with open("19.txt") as f:
     rules = rules.split("\n")
     messages = messages.split("\n")
 
-#luckily, all rules fall into these categories.
+#Regexes. luckily, all rules fall into these categories.
 base_rule = re.compile("(\d+): \"(\w)\"")
 compound_rule = re.compile("^(\d+): (\d+) (\d+) \| (\d+) (\d+)$")
 sequence_rule = re.compile("^(\d+): (\d+) (\d+)$")
@@ -16,13 +16,11 @@ lone_compound_rule = re.compile("^(\d+): (\d+) \| (\d+)$")
 lone_rec_rule = re.compile("^(\d+): (\d+) \| (\d+) (\d+)$")
 sequence_rec_rule = re.compile("^(\d+): (\d+) (\d+) \| (\d+) (\d+) (\d+)$")
 
-
 b_count = sum(1 for r in rules if base_rule.match(r))
 c_count = sum(1 for r in rules if compound_rule.match(r))
 s_count = sum(1 for r in rules if sequence_rule.match(r))
 l_count = sum(1 for r in rules if lone_rule.match(r))
 lc_count = sum(1 for r in rules if lone_compound_rule.match(r))
-#print(f"base, compound, sequence = {b_count}, {c_count}, {s_count}, {l_count}, {lc_count}")
 
 #@lru_cache(None)
 def builder(root="0") -> str:
@@ -32,7 +30,6 @@ def builder(root="0") -> str:
     """
     this_rule = re.compile(f"^{root}:.*")
     rule = next(r for r in rules if this_rule.match(r))
-    #print(rule)
     if b := base_rule.match(rule):
         return b.group(2)
     elif lr := lone_rec_rule.match(rule):
@@ -57,7 +54,6 @@ total_rule = re.compile(b)
 print(sum(1 for m in messages if total_rule.match(m)))
 
 #part 2
-#325 apparently
 i = rules.index("8: 42")
 rules = rules[:i] + ["8: 42 | 42 8"] + rules[i:]
 i = rules.index("11: 42 31")

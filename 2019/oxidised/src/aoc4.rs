@@ -1,12 +1,12 @@
-fn is_valid(i: usize) -> bool {
+fn is_valid(num: usize) -> bool {
     //todo: very slow, probably due to this initial collection. Consider ways to avoid.
-    let digits = i.to_string()
+    let digits = num.to_string()
                         .chars()
-                        .map(|d| d.to_digit(10).unwrap() as usize)
-                        .collect::<Vec<usize>>();
+                        .map(|d| d.to_digit(10).unwrap() as i32)
+                        .collect::<Vec<i32>>();
     let (mut adjacent, mut decreasing) = (false, false);
     'a: for d in digits.windows(2) {
-        match (d[0] as i32 - d[1] as i32).signum() {
+        match (d[0] - d[1]).signum() {
             1 => {decreasing = true; break 'a;},
             -1 => {},
             0 => {adjacent = true;},

@@ -2,9 +2,6 @@
 Advent of code day 5: boarding a plane, in a binary fashion.
 """
 
-with open("5.txt") as f:
-    lines = f.readlines()
-
 def get_id(p: str) -> int:
     """
     gets a numerical id from binary string.
@@ -21,6 +18,10 @@ def get_id(p: str) -> int:
         columns >>= 1
         column += columns if c == "R" else 0
     return (row * 8) + column
+
+#setup
+with open("5.txt") as f:
+    lines = f.readlines()
 
 #part 1
 IDs = [get_id(p) for p in lines]

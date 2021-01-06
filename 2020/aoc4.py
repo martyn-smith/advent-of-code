@@ -2,9 +2,8 @@
 Advent of code day 4: "assisting" passport validation.
 """
 import re
-#re.DOTALL = True
 
-#validations
+# validations
 # byr (Birth Year)
 byr = re.compile(".*byr:(\d{4})( |$)") #1920 - 2002
 # iyr (Issue Year)
@@ -27,9 +26,6 @@ ranges = {
     "expiration_year": range(2020, 2030+1),
     "height" : {"cm": range(150, 193+1), "in": range(59, 76+1)}
 }
-
-with open("4.txt") as f:
-    passports = f.read().split("\n\n")
 
 def is_complete(passport: str) -> bool:
     """
@@ -77,8 +73,10 @@ def is_valid(passport: str) -> bool:
             pid.match(passport)))
 
 #setup. I don't actually know why the regex fails with intermittent newlines... but easy fix.
-passports = [passport.replace("\n", " ") for passport in passports]
-#279 entries, 213 initially valid, 147 secondary valid.
+with open("4.txt") as f:
+    passports = f.read().split("\n\n")
+    passports = [passport.replace("\n", " ") for passport in passports]
+
 #part 1
 print(sum(1 for passport in passports if is_complete(passport)))
 

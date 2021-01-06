@@ -1,8 +1,6 @@
 """
 Advent of code 2020 day 1: we're fudging expense reports.
 """
-with open("1.txt") as f:
-    entries = [int(l) for l in f.readlines()]
 
 target = 2020
 
@@ -26,6 +24,10 @@ def find_triad(target: int) -> (int, int, int):
             for complement_2 in entries[i+j:]:
                 if entry + complement_1 + complement_2 == target:
                     return (entry, complement_1, complement_2)
+
+#setup
+with open("1.txt") as f:
+    entries = [int(l) for l in f.readlines()]
 
 #part 1
 a, b = find_pair(target)

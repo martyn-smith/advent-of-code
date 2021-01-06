@@ -4,9 +4,6 @@ Advent of code 16: playing sudoku with train tickets.
 import re
 from math import prod
 
-with open("16.txt") as f:
-    tickets_file = f.read().split("\n\n")
-
 #regex. All fields are two ranges.
 range_srch = re.compile("^(.*): (\d+)-(\d+) or (\d+)-(\d+)")
 
@@ -52,6 +49,8 @@ def get_indices() -> list:
     return [mapping[f][0] for f in mapping if "departure" in f]
 
 #setup
+with open("16.txt") as f:
+    tickets_file = f.read().split("\n\n")
 fields, my_ticket, nearby_tickets = (parse_fields(tickets_file[0]), 
                                         parse_tickets(tickets_file[1])[0], 
                                         parse_tickets(tickets_file[2]))

@@ -3,9 +3,6 @@ Advent of code day 7: how many bags can a bag bag?
 """
 import re
 
-with open("7.txt") as f:
-    lines = f.readlines()
-
 #part 1 regexes
 new_bag_srch = re.compile("^(\w.* \w.*) bags contain")
 child_bag_srch = re.compile("\d (\w.*? \w.*?) bag")
@@ -45,6 +42,10 @@ def bag_numbers(colour: str) -> int:
     bag_colours = [numbers_split.match(b).groups() 
                    for b in re.findall(numerical_child_bag_search, this_bag)]
     return 1 + sum(int(bag[0])*bag_numbers(bag[1]) for bag in bag_colours)
+
+#setup
+with open("7.txt") as f:
+    lines = f.readlines()
 
 #part 1
 print(len(contains_colour("shiny gold")))

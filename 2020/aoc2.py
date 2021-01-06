@@ -3,9 +3,6 @@ Advent of code day 2: "validating" passwords.
 """
 import re
 
-with open("2.txt") as f:
-    lines = f.readlines()
-
 policy_pattern = re.compile('(\d+)-(\d+) ([a-z]):')
 
 def validate_policy_1(line: str) -> bool:
@@ -31,9 +28,12 @@ def validate_policy_2(line: str) -> bool:
     password = line.split(":")[1]
     return bool(password[pos_a] == char) ^ bool(password[pos_b] == char)
 
+#setup
+with open("2.txt") as f:
+    lines = f.readlines()
+
 #part_1
 print(sum(1 for line in lines if validate_policy_1(line)))
 
 #part_2
-with open("2.txt") as f:
-    print(sum(1 for line in lines if validate_policy_2(line)))
+print(sum(1 for line in lines if validate_policy_2(line)))

@@ -4,8 +4,6 @@ Advent of code day 9: Breaking the in-flight entertainment's copy-protection.
 from itertools import combinations
 
 preamble_len = 25
-with open("9.txt") as f:
-    lines = [int(l) for l in f.readlines()]
 
 def find_invalid_XMAS_number() -> int:
     """
@@ -32,6 +30,10 @@ def find_contiguous_set(invalid_num: int) -> (int, int):
         else:
             i += 1
     return i, j
+
+#setup
+with open("9.txt") as f:
+    lines = [int(l) for l in f.readlines()]
 
 #part 1
 invalid_num = find_invalid_XMAS_number()

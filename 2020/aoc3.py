@@ -3,11 +3,6 @@ Advent of code day 3: we're going tobogganing!
 """
 from math import prod
 
-with open("3.txt") as f:
-    lines = f.readlines()
-    depth = len(lines) - 1
-    width = len(lines[0]) - 1
-
 def total_trees(move: (int, int)) -> int:
     """
     Counts the trees collided with in a modular grid traversal.
@@ -20,6 +15,12 @@ def total_trees(move: (int, int)) -> int:
         cursor[0] += move[0]
         cursor[1] = (cursor[1] + move[1]) % width
     return trees
+
+#setup
+with open("3.txt") as f:
+    lines = f.readlines()
+    depth = len(lines) - 1
+    width = len(lines[0]) - 1
 
 #part 1
 print(total_trees((1,3)))
