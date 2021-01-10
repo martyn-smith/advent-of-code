@@ -34,12 +34,19 @@ pub fn run_intcode(mut intcodes: Vec<usize>) -> Result<usize, usize> {
     Ok(intcodes[0])
 }
 
-pub fn twelve_oh_two(mut program: Vec<usize>) -> Result<usize, usize> {
+pub fn get_input() -> Vec<usize> {
+    let input = fs::read_to_string("../data/data/2.txt").unwrap();
+    input.trim().split(',')
+            .map(|l| l.parse::<usize>().unwrap())
+            .collect::<Vec<usize>>()
+}
+
+pub fn part_1(mut program: Vec<usize>) -> Result<usize, usize> {
     prepro(&mut program, 12, 2);
     run_intcode(program)
 }
 
-pub fn hunt(program: Vec<usize>, target: usize) -> Option<usize> {
+pub fn part_2(program: Vec<usize>, target: usize) -> Option<usize> {
     let range = (79..80).cartesian_product(12..13);
     for it in range {
         let mut candidate = program.clone();

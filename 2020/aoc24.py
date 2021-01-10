@@ -23,7 +23,6 @@ northwest = re.compile("nw")
 
 def build(lines) -> list:
     positions = []
-
     for line in lines:
         east_count = len(east.findall(line)) - len(west.findall(line))
         southeast_count = len(southeast.findall(line)) - len(northwest.findall(line))
@@ -37,13 +36,11 @@ def build(lines) -> list:
             positions.remove(position)
         else:
             positions += [position]
-
     return positions
 
 def play(positions: set) -> set:
     """
-    Conway again
-    
+    Conway again.
     Any black tile with zero or more than 2 black tiles immediately adjacent to it is flipped to white.
     Any white tile with exactly 2 black tiles immediately adjacent to it is flipped to black.
     """
@@ -72,16 +69,19 @@ def play(positions: set) -> set:
     return positions
 
 #setup
-with open("24.txt") as f:
+with open("data/24.txt") as f:
     lines = f.readlines()
 
-#part 1
-positions = build(lines)
-print(len(positions))
+def part_1():
+    positions = build(lines)
+    return len(positions)
 
-#part 2
-positions = set(positions) #necessary to prevent O(n). SPEEEEEEEEED
-for i in range(100):
-    positions = play(positions)
-print(len(positions))
+def part_2():
+    positions = set(build(lines)) #necessary to prevent O(n). SPEEEEEEEEED
+    for i in range(100):
+        positions = play(positions)
+    return len(positions)
 
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

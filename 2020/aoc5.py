@@ -20,16 +20,19 @@ def get_id(p: str) -> int:
     return (row * 8) + column
 
 #setup
-with open("5.txt") as f:
+with open("data/5.txt") as f:
     lines = f.readlines()
+    IDs = [get_id(p) for p in lines]
+    IDs.sort()
 
-#part 1
-IDs = [get_id(p) for p in lines]
-IDs.sort()
-print(IDs[-1])
+def part_1():
+    return IDs[-1]
 
-#part 2
-for i, _ in enumerate(IDs[1:-1]):
-    if IDs[i] - IDs[i-1] > 1:
-        print(IDs[i] - 1)
+def part_2():
+    for i, _ in enumerate(IDs[1:-1]):
+        if IDs[i] - IDs[i-1] > 1:
+            return IDs[i] - 1
 
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

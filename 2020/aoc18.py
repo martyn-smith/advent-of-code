@@ -1,8 +1,6 @@
 """
 Advent of code day 18: horrible stack-based order of operations.
 """
-with open("18.txt") as f:
-    lines = f.readlines()
 
 def find_closing_brace(expression) -> int:
     braces_level = 1
@@ -70,8 +68,15 @@ def solve(expression: list, precedence="equal") -> int:
     if value in ("+", "*"):
         raise ValueError(f"{expression} is invalid")
 
-#part 1
-print(sum(solve(tokenise(line)) for line in lines))
+with open("data/18.txt") as f:
+    lines = f.readlines()
 
-#part 2
-print(sum(solve(tokenise(line), "AM") for line in lines))
+def part_1():
+    return sum(solve(tokenise(line)) for line in lines)
+
+def part_2():
+    return sum(solve(tokenise(line), "AM") for line in lines)
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

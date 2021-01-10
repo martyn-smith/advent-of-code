@@ -26,13 +26,17 @@ def find_triad(target: int) -> (int, int, int):
                     return (entry, complement_1, complement_2)
 
 #setup
-with open("1.txt") as f:
+with open("data/1.txt") as f:
     entries = [int(l) for l in f.readlines()]
 
-#part 1
-a, b = find_pair(target)
-print(a * b)
+def part_1():
+    a, b = find_pair(target)
+    return a * b
 
-#part 2
-a, b, c = find_triad(target)
-print(a * b * c)
+def part_2():
+    a, b, c = find_triad(target)
+    return a * b * c
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

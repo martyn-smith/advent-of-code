@@ -11,18 +11,22 @@ def find_valid_paths(jolt: list) -> int:
     if jolt == jolts[-1]:
         return 1
     return sum(find_valid_paths(jolt + i + 1) for i in range(3) if jolt + i + 1 in jolts)
+
 #setup
-with open("10.txt") as f:
+with open("data/10.txt") as f:
     lines = f.readlines()
+    jolts = [int(l) for l in lines]
+    jolts.sort()
+    jolts.insert(0, 0)
+    jolts.append(max(jolts) + 3)
 
-jolts = [int(l) for l in lines]
-jolts.sort()
-jolts.insert(0, 0)
-jolts.append(max(jolts) + 3)
+def part_1():
+    deltas = [i - j for i, j in zip(jolts[1:], jolts[:-1])]
+    return deltas.count(1) * deltas.count(3)
 
-#part 1
-deltas = [i - j for i, j in zip(jolts[1:], jolts[:-1])]
-print(deltas.count(1) * deltas.count(3))
+def part_2():
+    return find_valid_paths(jolts[0])
 
-#part 2
-print(find_valid_paths(jolts[0]))
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

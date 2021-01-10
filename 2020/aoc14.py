@@ -12,17 +12,6 @@ def mask_overwite(value, mask):
     #Still feel there's a nice number-theory solution to be found.
     return value & int(mask.replace("X", "1"), 2) | int(mask.replace("X", "0"), 2)
 
-def part_1():
-    memory = {}
-    for line in lines:
-        if m := mask_srch.match(line):
-            mask = m.group(1)
-        elif m := mem_srch.match(line):
-            address, value = int(m.group(1)), int(m.group(2))
-            value = mask_overwite(value, mask)
-            memory[address] = value
-    return memory
-
 def get_addresses(address, mask):
     # If the bitmask bit is 0, the corresponding memory address bit is unchanged.
     # If the bitmask bit is 1, the corresponding memory address bit is overwritten with 1.
@@ -36,6 +25,21 @@ def get_addresses(address, mask):
     address = ''.join([m if m == "1" or m == "X" else a for a, m in zip(bin(address)[2:].zfill(36), mask)])
     return address_overwrite(address)
 
+#setup
+with open("data/14.txt") as f:
+    lines = f.readlines()
+
+def part_1():
+    memory = {}
+    for line in lines:
+        if m := mask_srch.match(line):
+            mask = m.group(1)
+        elif m := mem_srch.match(line):
+            address, value = int(m.group(1)), int(m.group(2))
+            value = mask_overwite(value, mask)
+            memory[address] = value
+    return sum(memory[m] for m in memory)
+
 def part_2():
     memory = {}
     for line in lines:
@@ -46,16 +50,8 @@ def part_2():
             addresses = get_addresses(address, mask)
             for addr in addresses:
                 memory[addr] = value
-    return memory
+    return sum(memory[m] for m in memory)
 
-#setup
-with open("14.txt") as f:
-    lines = f.readlines()
-
-#part 1
-memory = part_1()
-print(sum(memory[m] for m in memory))
-
-#part 2
-memory = part_2()
-print(sum(memory[m] for m in memory))
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

@@ -44,6 +44,13 @@ fn output(intcodes: &mut Vec<isize>, pos: usize) -> usize {
     2
 }
 
+pub fn get_input() -> Vec<isize> {
+    let input = fs::read_to_string("../data/data/5.txt").unwrap();
+    input.trim().split(',')
+            .map(|l| l.parse::<isize>().unwrap())
+            .collect::<Vec<isize>>()
+}
+
 pub fn run_intcode(mut intcodes: Vec<isize>) -> Result<isize, isize> {
     let mut i = 0usize;
     'a: loop {

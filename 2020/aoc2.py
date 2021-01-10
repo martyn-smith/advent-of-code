@@ -29,11 +29,15 @@ def validate_policy_2(line: str) -> bool:
     return bool(password[pos_a] == char) ^ bool(password[pos_b] == char)
 
 #setup
-with open("2.txt") as f:
+with open("data/2.txt") as f:
     lines = f.readlines()
 
-#part_1
-print(sum(1 for line in lines if validate_policy_1(line)))
+def part_1():
+    return sum(1 for line in lines if validate_policy_1(line))
 
-#part_2
-print(sum(1 for line in lines if validate_policy_2(line)))
+def part_2():
+    return sum(1 for line in lines if validate_policy_2(line))
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

@@ -12,7 +12,7 @@ sea_monster = """
 class Image:
 
     def __init__(self):
-        with open("20.txt") as f:
+        with open("data/20.txt") as f:
             pre_tiles = f.read().split("\n\n")
         self.tiles = [Tile(p) for p in pre_tiles]
         self.grid = []
@@ -152,12 +152,18 @@ def flip_vertical(tile):
 def flip_horizontal(tile):
         return [l[::-1] for l in tile]
 
-#part 1
+#setup
 im = Image()
-print(prod(int(c.ID) for c in im.corner_tiles))
 
-#part 2
-im.solve()
-monster_count = im.hunt(sea_monster)
-monster_tiles = monster_count * sum(1 for i in sea_monster if i == "#")
-print(sum(1 for i in repr(im) if i == "#") - monster_tiles)
+def part_1():
+    return prod(int(c.ID) for c in im.corner_tiles)
+
+def part_2():
+    im.solve()
+    monster_count = im.hunt(sea_monster)
+    monster_tiles = monster_count * sum(1 for i in sea_monster if i == "#")
+    return sum(1 for i in repr(im) if i == "#") - monster_tiles
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

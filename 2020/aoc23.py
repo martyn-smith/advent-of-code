@@ -3,8 +3,12 @@ Advent of code day 23: playing find-the-lady with a crab.
 """
 line = 463528179
 
-def make_cups(line: str) -> list:
+def make_cups(line: int) -> list:
     return [int(c) for c in str(line)]
+
+def unmake_cups(cups: list) -> int:
+    idx = cups.index(1)
+    return int(''.join([str(c) for c in cups[idx+1:] + cups[:idx]]))
 
 def linkify(cup_list: list) -> dict:
     cups = {}
@@ -22,7 +26,7 @@ def unlinkify(cup_dict: dict) -> list:
         c = cup_dict[c]
     return cups
 
-def move_linked(curr_cup) -> int:
+def move_linked(cups, curr_cup) -> int:
     """
     Implements a *crab* moving a circular array of cups, similar to part 1.
     Linked-list approach. Credit to u/fsed123 and u/Nastapoka - the basic idea is a dictionary,
@@ -46,7 +50,7 @@ def move_linked(curr_cup) -> int:
     cups[cup_3] = tmp
     return cups[curr_cup]
 
-def move(curr_cup) -> int:
+def move(cups, curr_cup) -> int:
     """
     Implements a *crab* moving a circular array of cups according to the following rules:
 
@@ -67,6 +71,7 @@ def move(curr_cup) -> int:
             if srch == 0:
                 srch = l
         return (max(cups) if srch == 0 else srch)
+    l = len(cups)
     idx = cups.index(curr_cup)
     cup_1, cup_2, cup_3 = (cups.pop(idx + 1 if idx + 1 < l else 0), 
                           cups.pop(idx + 1 if idx + 1 < l - 1 else 0), 
@@ -79,20 +84,22 @@ def move(curr_cup) -> int:
     idx = cups.index(curr_cup)
     return cups[(idx + 1) % l]
 
-#part 1
-cups = make_cups(line)
-l = len(cups)
-curr_cup = cups[0]
-for i in range(100):
-    curr_cup = move(curr_cup)
-idx = cups.index(1)
-print(''.join([str(c) for c in cups[idx+1:] + cups[:idx]]))
+def part_1():
+    cups = make_cups(line)
+    curr_cup = cups[0]
+    for i in range(100):
+        curr_cup = move(cups, curr_cup)
+    return unmake_cups(cups)
 
-# part 2 
-cups = make_cups(line)
-curr_cup = cups[0]
-cups = linkify(cups + [*range(max(cups), 1_000_001)])
-for i in range(10_000_001):
-    curr_cup = move_linked(curr_cup)
-idx = cups[1]
-print(cups[1] * cups[cups[1]])
+def part_2():
+    cups = make_cups(line)
+    curr_cup = cups[0]
+    cups = linkify(cups + [*range(max(cups), 1_000_001)])
+    for i in range(10_000_001):
+        curr_cup = move_linked(cups, curr_cup)
+    idx = cups[1]
+    return cups[1] * cups[cups[1]]
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

@@ -44,11 +44,15 @@ def count_positives_2(group: list) -> int:
     return len(responses) if responses is not None else 0
 
 #setup
-with open("6.txt") as f:
+with open("data/6.txt") as f:
     lines = f.readlines()
 
-#part 1
-print(sum(count_positives(entry) for entry in parse_input()))
+def part_1():
+    return sum(count_positives(entry) for entry in parse_input())
 
-#part 2
-print(sum(count_positives_2(entry) for entry in parse_input_2()))
+def part_2():
+    return sum(count_positives_2(entry) for entry in parse_input_2())
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

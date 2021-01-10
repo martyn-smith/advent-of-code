@@ -38,10 +38,14 @@ class SpeakingGame:
 #setup
 seed = [7,14,0,17,11,1,2]
 
-#part 1
-s = SpeakingGame(2020, seed)
-print(s.run())
+def part_1():
+    s = SpeakingGame(2020, seed)
+    return s.run()
 
-#part 2
-s = SpeakingGame(30000000, seed)
-print(s.run())
+def part_2():
+    s = SpeakingGame(30000000, seed)
+    return s.run()
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

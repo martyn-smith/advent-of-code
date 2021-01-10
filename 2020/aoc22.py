@@ -72,13 +72,17 @@ def play_recursive_combat(deck_a, deck_b, g = 1):
         return score(deck_b)
 
 #setup
-with open("22.txt") as f:
+with open("data/22.txt") as f:
     player_a, player_b = f.read().split("\n\n")
 
-#part 1
-deck_a, deck_b = make_decks()
-print(play_combat(deck_a, deck_b))
+def part_1():
+    deck_a, deck_b = make_decks()
+    return play_combat(deck_a, deck_b)
 
-#part 2
-deck_a, deck_b = make_decks()
-print(play_recursive_combat(tuple(deck_a), tuple(deck_b)))
+def part_2():
+    deck_a, deck_b = make_decks()
+    return play_recursive_combat(tuple(deck_a), tuple(deck_b))
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

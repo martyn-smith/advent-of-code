@@ -73,12 +73,16 @@ def is_valid(passport: str) -> bool:
             pid.match(passport)))
 
 #setup. I don't actually know why the regex fails with intermittent newlines... but easy fix.
-with open("4.txt") as f:
+with open("data/4.txt") as f:
     passports = f.read().split("\n\n")
     passports = [passport.replace("\n", " ") for passport in passports]
 
-#part 1
-print(sum(1 for passport in passports if is_complete(passport)))
+def part_1():
+    return sum(1 for passport in passports if is_complete(passport))
 
-#part 2
-print(sum(1 for passport in passports if is_valid(passport)))
+def part_2():
+    return sum(1 for passport in passports if is_valid(passport))
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

@@ -49,14 +49,18 @@ def get_indices() -> list:
     return [mapping[f][0] for f in mapping if "departure" in f]
 
 #setup
-with open("16.txt") as f:
+with open("data/16.txt") as f:
     tickets_file = f.read().split("\n\n")
-fields, my_ticket, nearby_tickets = (parse_fields(tickets_file[0]), 
-                                        parse_tickets(tickets_file[1])[0], 
-                                        parse_tickets(tickets_file[2]))
+    fields, my_ticket, nearby_tickets = (parse_fields(tickets_file[0]), 
+                                            parse_tickets(tickets_file[1])[0], 
+                                            parse_tickets(tickets_file[2]))
 
-#part 1
-print(sum(sum(invalid_fields(t)) for t in nearby_tickets))
+def part_1():
+    return sum(sum(invalid_fields(t)) for t in nearby_tickets)
 
-#part 2
-print(prod(my_ticket[i] for i in get_indices()))
+def part_2():
+    return prod(my_ticket[i] for i in get_indices())
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

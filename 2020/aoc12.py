@@ -65,13 +65,17 @@ def move_with_waypoint() -> (int, int):
         yield ship_pos
 
 #setup
-with open("12.txt") as f:
+with open("data/12.txt") as f:
         lines = f.readlines()
 
-#part 1
-pos = [p for p in move()][-1]
-print(sum(abs(p) for p in pos))
+def part_1():
+    pos = [p for p in move()][-1]
+    return sum(abs(p) for p in pos)
 
-#part 2
-pos = [p for p in move_with_waypoint()][-1]
-print(sum(abs(p) for p in pos))
+def part_2():
+    pos = [p for p in move_with_waypoint()][-1]
+    return sum(abs(p) for p in pos)
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

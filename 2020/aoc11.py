@@ -8,7 +8,7 @@ class Ferry:
     Class to hold the Ferry deck's state.
     """
     def __init__(self, tolerance, visibility):
-        with open("11.txt") as f:
+        with open("data/11.txt") as f:
             self.state = [list(line.strip("\n")) for line in f.readlines()]
         self.dimensions = [len(self.state), len(self.state[0])]
         self.prev_state = []
@@ -89,14 +89,18 @@ class Ferry:
                 self.state[i][j] = self.empty
                 return True
 
-#part 1
-ferry = Ferry(4, "immediate")
-while ferry.state != ferry.prev_state:
-    ferry.update_all()
-print(ferry.count_all_occupied())
+def part_1():
+    ferry = Ferry(4, "immediate")
+    while ferry.state != ferry.prev_state:
+        ferry.update_all()
+    return ferry.count_all_occupied()
 
-#part 2
-ferry = Ferry(5, "distant")
-while ferry.state != ferry.prev_state:
-    ferry.update_all()
-print(ferry.count_all_occupied())
+def part_2():
+    ferry = Ferry(5, "distant")
+    while ferry.state != ferry.prev_state:
+        ferry.update_all()
+    return ferry.count_all_occupied()
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

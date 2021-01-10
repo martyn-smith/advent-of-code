@@ -44,11 +44,15 @@ def bag_numbers(colour: str) -> int:
     return 1 + sum(int(bag[0])*bag_numbers(bag[1]) for bag in bag_colours)
 
 #setup
-with open("7.txt") as f:
+with open("data/7.txt") as f:
     lines = f.readlines()
 
-#part 1
-print(len(contains_colour("shiny gold")))
+def part_1():
+    return len(contains_colour("shiny gold"))
 
-#part 2
-print(bag_numbers("shiny gold") - 1)
+def part_2():
+    return bag_numbers("shiny gold") - 1
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

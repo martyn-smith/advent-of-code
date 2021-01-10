@@ -10,7 +10,7 @@ class ConwayCube:
     def __init__(self, dimensionality=3):
         self.actives = {}
         self.dimensionality = dimensionality
-        with open("17.txt") as f:
+        with open("data/17.txt") as f:
             lines = f.readlines()
         for y, line in enumerate(lines):
             for x, char in enumerate(line):
@@ -37,14 +37,18 @@ class ConwayCube:
         for d in to_deactivate:
             self.actives.pop(d)
 
-#part 1
-c = ConwayCube()
-for i in range(6):
-    c.step()
-print(len(c.actives))
+def part_1():
+    c = ConwayCube()
+    for i in range(6):
+        c.step()
+    return len(c.actives)
 
-#part 2
-c = ConwayCube(4)
-for i in range(6):
-    c.step()
-print(len(c.actives))
+def part_2():
+    c = ConwayCube(4)
+    for i in range(6):
+        c.step()
+    return len(c.actives)
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

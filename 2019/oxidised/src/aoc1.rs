@@ -12,13 +12,20 @@ fn total_fuel(module_mass: &usize) -> usize {
     fuel
 }
 
-pub fn get_total_mass(masses: &Vec<usize>) -> usize {
+pub fn get_input() -> Vec<usize> {
+    let input = fs::read_to_string("../data/data/1.txt").unwrap();
+    input.lines()
+            .map(|l| l.parse::<usize>().unwrap())
+            .collect()
+}
+
+pub fn part_1(masses: &Vec<usize>) -> usize {
     masses.iter()
         .map(|i| get_fuel(i))
         .sum()
 }
 
-pub fn get_recursive_total_mass(masses: &Vec<usize>) -> usize {
+pub fn part_2(masses: &Vec<usize>) -> usize {
     masses.iter()
         .map(|i| total_fuel(i))
         .sum()

@@ -1,7 +1,7 @@
 """
 Advent of code day 21: set theory.
 """
-with open("21.txt") as f:
+with open("data/21.txt") as f:
     lines = f.readlines()
 
 all_allergens = {}
@@ -34,11 +34,14 @@ for a in all_allergens:
     all_allergen_ingredients.update(all_allergens[a])
 non_allergen_ingredients = all_ingredients.difference(all_allergen_ingredients)
 
+def part_1():
+    return sum(sum(1 for ingredient in line.split("(")[0].strip().split(" ") 
+                    if ingredient in non_allergen_ingredients) 
+            for line in lines)
 
-#part 1
-print(sum(sum(1 for ingredient in line.split("(")[0].strip().split(" ") 
-              if ingredient in non_allergen_ingredients) 
-         for line in lines))
+def part_2():
+    return ",".join(",".join(list(all_allergens[key])) for key in sorted(all_allergens))
 
-#part 2
-print(",".join(",".join(list(all_allergens[key])) for key in sorted(all_allergens)))
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

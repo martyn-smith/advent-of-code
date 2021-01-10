@@ -1,11 +1,6 @@
 import re
 from functools import lru_cache
 
-with open("19.txt") as f:
-    rules, messages = f.read().split("\n\n")
-    rules = rules.split("\n")
-    messages = messages.split("\n")
-
 #Regexes. luckily, all rules fall into these categories.
 base_rule = re.compile("(\d+): \"(\w)\"")
 compound_rule = re.compile("^(\d+): (\d+) (\d+) \| (\d+) (\d+)$")
@@ -48,17 +43,26 @@ def builder(root="0") -> str:
         return "(" + builder(c.group(2)) + builder(c.group(3)) + "|" + builder(c.group(4)) + builder(c.group(5)) + ")"
     print(f"{rule} matches nothing!")
 
-#part 1
-b = "^" + builder() + "$"
-total_rule = re.compile(b)
-print(sum(1 for m in messages if total_rule.match(m)))
+with open("data/19.txt") as f:
+    rules, messages = f.read().split("\n\n")
+    rules = rules.split("\n")
+    messages = messages.split("\n")
 
-#part 2
-i = rules.index("8: 42")
-rules = rules[:i] + ["8: 42 | 42 8"] + rules[i:]
-i = rules.index("11: 42 31")
-rules = rules[:i] + ["11: 42 31 | 42 11 31"] + rules[1:]
-b = "^" + builder() + "$"
-total_rule = re.compile(b)
-print(sum(1 for m in messages if total_rule.match(m)))
+def part_1():
+    b = "^" + builder() + "$"
+    total_rule = re.compile(b)
+    return sum(1 for m in messages if total_rule.match(m))
+
+def part_2():
+    i = rules.index("8: 42")
+    rules = rules[:i] + ["8: 42 | 42 8"] + rules[i:]
+    i = rules.index("11: 42 31")
+    rules = rules[:i] + ["11: 42 31 | 42 11 31"] + rules[1:]
+    b = "^" + builder() + "$"
+    total_rule = re.compile(b)
+    return sum(1 for m in messages if total_rule.match(m))
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())
 

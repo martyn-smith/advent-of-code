@@ -28,7 +28,7 @@ class Interpreter():
         self.cursor = 0
         self.accumulator = 0
         self.executed_lines = []
-        with open("8.txt") as f:
+        with open("data/8.txt") as f:
             lines = [l for l in f.readlines()]
             self.ops = [l[:3] for l in lines]
             self.args = [int(l[4:]) for l in lines]
@@ -71,8 +71,12 @@ class Interpreter():
 #setup
 i = Interpreter()
 
-#part 1
-print(i.run()[1])
+def part_1():
+    return i.run()[1]
 
-#part 2
-print(i.hunt())
+def part_2():
+    return i.hunt()
+
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())

@@ -32,15 +32,18 @@ def find_contiguous_set(invalid_num: int) -> (int, int):
     return i, j
 
 #setup
-with open("9.txt") as f:
+with open("data/9.txt") as f:
     lines = [int(l) for l in f.readlines()]
 
-#part 1
-invalid_num = find_invalid_XMAS_number()
-print(invalid_num)
+def part_1():
+    invalid_num = find_invalid_XMAS_number()
+    return invalid_num
 
-#part 2
-i, j = find_contiguous_set(invalid_num)
-print(min(lines[i:j]) + max(lines[i:j]))
+def part_2():
+    invalid_num = part_1()
+    i, j = find_contiguous_set(invalid_num)
+    return min(lines[i:j]) + max(lines[i:j])
 
-
+if __name__ == "__main__":
+    print(part_1())
+    print(part_2())
