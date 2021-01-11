@@ -5,19 +5,19 @@ import re
 
 # validations
 # byr (Birth Year)
-byr = re.compile(".*byr:(\d{4})( |$)") #1920 - 2002
+byr = re.compile(r".*byr:(\d{4})( |$)") #1920 - 2002
 # iyr (Issue Year)
-iyr = re.compile(".*iyr:(\d{4})( |$)") #2020 - 2020
+iyr = re.compile(r".*iyr:(\d{4})( |$)") #2020 - 2020
 # eyr (Expiration Year)
-eyr = re.compile(".*eyr:(\d{4})( |$)") #2020 - 2030
+eyr = re.compile(r".*eyr:(\d{4})( |$)") #2020 - 2030
 # hgt (Height)
-hgt = re.compile(".*hgt:(\d+)(cm|in)( |$)") #150-193 cm, 59 - 76 in
+hgt = re.compile(r".*hgt:(\d+)(cm|in)( |$)") #150-193 cm, 59 - 76 in
 # hcl (Hair Color)
-hcl = re.compile(".*hcl:\#[0-9a-f]{6}( |$)")
+hcl = re.compile(r".*hcl:\#[0-9a-f]{6}( |$)")
 # ecl (Eye Color)
-ecl = re.compile(".*ecl:(amb|blu|brn|gry|grn|hzl|oth)( |$)")
+ecl = re.compile(r".*ecl:(amb|blu|brn|gry|grn|hzl|oth)( |$)")
 # pid (Passport ID)
-pid = re.compile(".*pid:\d{9}( |$)")
+pid = re.compile(r".*pid:\d{9}( |$)")
 # cid (Country ID) unused
 
 ranges = { 

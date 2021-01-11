@@ -14,8 +14,8 @@ directions = {
     "ne" : (1,-1)
 }
 
-east = re.compile("(?<!n|s)e")
-west = re.compile("(?<!n|s)w")
+east = re.compile(r"(?<!n|s)e")
+west = re.compile(r"(?<!n|s)w")
 southwest = re.compile("sw")
 northeast = re.compile("ne")
 southeast = re.compile("se")

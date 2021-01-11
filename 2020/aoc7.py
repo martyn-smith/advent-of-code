@@ -4,13 +4,13 @@ Advent of code day 7: how many bags can a bag bag?
 import re
 
 #part 1 regexes
-new_bag_srch = re.compile("^(\w.* \w.*) bags contain")
-child_bag_srch = re.compile("\d (\w.*? \w.*?) bag")
-leaf_bag_srch = re.compile("no other bags")
+new_bag_srch = re.compile(r"^(\w.* \w.*) bags contain")
+child_bag_srch = re.compile(r"\d (\w.*? \w.*?) bag")
+leaf_bag_srch = re.compile(r"no other bags")
 
 #part 2 regexes
-numerical_child_bag_search = re.compile("(\d \w.*? \w.*?) bag")
-numbers_split = re.compile("(\d) (\w.*? \w.*)")
+numerical_child_bag_search = re.compile(r"(\d \w.*? \w.*?) bag")
+numbers_split = re.compile(r"(\d) (\w.*? \w.*)")
 
 def contains_colour(colour: str) -> int:
     """

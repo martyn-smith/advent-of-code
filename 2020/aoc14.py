@@ -1,7 +1,7 @@
 import re
 
-mask_srch = re.compile("^mask = (.*)")
-mem_srch = re.compile("^mem\[(\d+)\] = (\d+)")
+mask_srch = re.compile(r"^mask = (.*)")
+mem_srch = re.compile(r"^mem\[(\d+)\] = (\d+)")
 
 def mask_overwite(value, mask):
     """

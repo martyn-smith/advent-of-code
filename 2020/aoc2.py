@@ -3,7 +3,7 @@ Advent of code day 2: "validating" passwords.
 """
 import re
 
-policy_pattern = re.compile('(\d+)-(\d+) ([a-z]):')
+policy_pattern = re.compile(r"(\d+)-(\d+) ([a-z]):")
 
 def validate_policy_1(line: str) -> bool:
     """

@@ -5,7 +5,7 @@ import re
 from math import prod
 
 #regex. All fields are two ranges.
-range_srch = re.compile("^(.*): (\d+)-(\d+) or (\d+)-(\d+)")
+range_srch = re.compile(r"^(.*): (\d+)-(\d+) or (\d+)-(\d+)")
 
 def parse_fields(fields):
     def parse_group(g):
