@@ -31,4 +31,5 @@ pub fn parse_line(line: String) -> Vec<(i32, i32)> {
 fn intersection(s1: Windows<Segment>, s2: Windows<Segment>) -> bool {
     let is_horiztonal = |l| {l[0].0 == l[1].0};
     let is_vertical = |l| {l[0].1 == l[1].1};
+    false
 }

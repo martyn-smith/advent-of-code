@@ -37,7 +37,13 @@ fn enhanced_is_valid(i: usize) -> bool {
     adjacent && !decreasing && !larger_group
 }
 
-pub fn valid_passwords(low: usize, high: usize) -> usize {
+pub fn get_input() -> (usize, usize) {
+    (271973, 785961)
+}
+
+pub fn part_1(input: (usize, usize)) -> usize {
+    let low = input.0;
+    let high = input.1;
     (low..high).filter(|&i| is_valid(i)).count()
 }
 

@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::fs;
 
 fn add(intcodes: &mut Vec<usize>, pos: usize) {
     let (a_pos, b_pos, write_pos) = (intcodes[pos+1], intcodes[pos+2], intcodes[pos+3]);
@@ -19,7 +20,7 @@ fn prepro(intcodes: &mut Vec<usize>, noun: usize, verb: usize) {
     intcodes[2] = verb;
 }
 
-pub fn run_intcode(mut intcodes: Vec<usize>) -> Result<usize, usize> {
+fn run_intcode(mut intcodes: Vec<usize>) -> Result<usize, usize> {
     let mut i = 0usize;
     'a: loop {
        // println!("{}", intcodes[i]);
@@ -35,18 +36,19 @@ pub fn run_intcode(mut intcodes: Vec<usize>) -> Result<usize, usize> {
 }
 
 pub fn get_input() -> Vec<usize> {
-    let input = fs::read_to_string("../data/data/2.txt").unwrap();
+    let input = fs::read_to_string("../data/2.txt").unwrap();
     input.trim().split(',')
             .map(|l| l.parse::<usize>().unwrap())
             .collect::<Vec<usize>>()
 }
 
-pub fn part_1(mut program: Vec<usize>) -> Result<usize, usize> {
+pub fn part_1(program: &Vec<usize>) -> Result<usize, usize> {
+    let mut program = program.clone();
     prepro(&mut program, 12, 2);
     run_intcode(program)
 }
 
-pub fn part_2(program: Vec<usize>, target: usize) -> Option<usize> {
+pub fn part_2(program: &Vec<usize>, target: usize) -> Option<usize> {
     let range = (79..80).cartesian_product(12..13);
     for it in range {
         let mut candidate = program.clone();

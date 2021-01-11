@@ -1,4 +1,4 @@
-use std::io;
+use std::{io,fs};
 
 fn get_value(intcodes: &Vec<isize>, pos: usize, mode_arg: isize) -> isize {
     match mode_arg { //position mode
@@ -45,13 +45,13 @@ fn output(intcodes: &mut Vec<isize>, pos: usize) -> usize {
 }
 
 pub fn get_input() -> Vec<isize> {
-    let input = fs::read_to_string("../data/data/5.txt").unwrap();
+    let input = fs::read_to_string("../data/5.txt").unwrap();
     input.trim().split(',')
             .map(|l| l.parse::<isize>().unwrap())
             .collect::<Vec<isize>>()
 }
 
-pub fn run_intcode(mut intcodes: Vec<isize>) -> Result<isize, isize> {
+pub fn part_1(mut intcodes: Vec<isize>) -> Result<isize, isize> {
     let mut i = 0usize;
     'a: loop {
         println!("{}", intcodes[i]);
