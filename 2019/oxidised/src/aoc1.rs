@@ -16,20 +16,13 @@ fn get_recursive_fuel(module_mass: &usize) -> usize {
 
 pub fn get_input() -> Vec<usize> {
     let input = fs::read_to_string("../data/1.txt").unwrap();
-    input.lines()
-            .map(|l| l.parse::<usize>().unwrap())
-            .collect()
+    input.lines().map(|l| l.parse::<usize>().unwrap()).collect()
 }
 
 pub fn part_1(masses: &Vec<usize>) -> usize {
-    masses.iter()
-        .map(|i| get_fuel(i))
-        .sum()
+    masses.iter().map(|i| get_fuel(i)).sum()
 }
 
 pub fn part_2(masses: &Vec<usize>) -> usize {
-    masses.iter()
-        .map(|i| get_recursive_fuel(i))
-        .sum()
+    masses.iter().map(|i| get_recursive_fuel(i)).sum()
 }
-

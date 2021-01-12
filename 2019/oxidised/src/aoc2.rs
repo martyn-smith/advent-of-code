@@ -2,14 +2,14 @@ use itertools::Itertools;
 use std::fs;
 
 fn add(intcodes: &mut Vec<usize>, pos: usize) {
-    let (a_pos, b_pos, write_pos) = (intcodes[pos+1], intcodes[pos+2], intcodes[pos+3]);
+    let (a_pos, b_pos, write_pos) = (intcodes[pos + 1], intcodes[pos + 2], intcodes[pos + 3]);
     let a = intcodes[a_pos];
     let b = intcodes[b_pos];
     intcodes[write_pos] = a + b;
 }
 
 fn mult(intcodes: &mut Vec<usize>, pos: usize) {
-    let (a_pos, b_pos, write_pos) = (intcodes[pos+1], intcodes[pos+2], intcodes[pos+3]);
+    let (a_pos, b_pos, write_pos) = (intcodes[pos + 1], intcodes[pos + 2], intcodes[pos + 3]);
     let a = intcodes[a_pos];
     let b = intcodes[b_pos];
     intcodes[write_pos] = a * b;
@@ -23,12 +23,16 @@ fn prepro(intcodes: &mut Vec<usize>, noun: usize, verb: usize) {
 fn run_intcode(mut intcodes: Vec<usize>) -> Result<usize, usize> {
     let mut i = 0usize;
     'a: loop {
-       // println!("{}", intcodes[i]);
+        // println!("{}", intcodes[i]);
         match intcodes[i] {
             1 => add(&mut intcodes, i),
             2 => mult(&mut intcodes, i),
-            99 => {break 'a;},
-            _ => {return Err(0);}
+            99 => {
+                break 'a;
+            }
+            _ => {
+                return Err(0);
+            }
         }
         i += 4;
     }
@@ -37,9 +41,11 @@ fn run_intcode(mut intcodes: Vec<usize>) -> Result<usize, usize> {
 
 pub fn get_input() -> Vec<usize> {
     let input = fs::read_to_string("../data/2.txt").unwrap();
-    input.trim().split(',')
-            .map(|l| l.parse::<usize>().unwrap())
-            .collect::<Vec<usize>>()
+    input
+        .trim()
+        .split(',')
+        .map(|l| l.parse::<usize>().unwrap())
+        .collect::<Vec<usize>>()
 }
 
 pub fn part_1(program: &Vec<usize>) -> Result<usize, usize> {
@@ -48,7 +54,8 @@ pub fn part_1(program: &Vec<usize>) -> Result<usize, usize> {
     run_intcode(program)
 }
 
-pub fn part_2(program: &Vec<usize>, target: usize) -> Option<usize> {
+pub fn part_2(program: &Vec<usize>) -> Option<usize> {
+    let target = 19690720;
     let range = (79..80).cartesian_product(12..13);
     for it in range {
         let mut candidate = program.clone();
