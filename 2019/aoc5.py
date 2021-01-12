@@ -19,7 +19,7 @@ class Interpreter():
             4 : self.read,
             99 : self.terminate #ERROR: cannot self terminate
         }
-        with open("data/data/5.txt") as f:
+        with open("data/5.txt") as f:
             self.codes = [int(c) for c in f.read().strip("\n").split(",")]
         self.ctr = 0
         #self.test()

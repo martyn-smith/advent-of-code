@@ -16,7 +16,7 @@ def parse_locations(moves):
         path.append(next_location(path[-1], direction, magnitude))
     return path
 
-with open("data/data/3.txt") as f:
+with open("data/3.txt") as f:
     lines = f.readlines()
 wire_0, wire_1 = ([s.strip("\n") for s in lines[0].split(",")], 
                   [s.strip("\n") for s in lines[1].split(",")])
