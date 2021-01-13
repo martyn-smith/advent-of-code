@@ -72,9 +72,8 @@ fn jf(intcodes: &mut Vec<isize>, pos: usize) -> usize {
     }
 }
 
-// Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
-// Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
 fn lt(intcodes: &mut Vec<isize>, pos: usize) -> usize {
+    // Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
     let write_pos = intcodes[pos + 3] as usize;
     let mode_args = intcodes[pos] / 100;
     let a = get_value(&intcodes, pos + 1, mode_args % 10);
@@ -84,6 +83,7 @@ fn lt(intcodes: &mut Vec<isize>, pos: usize) -> usize {
 }
 
 fn eq(intcodes: &mut Vec<isize>, pos: usize) -> usize {
+    // Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
     let write_pos = intcodes[pos + 3] as usize;
     let mode_args = intcodes[pos] / 100;
     let a = get_value(&intcodes, pos + 1, mode_args % 10);
@@ -92,49 +92,14 @@ fn eq(intcodes: &mut Vec<isize>, pos: usize) -> usize {
     4
 }
 
-pub fn get_input() -> Vec<isize> {
-    let input = fs::read_to_string("../data/5.txt").unwrap();
-    input
-        .trim()
-        .split(',')
-        .map(|l| l.parse::<isize>().unwrap())
-        .collect::<Vec<isize>>()
-}
-
-pub fn part_1(intcodes: &Vec<isize>) -> Result<isize, isize> {
-    let mut intcodes = intcodes.clone();
+fn run_intcode(mut intcodes: Vec<isize>, system_id: &str) -> Result<Vec<isize>, isize> {
     let mut i = 0usize;
-    let system_id = "1";
     let mut outputs: Vec<isize> = vec![];
     'a: loop {
         let adv = match intcodes[i] % 100 {
             1 => add(&mut intcodes, i),
             2 => mult(&mut intcodes, i),
-            3 => input(&mut intcodes, i, &system_id),
-            4 => output(&mut intcodes, i, &mut outputs),
-            99 => {
-                break 'a;
-            }
-            _ => {
-                return Err(-1);
-            }
-        };
-        i += adv;
-    }
-    //TODO: assert outputs non-zero count is one
-    Ok(*outputs.iter().last().unwrap())
-}
-
-pub fn part_2(intcodes: &Vec<isize>) -> Result<isize, isize> {
-    let mut intcodes = intcodes.clone();
-    let mut i = 0usize;
-    let system_id = "5";
-    let mut outputs: Vec<isize> = vec![];
-    'a: loop {
-        let adv = match intcodes[i] % 100 {
-            1 => add(&mut intcodes, i),
-            2 => mult(&mut intcodes, i),
-            3 => input(&mut intcodes, i, &system_id),
+            3 => input(&mut intcodes, i, system_id),
             4 => output(&mut intcodes, i, &mut outputs),
             5 => jt(&mut intcodes, i),
             6 => jf(&mut intcodes, i),
@@ -149,6 +114,30 @@ pub fn part_2(intcodes: &Vec<isize>) -> Result<isize, isize> {
         };
         i += adv;
     }
-    //TODO: assert outputs non-zero count is one
+    Ok(outputs)
+}
+
+pub fn get_input() -> Vec<isize> {
+    let input = fs::read_to_string("../data/5.txt").unwrap();
+    input
+        .trim()
+        .split(',')
+        .map(|l| l.parse::<isize>().unwrap())
+        .collect::<Vec<isize>>()
+}
+
+pub fn part_1(intcodes: &Vec<isize>) -> Result<isize, isize> {
+    let mut intcodes = intcodes.clone();
+    let outputs = run_intcode(intcodes, "1").unwrap();
+    assert!(outputs.iter().filter(|&&i| i != 0).count() <= 1, 
+            "ERROR: intcode returned too many non-zero status codes");
+    Ok(*outputs.iter().last().unwrap())
+}
+
+pub fn part_2(intcodes: &Vec<isize>) -> Result<isize, isize> {
+    let mut intcodes = intcodes.clone();
+    let outputs = run_intcode(intcodes, "5").unwrap();
+    assert!(outputs.iter().filter(|&&i| i != 0).count() <= 1, 
+           "ERROR: intcode returned too many non-zero status codes");
     Ok(*outputs.iter().last().unwrap())
 }

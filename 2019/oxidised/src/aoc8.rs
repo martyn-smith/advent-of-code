@@ -1,5 +1,13 @@
 use std::fs;
 
+struct Layer {
+    data: Vec<Vec<usize>>
+}
+
+struct Image {
+    data: Vec<Layer>
+}
+
 pub fn get_input() -> Vec<Vec<usize>> {
     let width = 25;
     let height = 6;
