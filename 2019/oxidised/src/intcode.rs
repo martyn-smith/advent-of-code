@@ -23,15 +23,13 @@ impl Intcode {
         4
     }
 
-    fn input(&mut self, input: &str) -> usize {
+    fn input(&mut self, input: &mut Vec<isize>) -> usize {
         let write_pos = self.intcodes[self.ptr + 1] as usize;
-        // let mut input = String::new();
-        // io::stdin().read_line(&mut input).unwrap();
-        let write_val = input.trim().parse::<isize>().unwrap();
+        let write_val = input.pop().unwrap();
         self.intcodes[write_pos] = write_val;
         2
     }
-    
+
     fn output(&self, outputs: &mut Vec<isize>) -> usize {
         let mode_arg = self.intcodes[self.ptr] / 100;
         let read_pos = self.get_value(self.ptr + 1, mode_arg);
@@ -104,13 +102,13 @@ impl Intcode {
         }
     }
 
-    pub fn run(&mut self, system_id: &str) -> Result<Vec<isize>, isize> {
+    pub fn run(&mut self, mut inputs: Vec<isize>) -> Result<Vec<isize>, isize> {
         let mut outputs: Vec<isize> = vec![];
         'a: loop {
             let adv = match self.intcodes[self.ptr] % 100 {
                 1 => self.add(),
                 2 => self.mult(),
-                3 => self.input(system_id),
+                3 => self.input(&mut inputs),
                 4 => self.output(&mut outputs),
                 5 => self.jt(),
                 6 => self.jf(),

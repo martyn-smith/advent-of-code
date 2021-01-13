@@ -42,6 +42,11 @@ fn test_day_6() {
 }
 
 #[test]
+fn test_day_7() {
+    let input = aoc7::get_input();
+    assert_eq!(22012, aoc7::part_1(&input));
+}
+#[test]
 fn test_day_8() {
     let input = aoc8::get_input();
     assert_eq!(1905, aoc8::part_1(&input));
