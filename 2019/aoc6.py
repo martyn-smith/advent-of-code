@@ -1,4 +1,4 @@
-def check_orbits():
+def part_1():
     """
     Identifies the total number of orbits (direct and indirect) specified in a 
     text file with the following spec:
@@ -9,9 +9,9 @@ def check_orbits():
 
     where "PLAN" is the planet and "SAT" the satellite.
     """
-    num_orbits = 0
     with open("data/6.txt") as f:
         orbits = [line.strip("\n").split(")") for line in f.readlines()]
+    num_orbits = 0
     while len(orbits):
         num_orbits += len(orbits)
         new_orbits = []
@@ -24,6 +24,5 @@ def check_orbits():
         orbits = new_orbits
     return num_orbits
 
-
 if __name__ == "__main__":
-    print(check_orbits())
+    print(part_1())

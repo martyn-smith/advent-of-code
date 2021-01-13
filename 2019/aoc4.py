@@ -1,7 +1,7 @@
 INPUT_LOW = 271973
 INPUT_HIGH = 785961
 
-def find_candidates(start = INPUT_LOW, stop = INPUT_HIGH):
+def part_1(start = INPUT_LOW, stop = INPUT_HIGH):
     candidates = []
     for candidate in range(start, stop):
         adjacent, increasing = False, True
@@ -18,4 +18,4 @@ def find_candidates(start = INPUT_LOW, stop = INPUT_HIGH):
     return len(candidates)
 
 if __name__ == "__main__":
-    print(find_candidates())
+    print(part_1())
