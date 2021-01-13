@@ -43,7 +43,7 @@ fn test_day_6() {
 
 #[test]
 fn test_day_8() {
-    let mut input = aoc8::get_input();
-    assert_eq!(1905, aoc8::part_1(&mut input));
+    let input = aoc8::get_input();
+    assert_eq!(1905, aoc8::part_1(&input));
 }
 

@@ -15,13 +15,17 @@ pub fn get_input() -> Vec<Vec<usize>> {
         .collect()
 }
 
-pub fn part_1(input: &mut Vec<Vec<usize>>) -> usize {
+pub fn part_1(input: &Vec<Vec<usize>>) -> usize {
+    let mut input = input.clone();
     input.sort_by(|a, b| {
         a.iter()
             .filter(|&&i| i == 0)
             .count()
             .cmp(&b.iter().filter(|&&i| i == 0).count())
     });
-    println!("{:?}", input[0]);
     input[0].iter().filter(|&&i| i == 1).count() * input[0].iter().filter(|&&i| i == 2).count()
+}
+
+pub fn part_2(input: &Vec<Vec<usize>>) {
+
 }
