@@ -1,11 +1,11 @@
 use std::fs;
 
 struct Layer {
-    data: Vec<Vec<usize>>
+    data: Vec<Vec<usize>>,
 }
 
 struct Image {
-    data: Vec<Layer>
+    data: Vec<Layer>,
 }
 
 pub fn get_input() -> Vec<Vec<usize>> {
@@ -34,6 +34,4 @@ pub fn part_1(input: &Vec<Vec<usize>>) -> usize {
     input[0].iter().filter(|&&i| i == 1).count() * input[0].iter().filter(|&&i| i == 2).count()
 }
 
-pub fn part_2(input: &Vec<Vec<usize>>) {
-
-}
+pub fn part_2(input: &Vec<Vec<usize>>) {}

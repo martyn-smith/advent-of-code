@@ -1,10 +1,9 @@
 pub struct Intcode {
     intcodes: Vec<isize>,
-    ptr: usize
+    ptr: usize,
 }
 
 impl Intcode {
-
     fn add(&mut self) -> usize {
         let write_pos = self.intcodes[self.ptr + 3] as usize;
         let mode_args = self.intcodes[self.ptr] / 100;
@@ -98,7 +97,7 @@ impl Intcode {
     pub fn new(intcodes: &Vec<isize>) -> Self {
         Intcode {
             intcodes: intcodes.clone(),
-            ptr: 0
+            ptr: 0,
         }
     }
 
