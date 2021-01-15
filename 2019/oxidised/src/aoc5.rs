@@ -27,7 +27,7 @@ pub fn part_2(intcodes: &Vec<isize>) -> Result<isize, isize> {
     let mut computer = Intcode::new(intcodes);
     let system_id = 5isize;
     let inputs = vec![system_id];
-    let mut outputs = computer.run(inputs).unwrap();
+    let outputs = computer.run(inputs).unwrap();
     assert!(
         outputs.iter().filter(|&&i| i != 0).count() <= 1,
         "ERROR: intcode returned too many non-zero status codes"

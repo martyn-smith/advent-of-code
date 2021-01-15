@@ -1,5 +1,15 @@
 use std::fs;
 
+pub fn get_input() -> Vec<Vec<String>> {
+    let input = fs::read_to_string("../data/6.txt").unwrap();
+    //map into pairs
+    input
+        .lines()
+        .map(|l| l.split(')').map(|s| s.to_string()).collect())
+        .collect()
+}
+
+
 pub fn part_1(orbits: &Vec<Vec<String>>) -> usize {
     //
     // Identifies the total number of orbits (direct and indirect) specified in a
@@ -28,13 +38,4 @@ pub fn part_1(orbits: &Vec<Vec<String>>) -> usize {
         orbits = new_orbits
     }
     num_orbits
-}
-
-pub fn get_input() -> Vec<Vec<String>> {
-    let input = fs::read_to_string("../data/6.txt").unwrap();
-    //map into pairs
-    input
-        .lines()
-        .map(|l| l.split(')').map(|s| s.to_string()).collect())
-        .collect()
 }
