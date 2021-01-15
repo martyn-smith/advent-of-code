@@ -17,9 +17,8 @@ fn test_day_2() {
 #[test]
 fn test_day_3() {
     let input = aoc3::get_input();
-    //assert_eq!(399, aoc3::part_1(&input));
-    //<48402
-    assert_eq!(610, aoc3::part_2(&input));
+    assert_eq!(399, aoc3::part_1(&input));
+    assert_eq!(15678, aoc3::part_2(&input));
 }
 
 #[test]

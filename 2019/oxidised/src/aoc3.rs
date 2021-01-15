@@ -23,16 +23,17 @@ impl Point {
         Point {
             x,
             y,
-            l: l + x.abs() as usize + y.abs() as usize,
+            l
         }
     }
 }
 
 impl Intersection {
     fn new(p: Point, p1: &Point, p2: &Point) -> Self {
+        //println!("{:?} {} {}", p, p1.l, p2.l);
         Intersection {
             r: p.x.abs() as usize + p.y.abs() as usize,
-            t: p.l,
+            t: p1.l + p2.l + (p.x - p1.x).abs() as usize + (p.y - p1.y).abs() as usize + (p.x - p2.x).abs() as usize + (p.y - p2.y).abs() as usize,
         }
     }
 }
@@ -93,7 +94,7 @@ fn get_wire(line: &str) -> Vec<Point> {
             }
         };
         let last = &wire[wire.len() - 1];
-        let pos = Point::new(last.x + vec.0, last.y + vec.1, last.l);
+        let pos = Point::new(last.x + vec.0, last.y + vec.1, last.l + mag as usize);
         wire.push(pos);
     }
     wire
