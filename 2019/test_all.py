@@ -9,6 +9,10 @@ def test_day_2():
     assert 3409710 == aoc2.part_1()
     assert 7912 == aoc2.part_2()
 
+def test_day_3():
+    import aoc3
+    assert 399 == aoc3.part_1()
+
 def test_day_4():
     import aoc4
     assert 925 == aoc4.part_1()

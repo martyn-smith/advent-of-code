@@ -14,13 +14,13 @@ fn test_day_2() {
     assert_eq!(7912, aoc2::part_2(&input).unwrap());
 }
 
-//     #[test]
-//     fn test_day_3() {
-//         // let input = fs::read_to_string("../data/data/3.txt").unwrap();
-//         // let entries = aoc3::parse_line(input.lines().nth(0).unwrap().to_string());
-//         // println!("{:?}", entries);
-//         // assert!(false);
-//     }
+#[test]
+fn test_day_3() {
+    let input = aoc3::get_input();
+    assert_eq!(399, aoc3::part_1(&input));
+    //48402
+    assert_eq!(48402, aoc3::part_2(&input));
+}
 
 #[test]
 fn test_day_4() {

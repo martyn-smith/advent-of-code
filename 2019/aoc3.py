@@ -1,4 +1,4 @@
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 def parse_locations(moves):
     def next_location(prev_location, direction, magnitude):
@@ -18,21 +18,17 @@ def parse_locations(moves):
 
 with open("data/3.txt") as f:
     lines = f.readlines()
-wire_0, wire_1 = ([s.strip("\n") for s in lines[0].split(",")], 
+    wire_0, wire_1 = ([s.strip("\n") for s in lines[0].split(",")], 
                   [s.strip("\n") for s in lines[1].split(",")])
-wire_0, wire_1 = parse_locations(wire_0)[1:], parse_locations(wire_1)[1:]
+    wire_0, wire_1 = parse_locations(wire_0)[1:], parse_locations(wire_1)[1:]
+    wire_0.insert(0, [0,0])
+    wire_1.insert(0, [0,0])
 
-def intersection(point_0, point_1):
-    point_0, point_1 = list(point_0), list(point_1)
-    if point_0[0][0] == point_0[1][0]:
-        pass
-    elif point_0[0][1] == point_0[1][1]:
-        pass
-
-for point in wire_1:
-    if point in wire_0:
-        
-
+#wire 0 going down
+plt.plot([w[0] for w in wire_0], [w[1] for w in wire_0], label="wire 0")
+plt.plot([w[0] for w in wire_1], [w[1] for w in wire_1], label="wire 1")
+plt.legend()
+plt.show()
 
 
 
