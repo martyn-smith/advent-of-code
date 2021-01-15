@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs;
 
 pub fn get_input() -> Vec<Vec<String>> {
@@ -8,7 +9,6 @@ pub fn get_input() -> Vec<Vec<String>> {
         .map(|l| l.split(')').map(|s| s.to_string()).collect())
         .collect()
 }
-
 
 pub fn part_1(orbits: &Vec<Vec<String>>) -> usize {
     //
@@ -38,4 +38,10 @@ pub fn part_1(orbits: &Vec<Vec<String>>) -> usize {
         orbits = new_orbits
     }
     num_orbits
+}
+
+pub fn part_2(orbits: &Vec<Vec<String>>) -> usize {
+    //let mut you = HashMap::new("YOU".to_string(), orbits[orbits.index("YOU".to_string())][1]);
+    //let mut san = HashMap::new("SAN".to_string(), orbits[orbits.index("SAN".to_string())][1]);
+    0
 }
