@@ -20,11 +20,7 @@ pub struct Point {
 
 impl Point {
     fn new(x: i32, y: i32, l: usize) -> Self {
-        Point {
-            x,
-            y,
-            l
-        }
+        Point { x, y, l }
     }
 }
 
@@ -33,7 +29,12 @@ impl Intersection {
         //println!("{:?} {} {}", p, p1.l, p2.l);
         Intersection {
             r: p.x.abs() as usize + p.y.abs() as usize,
-            t: p1.l + p2.l + (p.x - p1.x).abs() as usize + (p.y - p1.y).abs() as usize + (p.x - p2.x).abs() as usize + (p.y - p2.y).abs() as usize,
+            t: p1.l
+                + p2.l
+                + (p.x - p1.x).abs() as usize
+                + (p.y - p1.y).abs() as usize
+                + (p.x - p2.x).abs() as usize
+                + (p.y - p2.y).abs() as usize,
         }
     }
 }
@@ -48,30 +49,30 @@ fn direction(p: &(Point, Point)) -> Direction {
     }
 }
 
-fn is_intersection(p1: &(Point, Point), p2: &(Point, Point)) -> Option<Intersection> {
-    match (direction(&p1), direction(&p2)) {
+fn get_intersection(a: &(Point, Point), b: &(Point, Point)) -> Option<Intersection> {
+    match (direction(&a), direction(&b)) {
         (Direction::Horizontal, Direction::Vertical) => {
-            if ((p1.0.x < p2.0.x && p2.0.x < p1.1.x) || (p1.1.x < p2.0.x && p2.0.x < p1.0.x))
-                && ((p2.0.y < p1.0.y && p1.0.y < p2.1.y) || (p2.1.y < p1.0.y && p1.0.y < p2.0.y))
+            if ((a.0.x < b.0.x && b.0.x < a.1.x) || (a.1.x < b.0.x && b.0.x < a.0.x))
+                && ((b.0.y < a.0.y && a.0.y < b.1.y) || (b.1.y < a.0.y && a.0.y < b.0.y))
             {
-                Some(Intersection::new(Point::new(
-                    p2.0.x,
-                    p1.0.y,
-                    p1.0.l + p2.0.l,
-                ), &p1.0, &p2.0))
+                Some(Intersection::new(
+                    Point::new(b.0.x, a.0.y, a.0.l + b.0.l),
+                    &a.0,
+                    &b.0,
+                ))
             } else {
                 None
             }
         }
         (Direction::Vertical, Direction::Horizontal) => {
-            if ((p1.0.y < p2.0.y && p2.0.y < p1.1.y) || (p1.1.y < p2.0.y && p2.0.y < p1.0.y))
-                && ((p2.0.x < p1.0.x && p1.0.x < p2.1.x) || (p2.1.x < p1.0.x && p1.0.x < p2.0.x))
+            if ((a.0.y < b.0.y && b.0.y < a.1.y) || (a.1.y < b.0.y && b.0.y < a.0.y))
+                && ((b.0.x < a.0.x && a.0.x < b.1.x) || (b.1.x < a.0.x && a.0.x < b.0.x))
             {
-                Some(Intersection::new(Point::new(
-                    p1.0.x,
-                    p2.0.y,
-                    p1.0.l + p2.0.l,
-                ), &p1.0, &p2.0))
+                Some(Intersection::new(
+                    Point::new(a.0.x, b.0.y, a.0.l + b.0.l),
+                    &a.0,
+                    &b.0,
+                ))
             } else {
                 None
             }
@@ -114,8 +115,8 @@ pub fn part_1(input: &(Vec<Point>, Vec<Point>)) -> usize {
         .0
         .windows(2)
         .cartesian_product(input.1.windows(2))
-        .filter_map(|(trace_1, trace_2)| {
-            is_intersection(&(trace_1[0], trace_1[1]), &(trace_2[0], trace_2[1]))
+        .filter_map(|(wire_1, wire_2)| {
+            get_intersection(&(wire_1[0], wire_1[1]), &(wire_2[0], wire_2[1]))
         })
         .map(|p| p.r)
         .min()
@@ -127,8 +128,8 @@ pub fn part_2(input: &(Vec<Point>, Vec<Point>)) -> usize {
         .0
         .windows(2)
         .cartesian_product(input.1.windows(2))
-        .filter_map(|(trace_1, trace_2)| {
-            is_intersection(&(trace_1[0], trace_1[1]), &(trace_2[0], trace_2[1]))
+        .filter_map(|(wire_1, wire_2)| {
+            get_intersection(&(wire_1[0], wire_1[1]), &(wire_2[0], wire_2[1]))
         })
         .map(|p| p.t)
         .min()

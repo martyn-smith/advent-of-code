@@ -7,12 +7,12 @@ fn is_valid(num: usize) -> bool {
         .collect::<Vec<i32>>();
     let (mut adjacent, mut decreasing) = (false, false);
     'a: for d in digits.windows(2) {
-        match (d[0] - d[1]).signum() {
-            1 => {
+        match (d[1] - d[0]).signum() {
+            1 => {}
+            -1 => {
                 decreasing = true;
                 break 'a;
             }
-            -1 => {}
             0 => {
                 adjacent = true;
             }
@@ -24,38 +24,55 @@ fn is_valid(num: usize) -> bool {
     adjacent && !decreasing
 }
 
-enum Reader {
-    new,
-}
-
 fn enhanced_is_valid(i: usize) -> bool {
     let digits = i
         .to_string()
         .chars()
-        .map(|d| d.to_digit(10).unwrap() as usize)
-        .collect::<Vec<usize>>();
-    let (mut adjacent, mut decreasing, mut larger_group) = (false, false, false);
-    let mut r = Reader::new;
-    for d in digits {
+        .map(|d| d.to_digit(10).unwrap() as i32)
+        .collect::<Vec<i32>>();
+    let (mut adjacent, mut decreasing) = (false, false);
+    let mut r = vec![0i32];
+    'a: for d in digits {
         // implement a state machine
-        // match r {
-        //     // new => r = Reader::nondecreasing();
-        //     // nondecreasing =>
-        // }
+        match (d - r.last().unwrap()).signum() {
+            1 => {
+                if r.len() == 2 {
+                    //println!("midway run for {}: {:?}", i, r);
+                    adjacent = true;
+                }
+                r = vec![d];
+            }
+            -1 => {
+                decreasing = true;
+                break 'a;
+            }
+            0 => {
+                r.push(d);
+            }
+            _ => {
+                panic!();
+            }
+        }
     }
-    adjacent && !decreasing && !larger_group
+    if r.len() == 2 {
+        //println!("end run for {}: {:?}", i, r);
+        adjacent = true;
+    }
+    adjacent && !decreasing
 }
 
 pub fn get_input() -> (usize, usize) {
     (271973, 785961)
 }
 
-pub fn part_1(input: (usize, usize)) -> usize {
+pub fn part_1(input: &(usize, usize)) -> usize {
     let low = input.0;
     let high = input.1;
     (low..high).filter(|&i| is_valid(i)).count()
 }
 
-pub fn enhanced_valid_passwords(low: usize, high: usize) -> usize {
+pub fn part_2(input: &(usize, usize)) -> usize {
+    let low = input.0;
+    let high = input.1;
     (low..high).filter(|&i| enhanced_is_valid(i)).count()
 }
