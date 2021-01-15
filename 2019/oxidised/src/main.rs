@@ -19,4 +19,5 @@ fn main() {
     //let opt = Opt::from_args();
     let input = aoc3::get_input();
     println!("{}", aoc3::part_1(&input));
+    println!("{}", aoc3::part_2(&input));
 }
