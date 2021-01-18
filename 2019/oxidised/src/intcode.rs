@@ -1,5 +1,5 @@
 pub struct Intcode {
-    intcodes: Vec<isize>,
+    pub intcodes: Vec<isize>,
     ptr: usize,
 }
 
