@@ -7,7 +7,7 @@ fn prepro(intcodes: &mut Vec<isize>, noun: isize, verb: isize) {
     intcodes[2] = verb;
 }
 
-fn run_intcode(mut intcodes: Vec<isize>) -> Result<usize, usize> {
+fn run_intcode(intcodes: Vec<isize>) -> Result<usize, usize> {
     let mut computer = Intcode::new(&intcodes);
     let inputs: Vec<isize> = vec![];
     let _ = computer.run(inputs).unwrap();

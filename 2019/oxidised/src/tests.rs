@@ -45,8 +45,7 @@ fn test_day_6() {
 fn test_day_7() {
     let input = aoc7::get_input();
     assert_eq!(22012, aoc7::part_1(&input));
-    // too high
-    // assert_eq!(1219070632396864, aoc7::part_2(&input));
+    assert_eq!(4039164, aoc7::part_2(&input));
 }
 #[test]
 fn test_day_8() {

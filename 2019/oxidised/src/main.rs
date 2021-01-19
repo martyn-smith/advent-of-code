@@ -7,7 +7,7 @@ mod intcode;
 // mod aoc6;
 // mod aoc2;
 // mod aoc7;
- mod aoc9;
+// mod aoc9;
 
 // use structopt::StructOpt;
 
@@ -18,9 +18,5 @@ mod intcode;
 // }
 
 fn main() {
-    //let opt = Opt::from_args();
-    // let input = aoc7::get_input();
-    // println!("{}", aoc7::part_2(&input));
-    let input = aoc9::get_input();
-    println!("{:?}", aoc9::part_2(&input));
+
 }

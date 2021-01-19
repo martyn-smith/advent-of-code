@@ -1,7 +1,13 @@
 pub struct Intcode {
     pub intcodes: Vec<isize>,
     ptr: usize,
-    base: isize
+    base: isize,
+}
+
+enum State {
+    Continue(usize),
+    Pause(usize),
+    Halt,
 }
 
 impl Intcode {
@@ -77,7 +83,6 @@ impl Intcode {
 
     fn lt(&mut self) -> usize {
         // Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
-        let write_pos = self.intcodes[self.ptr + 3] as usize;
         let mode_args = self.intcodes[self.ptr] / 100;
         let a = self.get_value(self.ptr + 1, mode_args % 10);
         let b = self.get_value(self.ptr + 2, (mode_args / 10) % 10);
@@ -112,32 +117,28 @@ impl Intcode {
     fn get_value(&self, pos: usize, mode_arg: isize) -> isize {
         let ptr = match mode_arg {
             //position mode
-            0 => {
-                self.intcodes[pos] as usize
-            },
+            0 => self.intcodes[pos] as usize,
             //immediate mode
             1 => pos,
             //relative mode
-            2 => {
-                (self.base + self.intcodes[pos]) as usize
-            },
+            2 => (self.base + self.intcodes[pos]) as usize,
             _ => {
                 panic!();
             }
         };
-        if ptr < self.intcodes.len() {self.intcodes[ptr]} else {0} 
+        if ptr < self.intcodes.len() {
+            self.intcodes[ptr]
+        } else {
+            0
+        }
     }
 
     fn get_pointer(&self, pos: usize, mode_arg: isize) -> isize {
         match mode_arg {
             //position mode
-            0 => {
-                self.intcodes[pos]
-            },
+            0 => self.intcodes[pos],
             //relative mode
-            2 => {
-                (self.base + self.intcodes[pos])
-            },
+            2 => self.base + self.intcodes[pos],
             _ => {
                 panic!();
             }
@@ -148,7 +149,7 @@ impl Intcode {
         Intcode {
             intcodes: intcodes.clone(),
             ptr: 0,
-            base: 0
+            base: 0,
         }
     }
 
@@ -177,5 +178,33 @@ impl Intcode {
             self.ptr += adv;
         }
         Ok(outputs)
+    }
+
+    pub fn step(&mut self, mut inputs: Vec<isize>) -> Option<isize> {
+        let mut outputs: Vec<isize> = vec![];
+        loop {
+            //dbg!(self.ptr, self.intcodes[self.ptr] % 100);
+            let adv = match self.intcodes[self.ptr] % 100 {
+                1 => self.add(),
+                2 => self.mult(),
+                3 => self.input(&mut inputs),
+                4 => {
+                    self.ptr += self.output(&mut outputs);
+                    return Some(*outputs.last().unwrap());
+                }
+                5 => self.jt(),
+                6 => self.jf(),
+                7 => self.lt(),
+                8 => self.eq(),
+                9 => self.rb(),
+                99 => {
+                    return None;
+                }
+                _ => {
+                    panic!("invalid opcode at {}", self.ptr);
+                }
+            };
+            self.ptr += adv;
+        }
     }
 }
