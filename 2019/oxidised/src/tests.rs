@@ -45,11 +45,18 @@ fn test_day_6() {
 fn test_day_7() {
     let input = aoc7::get_input();
     assert_eq!(22012, aoc7::part_1(&input));
-    //too high
-   // assert_eq!(1219070632396864, aoc7::part_2(&input));
+    // too high
+    // assert_eq!(1219070632396864, aoc7::part_2(&input));
 }
 #[test]
 fn test_day_8() {
     let input = aoc8::get_input();
     assert_eq!(1905, aoc8::part_1(&input));
+}
+
+#[test]
+fn test_day_9() {
+    let input = aoc9::get_input();
+    assert_eq!(2752191671, aoc9::part_1(&input));
+    assert_eq!(87571, aoc9::part_2(&input));
 }

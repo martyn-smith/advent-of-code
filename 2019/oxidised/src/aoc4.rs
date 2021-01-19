@@ -37,7 +37,6 @@ fn enhanced_is_valid(i: usize) -> bool {
         match (d - r.last().unwrap()).signum() {
             1 => {
                 if r.len() == 2 {
-                    //println!("midway run for {}: {:?}", i, r);
                     adjacent = true;
                 }
                 r = vec![d];
@@ -55,7 +54,6 @@ fn enhanced_is_valid(i: usize) -> bool {
         }
     }
     if r.len() == 2 {
-        //println!("end run for {}: {:?}", i, r);
         adjacent = true;
     }
     adjacent && !decreasing
