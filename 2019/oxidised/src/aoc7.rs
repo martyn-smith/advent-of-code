@@ -95,9 +95,6 @@ pub fn part_1(intcodes: &Vec<isize>) -> usize {
 pub fn part_2(intcodes: &Vec<isize>) -> usize {
     let amp_count = 5;
     let offset = 5;
-    let test = vec![9, 8, 7, 6, 5];
-    let mut a = AmpChain::new(intcodes, test);
-    println!("{}", a.run_closed());
     (offset..amp_count + offset)
         .permutations(amp_count)
         .map(|phases| {

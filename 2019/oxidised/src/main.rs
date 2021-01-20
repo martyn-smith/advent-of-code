@@ -8,6 +8,7 @@ mod intcode;
 // mod aoc2;
 // mod aoc7;
 // mod aoc9;
+// mod aoc13;
 
 // use structopt::StructOpt;
 
