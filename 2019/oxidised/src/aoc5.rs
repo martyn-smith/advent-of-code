@@ -15,7 +15,6 @@ pub fn part_1(intcodes: &Vec<isize>) -> Result<isize, isize> {
     let system_id = 1isize;
     let inputs = vec![system_id];
     let outputs = computer.run(inputs).unwrap();
-    //let outputs = run_intcode(intcodes, "1").unwrap();
     assert!(
         outputs.iter().filter(|&&i| i != 0).count() <= 1,
         "ERROR: intcode returned too many non-zero status codes"

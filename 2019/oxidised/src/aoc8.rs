@@ -1,11 +1,11 @@
 use std::fs;
+//use ndarray::{Array, arr2};
+
+// Create a table of i × j (with i and j from 1 to 3)
+//let layer = Array::from_shape_vec((width, height), input);
 
 struct Layer {
     data: Vec<Vec<usize>>,
-}
-
-struct Image {
-    data: Vec<Layer>,
 }
 
 pub fn get_input() -> Vec<Vec<usize>> {
