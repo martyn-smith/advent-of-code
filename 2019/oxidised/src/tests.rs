@@ -10,8 +10,8 @@ fn test_day_1() {
 #[test]
 fn test_day_2() {
     let input = aoc2::get_input();
-    assert_eq!(3409710, aoc2::part_1(&input).unwrap());
-    assert_eq!(7912, aoc2::part_2(&input).unwrap());
+    assert_eq!(3409710, aoc2::part_1(&input));
+    assert_eq!(7912, aoc2::part_2(&input));
 }
 
 #[test]
@@ -31,14 +31,15 @@ fn test_day_4() {
 #[test]
 fn test_day_5() {
     let input = aoc5::get_input();
-    assert_eq!(13294380, aoc5::part_1(&input).unwrap());
-    assert_eq!(11460760, aoc5::part_2(&input).unwrap());
+    assert_eq!(13294380, aoc5::part_1(&input));
+    assert_eq!(11460760, aoc5::part_2(&input));
 }
 
 #[test]
 fn test_day_6() {
     let input = aoc6::get_input();
     assert_eq!(249308, aoc6::part_1(&input));
+    assert_eq!(349, aoc6::part_2(&input));
 }
 
 #[test]

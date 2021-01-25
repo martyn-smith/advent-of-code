@@ -1,5 +1,5 @@
 fn is_valid(num: usize) -> bool {
-    //todo: very slow, probably due to this initial collection. Consider ways to avoid.
+    //TODO: slow in debug mode, probably due to this initial collection. Consider ways to avoid.
     let digits = num
         .to_string()
         .chars()

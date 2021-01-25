@@ -10,7 +10,7 @@ pub fn get_input() -> Vec<isize> {
         .collect::<Vec<isize>>()
 }
 
-pub fn part_1(intcodes: &Vec<isize>) -> Result<isize, isize> {
+pub fn part_1(intcodes: &Vec<isize>) -> usize {
     let mut computer = Intcode::new(intcodes);
     let system_id = 1isize;
     let inputs = vec![system_id];
@@ -19,10 +19,10 @@ pub fn part_1(intcodes: &Vec<isize>) -> Result<isize, isize> {
         outputs.iter().filter(|&&i| i != 0).count() <= 1,
         "ERROR: intcode returned too many non-zero status codes"
     );
-    Ok(*outputs.last().unwrap())
+    *outputs.last().unwrap() as usize
 }
 
-pub fn part_2(intcodes: &Vec<isize>) -> Result<isize, isize> {
+pub fn part_2(intcodes: &Vec<isize>) -> usize {
     let mut computer = Intcode::new(intcodes);
     let system_id = 5isize;
     let inputs = vec![system_id];
@@ -31,5 +31,5 @@ pub fn part_2(intcodes: &Vec<isize>) -> Result<isize, isize> {
         outputs.iter().filter(|&&i| i != 0).count() <= 1,
         "ERROR: intcode returned too many non-zero status codes"
     );
-    Ok(*outputs.last().unwrap())
+    *outputs.last().unwrap() as usize
 }

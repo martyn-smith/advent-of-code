@@ -7,11 +7,11 @@ fn prepro(intcodes: &mut Vec<isize>, noun: isize, verb: isize) {
     intcodes[2] = verb;
 }
 
-fn run_intcode(intcodes: Vec<isize>) -> Result<usize, usize> {
+fn run_intcode(intcodes: Vec<isize>) -> usize {
     let mut computer = Intcode::new(&intcodes);
     let inputs: Vec<isize> = vec![];
     let _ = computer.run(inputs).unwrap();
-    Ok(computer.intcodes[0] as usize)
+    computer.intcodes[0] as usize
 }
 
 pub fn get_input() -> Vec<isize> {
@@ -23,23 +23,21 @@ pub fn get_input() -> Vec<isize> {
         .collect::<Vec<isize>>()
 }
 
-pub fn part_1(program: &Vec<isize>) -> Result<usize, usize> {
+pub fn part_1(program: &Vec<isize>) -> usize {
     let mut program = program.clone();
     prepro(&mut program, 12, 2);
     run_intcode(program)
 }
 
-pub fn part_2(program: &Vec<isize>) -> Option<usize> {
+pub fn part_2(program: &Vec<isize>) -> usize {
     let target = 19690720;
-    let range = (79..80).cartesian_product(12..13);
+    let range = (0..100).permutations(2);
     for it in range {
         let mut candidate = program.clone();
-        prepro(&mut candidate, 79, 12);
-        if let Ok(r) = run_intcode(candidate) {
-            if r == target {
-                return Some(it.0 * 100 + it.1);
-            }
+        prepro(&mut candidate, it[0], it[1]);
+        if run_intcode(candidate) == target {
+            return (it[0] * 100 + it[1]) as usize;
         }
     }
-    None
+    panic!("no solution found!");
 }

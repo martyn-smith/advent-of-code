@@ -1,4 +1,6 @@
 use itertools::Itertools;
+use num::integer::lcm;
+use std::collections::HashSet;
 
 #[derive(Debug, Clone)]
 pub struct Moon {
@@ -8,6 +10,9 @@ pub struct Moon {
     v_x: isize,
     v_y: isize,
     v_z: isize,
+    h_x: HashSet<(isize, isize)>,
+    h_y: HashSet<(isize, isize)>,
+    h_z: HashSet<(isize, isize)>,
 }
 
 impl Moon {
@@ -19,6 +24,9 @@ impl Moon {
             v_x: 0,
             v_y: 0,
             v_z: 0,
+            h_x: HashSet::new(),
+            h_y: HashSet::new(),
+            h_z: HashSet::new(),
         }
     }
 
@@ -70,4 +78,40 @@ pub fn part_1(input: &Vec<Moon>) -> usize {
         }
     }
     moons.iter().map(|m| m.e()).sum()
+}
+
+pub fn part_2(input: &Vec<Moon>) -> usize {
+    let mut moons: Vec<Moon> = input.clone();
+    let mut ctr = 0;
+    let mut period: [Option<usize>; 3] = [None; 3];
+    loop {
+        for i in (0..moons.len()).permutations(2) {
+            let m = moons[i[1]].clone();
+            moons[i[0]].gravity(&m);
+        }
+        for m in &mut moons {
+            m.velocity();
+        }
+        if moons.iter_mut().all(|m| !m.h_x.insert((m.x, m.v_x))) {
+            println!("found x at {}", ctr);
+            period[0] = Some(ctr);
+        }
+        if moons.iter_mut().all(|m| !m.h_y.insert((m.y, m.v_y))) {
+            println!("found y at {}", ctr);
+            period[1] = Some(ctr);
+        }
+        if moons.iter_mut().all(|m| !m.h_z.insert((m.z, m.v_z))) {
+            println!("found z at {}", ctr);
+            period[2] = Some(ctr);
+        }
+        if let [Some(_), Some(_), Some(_)] = period {
+            break;
+        }
+        if ctr % 100_0 == 0 {
+            println!("{}", ctr);
+        }
+        ctr += 1;
+    }
+    println!("{:?}", period);
+    period.iter().fold(1, |acc, x| lcm(acc, x.unwrap()))
 }

@@ -1,4 +1,4 @@
-mod intcode;
+// mod intcode;
 // mod aoc1;
 // mod aoc2;
 // mod aoc3;
@@ -7,6 +7,7 @@ mod intcode;
 // mod aoc6;
 // mod aoc2;
 // mod aoc7;
+mod aoc8;
 // mod aoc9;
 // mod aoc12;
 // mod aoc13;
@@ -20,5 +21,6 @@ mod intcode;
 // }
 
 fn main() {
-
+    let input = aoc8::get_input();
+    println!("{}", aoc8::part_2(&input));
 }
