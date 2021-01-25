@@ -22,5 +22,5 @@ mod aoc8;
 
 fn main() {
     let input = aoc8::get_input();
-    println!("{}", aoc8::part_2(&input));
+    aoc8::part_2(&input);
 }
