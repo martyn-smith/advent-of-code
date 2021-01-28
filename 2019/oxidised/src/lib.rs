@@ -1,6 +1,7 @@
 mod intcode;
 
 mod aoc1;
+mod aoc11;
 mod aoc12;
 mod aoc13;
 mod aoc2;

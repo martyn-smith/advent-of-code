@@ -5,7 +5,11 @@ use std::fs;
 
 fn add_layers(a: &Array2<usize>, b: &Array2<usize>) -> Array2<usize> {
     let mut out = b.clone();
-    out.zip_mut_with(a, |l2, l1| if *l2 == 2 {*l2 = *l1;} );
+    out.zip_mut_with(a, |l2, l1| {
+        if *l2 == 2 {
+            *l2 = *l1;
+        }
+    });
     out
 }
 
@@ -42,7 +46,9 @@ pub fn part_2(input: &Vec<Array2<usize>>) {
     let output = input
         .iter()
         .rev()
-        .fold(Array2::<usize>::zeros(input[0].raw_dim()), |acc, x| add_layers(&acc, x));
+        .fold(Array2::<usize>::zeros(input[0].raw_dim()), |acc, x| {
+            add_layers(&acc, x)
+        });
     // let printable =  output.rows()
     //     .map(|x| if x == 1 {'*'} else {' '}).collect().collect()
     // ;
