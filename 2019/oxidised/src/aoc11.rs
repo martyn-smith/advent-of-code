@@ -37,9 +37,9 @@ struct Robot {
 }
 
 impl Robot {
-    fn new(intcodes: &Vec<isize>) -> Self {
+    fn new(computer: &Intcode) -> Self {
         Robot {
-            computer: Intcode::new(intcodes),
+            computer: computer.clone(),
             position: (0, 0),
             direction: Direction::North,
         }
@@ -102,27 +102,22 @@ impl Robot {
     }
 }
 
-pub fn get_input() -> Vec<isize> {
-    let input = fs::read_to_string("../data/11.txt").unwrap();
-    input
-        .trim()
-        .split(',')
-        .map(|l| l.parse::<isize>().unwrap())
-        .collect::<Vec<isize>>()
+pub fn get_input() -> Intcode {
+    Intcode::load("../data/11.txt").unwrap()
 }
 
-pub fn part_1(input: &Vec<isize>) -> usize {
+pub fn part_1(input: &Intcode) -> usize {
     let mut robot = Robot::new(input);
     let mut hull = HashMap::new();
-    while let Some(p) = robot.step(&mut hull) {}
+    while let Some(_) = robot.step(&mut hull) {}
     hull.len()
 }
 
-pub fn part_2(input: &Vec<isize>) -> usize {
+pub fn part_2(input: &Intcode) -> usize {
     let mut robot = Robot::new(input);
     let mut hull = HashMap::new();
     hull.insert((0, 0), true);
-    while let Some(p) = robot.step(&mut hull) {}
+    while let Some(_) = robot.step(&mut hull) {}
     println!("{:?}", hull);
     0
 }

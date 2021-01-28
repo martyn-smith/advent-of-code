@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 mod intcode;
 // mod aoc1;
 // mod aoc2;
@@ -25,5 +26,6 @@ mod aoc11;
 fn main() {
     //1489 < x < 6015
     let input = aoc11::get_input();
+    println!("{}", aoc11::part_1(&input));
     aoc11::part_2(&input);
 }

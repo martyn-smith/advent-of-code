@@ -1,17 +1,11 @@
 use super::intcode::Intcode;
-use std::fs;
 
-pub fn get_input() -> Vec<isize> {
-    let input = fs::read_to_string("../data/9.txt").unwrap();
-    input
-        .trim()
-        .split(',')
-        .map(|l| l.parse::<isize>().unwrap())
-        .collect::<Vec<isize>>()
+pub fn get_input() -> Intcode {
+    Intcode::load("../data/9.txt").unwrap()
 }
 
-pub fn part_1(intcodes: &Vec<isize>) -> usize {
-    let mut computer = Intcode::new(intcodes);
+pub fn part_1(computer: &Intcode) -> usize {
+    let mut computer = computer.clone();
     let inputs = vec![1isize];
     let outputs = computer.run(inputs).unwrap();
     assert!(
@@ -21,8 +15,8 @@ pub fn part_1(intcodes: &Vec<isize>) -> usize {
     *outputs.last().unwrap() as usize
 }
 
-pub fn part_2(intcodes: &Vec<isize>) -> usize {
-    let mut computer = Intcode::new(intcodes);
+pub fn part_2(computer: &Intcode) -> usize {
+    let mut computer = computer.clone();
     let inputs = vec![2isize];
     let outputs = computer.run(inputs).unwrap();
     assert!(

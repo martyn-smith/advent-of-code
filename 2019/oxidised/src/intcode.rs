@@ -1,3 +1,6 @@
+use std::fs;
+
+#[derive(Clone)]
 pub struct Intcode {
     pub intcodes: Vec<isize>,
     ptr: usize,
@@ -151,6 +154,19 @@ impl Intcode {
             ptr: 0,
             base: 0,
         }
+    }
+
+    pub fn load(filename: &str) -> Result<Self, Box<dyn std::error::Error + 'static>> {
+        let intcodes = fs::read_to_string(filename)?
+            .trim()
+            .split(',')
+            .map(|l| l.parse::<isize>().unwrap())
+            .collect::<Vec<isize>>();
+        Ok(Intcode {
+            intcodes: intcodes,
+            ptr: 0,
+            base: 0,
+        })
     }
 
     pub fn run(&mut self, mut inputs: Vec<isize>) -> Result<Vec<isize>, isize> {
