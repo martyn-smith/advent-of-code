@@ -52,7 +52,7 @@ impl AmpChain {
             .fold(input, |output, amp| amp.run(output))
     }
 
-    fn run_closed(&mut self) -> usize {
+    fn run_closed(&mut self) -> Option<isize> {
         let mut output: Option<isize> = Some(0);
         loop {
             if let Some(o) = self.run_open(output) {
@@ -61,7 +61,7 @@ impl AmpChain {
                 break;
             }
         }
-        output.unwrap() as usize
+        output
     }
 }
 
@@ -88,7 +88,7 @@ pub fn part_2(intcodes: &Intcode) -> usize {
         .permutations(amp_count)
         .map(|phases| {
             let mut a = AmpChain::new(intcodes, phases);
-            a.run_closed() as usize
+            a.run_closed().unwrap() as usize
         })
         .max()
         .unwrap()
