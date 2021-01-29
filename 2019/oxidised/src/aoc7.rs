@@ -21,18 +21,14 @@ impl Amplifier {
     }
 
     fn run(&mut self, input: Option<isize>) -> Option<isize> {
-        if let Some(input) = input {
-            let inputs = match self.first_run {
-                true => {
-                    self.first_run = false;
-                    vec![input, self.phase as isize]
-                }
-                false => vec![input],
-            };
-            self.computer.step(inputs)
-        } else {
-            None
-        }
+        let inputs = match self.first_run {
+            true => {
+                self.first_run = false;
+                vec![input?, self.phase as isize]
+            }
+            false => vec![input?],
+        };
+        self.computer.step(inputs)
     }
 }
 
