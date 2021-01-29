@@ -1,6 +1,5 @@
 use super::intcode::Intcode;
 use itertools::Itertools;
-use std::fs;
 
 struct Amplifier {
     phase: usize,
@@ -13,10 +12,10 @@ struct AmpChain {
 }
 
 impl Amplifier {
-    fn new(intcodes: &Vec<isize>, phase: usize) -> Self {
+    fn new(intcodes: &Intcode, phase: usize) -> Self {
         Amplifier {
             phase: phase,
-            computer: Intcode::new(intcodes),
+            computer: intcodes.clone(),
             first_run: true,
         }
     }
@@ -38,7 +37,7 @@ impl Amplifier {
 }
 
 impl AmpChain {
-    fn new(intcodes: &Vec<isize>, phases: Vec<usize>) -> Self {
+    fn new(intcodes: &Intcode, phases: Vec<usize>) -> Self {
         AmpChain {
             amps: phases
                 .iter()
@@ -47,20 +46,16 @@ impl AmpChain {
         }
     }
 
-    fn run_open(&mut self) -> usize {
+    fn run_open(&mut self, input: Option<isize>) -> Option<isize> {
         self.amps
             .iter_mut()
-            .fold(Some(0), |output, amp| amp.run(output))
-            .unwrap() as usize
+            .fold(input, |output, amp| amp.run(output))
     }
 
     fn run_closed(&mut self) -> usize {
         let mut output: Option<isize> = Some(0);
         loop {
-            if let Some(o) = self
-                .amps
-                .iter_mut()
-                .fold(output, |output, amp| amp.run(output))
+            if let Some(o) = self.run_open(output)
             {
                 output = Some(o);
             } else {
@@ -71,35 +66,30 @@ impl AmpChain {
     }
 }
 
-pub fn get_input() -> Vec<isize> {
-    let input = fs::read_to_string("../data/7.txt").unwrap();
-    input
-        .trim()
-        .split(',')
-        .map(|l| l.parse::<isize>().unwrap())
-        .collect::<Vec<isize>>()
+pub fn get_input() -> Intcode {
+    Intcode::load("../data/7.txt").unwrap()
 }
 
-pub fn part_1(intcodes: &Vec<isize>) -> usize {
+pub fn part_1(intcodes: &Intcode) -> usize {
     let amp_count = 5;
     (0..amp_count)
         .permutations(amp_count)
         .map(|phases| {
             let mut a = AmpChain::new(intcodes, phases);
-            a.run_open()
+            a.run_open(Some(0)).unwrap() as usize
         })
         .max()
         .unwrap()
 }
 
-pub fn part_2(intcodes: &Vec<isize>) -> usize {
+pub fn part_2(intcodes: &Intcode) -> usize {
     let amp_count = 5;
     let offset = 5;
     (offset..amp_count + offset)
         .permutations(amp_count)
         .map(|phases| {
             let mut a = AmpChain::new(intcodes, phases);
-            a.run_closed()
+            a.run_closed() as usize
         })
         .max()
         .unwrap()

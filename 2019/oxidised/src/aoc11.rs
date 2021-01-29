@@ -1,6 +1,5 @@
 use super::intcode::Intcode;
 use std::collections::HashMap;
-use std::fs;
 
 #[derive(Debug, Copy, Clone)]
 enum Direction {
