@@ -11,7 +11,7 @@ mod intcode;
 // mod aoc8;
 // mod aoc9;
 // mod aoc10;
-mod aoc11;
+// mod aoc11;
 // mod aoc12;
 // mod aoc13;
 
@@ -24,8 +24,5 @@ mod aoc11;
 // }
 
 fn main() {
-    //1489 < x < 6015
-    let input = aoc11::get_input();
-    println!("{}", aoc11::part_1(&input));
-    aoc11::part_2(&input);
+    
 }

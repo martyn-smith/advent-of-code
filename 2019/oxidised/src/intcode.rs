@@ -14,7 +14,6 @@ enum State {
 }
 
 impl Intcode {
-    //
     fn add(&mut self) -> usize {
         let mode_args = self.intcodes[self.ptr] / 100;
         let a = self.get_value(self.ptr + 1, mode_args % 10);
@@ -174,24 +173,26 @@ impl Intcode {
         'a: loop {
             //dbg!(self.ptr, self.intcodes[self.ptr] % 100);
             let adv = match self.intcodes[self.ptr] % 100 {
-                1 => self.add(),
-                2 => self.mult(),
-                3 => self.input(&mut inputs),
-                4 => self.output(&mut outputs),
-                5 => self.jt(),
-                6 => self.jf(),
-                7 => self.lt(),
-                8 => self.eq(),
-                9 => self.rb(),
-                99 => {
-                    break 'a;
-                }
+                1 => State::Continue(self.add()),
+                2 => State::Continue(self.mult()),
+                3 => State::Continue(self.input(&mut inputs)),
+                4 => State::Continue(self.output(&mut outputs)),
+                5 => State::Continue(self.jt()),
+                6 => State::Continue(self.jf()),
+                7 => State::Continue(self.lt()),
+                8 => State::Continue(self.eq()),
+                9 => State::Continue(self.rb()),
+                99 => State::Halt,
                 _ => {
                     println!("invalid opcode at {}", self.ptr);
                     return Err(-1);
                 }
             };
-            self.ptr += adv;
+            if let State::Continue(i) = adv {
+                self.ptr += i;
+            } else {
+                break 'a;
+            }
         }
         Ok(outputs)
     }
@@ -201,26 +202,32 @@ impl Intcode {
         loop {
             //dbg!(self.ptr, self.intcodes[self.ptr] % 100);
             let adv = match self.intcodes[self.ptr] % 100 {
-                1 => self.add(),
-                2 => self.mult(),
-                3 => self.input(&mut inputs),
-                4 => {
-                    self.ptr += self.output(&mut outputs);
-                    return Some(*outputs.last().unwrap());
-                }
-                5 => self.jt(),
-                6 => self.jf(),
-                7 => self.lt(),
-                8 => self.eq(),
-                9 => self.rb(),
-                99 => {
-                    return None;
-                }
+                1 => State::Continue(self.add()),
+                2 => State::Continue(self.mult()),
+                3 => State::Continue(self.input(&mut inputs)),
+                4 => State::Pause(self.output(&mut outputs)),
+                5 => State::Continue(self.jt()),
+                6 => State::Continue(self.jf()),
+                7 => State::Continue(self.lt()),
+                8 => State::Continue(self.eq()),
+                9 => State::Continue(self.rb()),
+                99 => State::Halt,
                 _ => {
                     panic!("invalid opcode at {}", self.ptr);
                 }
             };
-            self.ptr += adv;
+            match adv {
+                State::Continue(i) => {
+                    self.ptr += i;
+                }
+                State::Pause(i) => {
+                    self.ptr += i;
+                    return Some(*outputs.last().unwrap());
+                }
+                State::Halt => {
+                    return None;
+                }
+            }
         }
     }
 }

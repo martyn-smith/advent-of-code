@@ -25,9 +25,9 @@ impl Amplifier {
             let inputs = match self.first_run {
                 true => {
                     self.first_run = false;
-                    vec![input as isize, self.phase as isize]
+                    vec![input, self.phase as isize]
                 }
-                false => vec![input as isize],
+                false => vec![input],
             };
             self.computer.step(inputs)
         } else {
@@ -55,8 +55,7 @@ impl AmpChain {
     fn run_closed(&mut self) -> usize {
         let mut output: Option<isize> = Some(0);
         loop {
-            if let Some(o) = self.run_open(output)
-            {
+            if let Some(o) = self.run_open(output) {
                 output = Some(o);
             } else {
                 break;
