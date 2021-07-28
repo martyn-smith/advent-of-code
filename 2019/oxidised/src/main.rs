@@ -1,5 +1,5 @@
 #[allow(dead_code)]
-mod intcode;
+// mod intcode;
 // mod aoc1;
 // mod aoc2;
 // mod aoc3;
@@ -14,7 +14,7 @@ mod intcode;
 // mod aoc11;
 // mod aoc12;
 // mod aoc13;
-// mod aoc14;
+mod aoc14;
 
 // use structopt::StructOpt;
 
@@ -25,6 +25,6 @@ mod intcode;
 // }
 
 fn main() {
-    // let input = aoc14::get_input();
-    // aoc14::part_1(&input);
+    let input = aoc14::get_input();
+    println!("{}", aoc14::part_1(&input));
 }
