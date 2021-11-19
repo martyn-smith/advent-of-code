@@ -55,12 +55,6 @@ pub fn get_input() -> Vec<Moon> {
         Moon::new(6, -2, -6),
         Moon::new(19, 11, 9),
     ]
-    // vec![
-    //     Moon::new(-1, 0, 2),
-    //     Moon::new(2, -10, -7),
-    //     Moon::new(4, -8, 8),
-    //     Moon::new(3, 5, -1),
-    // ]
 }
 
 pub fn part_1(input: &Vec<Moon>) -> usize {
