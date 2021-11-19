@@ -3,20 +3,34 @@ use super::*;
 #[test]
 fn test_day_1() {
     let input = aoc1::get_input();
-    assert_eq!(aoc1::part_1(&input), 280);
-    assert_eq!(aoc1::part_2(&input), 1797);
+    assert_eq!(280, aoc1::part_1(&input));
+    assert_eq!(1797, aoc1::part_2(&input));
 }
 
 #[test]
 fn test_day_2() {
     let input = aoc2::get_input();
-    assert_eq!(aoc2::part_1(&input), 1598415);
-    assert_eq!(aoc2::part_2(&input), 3812909);
+    assert_eq!(1598415, aoc2::part_1(&input));
+    assert_eq!(3812909, aoc2::part_2(&input));
 }
 
 #[test]
 fn test_day_3() {
     let input = aoc3::get_input();
-    assert_eq!(aoc3::part_1(&input), 2572);
-    assert_eq!(aoc3::part_2(&input), 2631);
+    assert_eq!(2572, aoc3::part_1(&input));
+    assert_eq!(2631, aoc3::part_2(&input));
+}
+/*
+#[test]
+fn test_day_4() {
+    let input = aoc4::get_input();
+    assert_eq!(346386, aoc4::part_1(&input));
+    assert_eq!(9958218, aoc4::part_2(&input));
+}
+*/
+#[test]
+fn test_day_6() {
+    let input = aoc6::get_input();
+    assert_eq!(569999, aoc6::part_1(&input));
+    assert_eq!(17836115, aoc6::part_2(&input));
 }
