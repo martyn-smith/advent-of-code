@@ -7,12 +7,12 @@ pub fn get_input() -> &'static str {
 pub fn part_1(prefix: &str) -> usize {
     let mut n = 0usize;
     loop {
-        let cand = prefix.to_owned() + &n.to_string();
-        let hash = Md5::digest(cand.as_bytes());
+        let cand = format!("{}{}", prefix, n);
+        let hash = format!("{:x}", Md5::digest(cand.as_bytes()));
         // if n % 10_000 == 0 {
-        //     println!("trying {:?}", hash);
+        //     println!("trying {} = {}", cand, hash);
         // }
-        if hash[0..5] == b"00000"[0..5] {
+        if hash[0..5] == "00000"[0..5] {
             break;
         }
         n += 1;
@@ -23,12 +23,12 @@ pub fn part_1(prefix: &str) -> usize {
 pub fn part_2(prefix: &str) -> usize {
     let mut n = 0usize;
     loop {
-        let cand = prefix.to_owned() + &n.to_string();
-        let hash = Md5::digest(cand.as_bytes());
+        let cand = format!("{}{}", prefix, n);
+        let hash = format!("{:x}", Md5::digest(cand.as_bytes()));
         // if n % 10_000 == 0 {
-        //     println!("trying {:?}", hash);
+        //     println!("trying {} = {}", cand, hash);
         // }
-        if hash[0..6] == b"000000"[0..6] {
+        if hash[0..6] == "000000"[0..6] {
             break;
         }
         n += 1;
