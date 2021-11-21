@@ -1,3 +1,4 @@
+use anyhow::Result;
 use std::fs;
 
 #[derive(Clone)]
@@ -155,7 +156,7 @@ impl Intcode {
         }
     }
 
-    pub fn load(filename: &str) -> Result<Self, Box<dyn std::error::Error + 'static>> {
+    pub fn load(filename: &str) -> Result<Self> {
         let intcodes = fs::read_to_string(filename)?
             .trim()
             .split(',')
