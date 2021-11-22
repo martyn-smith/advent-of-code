@@ -2,153 +2,211 @@ use anyhow::{anyhow, Result};
 use std::collections::HashMap;
 use std::fs;
 
-#[derive(Clone, Debug)]
-pub enum Op{
-    AND(String, String),
-    OR(String, String),
-    NOT(String),
-    LSHIFT(String, String),
-    RSHIFT(String, String),
-    NULL(String),
-    //technically not necessary, but saves time
-    VAL(u16)
+#[derive(Clone,Debug)]
+pub enum MaybeInt {
+    solved(u16),
+    unsolved(String)
 }
 
-fn is_solved(x: String, gates: &HashMap<String, Op>) -> Option<u16> {
-    if let Ok(x) = u16::from_str_radix(a, 10) {
-        Some(x)
-    } else {
-        if let Op::Val(x) = gates.get(x).expect("not a number or key!") {
-            Some(x)
+impl MaybeInt {
+    fn new(left: &str) -> Self {
+        if let Ok(x) = u16::from_str_radix(left, 10) {
+            Self::solved(x)
         } else {
-            None
+            Self::unsolved(left.to_string())
         }
     }
 }
 
-fn solve(gates: &mut HashMap<String, Op>, id: &str) -> Result<()> {
-    //try to parse the operand as a value. If it succeeds, do no more;
-    //otherwise, solve the subtree and retry
-    //println!("solving {}", id);
-    let to_solve = match gates.get(id).ok_or(anyhow!("no key"))? {
-        Op::VAL(_) => {
-            vec![]
-        },
-        Op::NULL(s) | Op::NOT(s) => {
-            if let None = is_solved(s, gates) {
-                vec![s.to_string()]
-            } else {
-                vec![]
-            }
-        },
-        Op::AND(a, b) | Op::OR(a, b) | Op::LSHIFT(a, b) | Op::RSHIFT(a, b) => {
-            match (is_solved(a, gates), is_solved(b, gates)) {
-                (None, None) => {
-                    vec![a.to_string(), b.to_string()]
-                },
-                (None, Some(_)) => {
-                    vec![b.to_string()]
-                },
-                (Some(_), None) => {
-                    vec![a.to_string()]
-                },
-                (Some(_), Some(_)) => {
-                    vec![]
-                },
-            }
-        }
-    };
-    for s in to_solve.iter() {
-        solve(gates, &s[..]);
-    }
-    let g = gates.get_mut(id).ok_or(anyhow!("no key"))?;
-    match g {
-        Op::VAL(_) => {
-            Ok(())
-        },
-        Op::NULL(s) => {
-            let s = gates.get(id);
-            *g = Op::VAL(s);
-            Ok(())
-        },
-        Op::RSHIFT(a, b) => {
-            let a = u16::from_str_radix(a, 10)?;
-            let b = u16::from_str_radix(b, 10)?;
-            *g = Op::VAL(a >> b);
-            Ok(())
-        }
-        Op::LSHIFT(a, b) => {
-            let a = u16::from_str_radix(a, 10)?;
-            let b = u16::from_str_radix(b, 10)?;
-            *g = Op::VAL(a << b);
-            Ok(())
-        }
-        Op::AND(a, b) => {
-            let a = u16::from_str_radix(a, 10)?;
-            let b = u16::from_str_radix(b, 10)?;
-            *g = Op::VAL(a & b);
-            Ok(())
-        }
-        Op::OR(a, b) => {
-            let a = u16::from_str_radix(a, 10)?;
-            let b = u16::from_str_radix(b, 10)?;
-            *g = Op::VAL(a | b);
-            Ok(())
-        }
-        Op::NOT(s) => {
-            let s = u16::from_str_radix(s, 10)?;
-            *g = Op::VAL(!s);
-            Ok(())
-        }
-    }
+#[derive(Debug)]
+enum OpCodes{
+    AND,
+    OR,
+    NOT,
+    LSHIFT,
+    RSHIFT,
+    ASSIGN,
 }
 
-fn get_operation(left: &str) -> Op {
-    if left.contains("NOT") {
-        let operands = left.split("NOT ").collect::<Vec<&str>>();
-        Op::NOT(operands[1].to_string())
-    }
-    else if left.contains("AND") {
-        let operands = left.split(" AND ").collect::<Vec<&str>>();
-        Op::AND(operands[0].to_string(), operands[1].to_string())
-    }
-    else if left.contains("OR") {
-        let operands = left.split(" OR ").collect::<Vec<&str>>();
-        Op::OR(operands[0].to_string(), operands[1].to_string())
-    }
-    else if left.contains("LSHIFT") {
-        let operands = left.split(" LSHIFT ").collect::<Vec<&str>>();
-        Op::LSHIFT(operands[0].to_string(), operands[1].to_string())
-    }
-    else if left.contains("RSHIFT") {
-        let operands = left.split(" RSHIFT ").collect::<Vec<&str>>();
-        Op::RSHIFT(operands[0].to_string(), operands[1].to_string())
-    }
-    else if let Ok(signal) = u16::from_str_radix(left, 10) {
-        Op::VAL(signal)
+#[derive(Debug)]
+struct Op {
+    op : OpCodes,
+    val : Vec<u16>
+}
+
+fn get_u16(gates: &HashMap<String, MaybeInt>, operand: &str) -> u16 {
+    if let Ok(v) = u16::from_str_radix(operand, 10) {
+        v
+    } else if let Some(MaybeInt::solved(v)) = gates.get(operand) {
+        *v
     } else {
-        Op::NULL(left.to_string())
-
+        panic!()
     }
 }
 
-pub fn get_input() -> HashMap<String, Op> {
+impl Op {
+    fn new(gates: &HashMap<String, MaybeInt>, left: &MaybeInt) -> Self {
+        match left {
+            MaybeInt::solved(v) => {
+            //I don't think we should ever be here...
+                Self {
+                    op: OpCodes::ASSIGN,
+                    val: vec![*v]
+                }
+            },
+            MaybeInt::unsolved(lhs) => {
+                if lhs.contains("NOT") {
+                    let operands = lhs.split("NOT ").collect::<Vec<&str>>();
+                    Self {
+                        op: OpCodes::NOT,
+                        val: vec![get_u16(gates, operands[1])]
+                    }
+                }
+                else if lhs.contains("AND") {
+                    let operands = lhs.split(" AND ").collect::<Vec<&str>>();
+                    Self {
+                        op: OpCodes::AND,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                    }
+                }
+                else if lhs.contains("OR") {
+                    let operands = lhs.split(" OR ").collect::<Vec<&str>>();
+                    Self {
+                        op: OpCodes::OR,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                    }
+                }
+                else if lhs.contains("LSHIFT") {
+                    let operands = lhs.split(" LSHIFT ").collect::<Vec<&str>>();
+                    Self {
+                        op: OpCodes::LSHIFT,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                    }
+                }
+                else if lhs.contains("RSHIFT") {
+                    let operands = lhs.split(" RSHIFT ").collect::<Vec<&str>>();
+                    Self {
+                        op: OpCodes::RSHIFT,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                    }
+                } else {
+                    Self {
+                        op: OpCodes::ASSIGN,
+                        val: vec![get_u16(gates, lhs)]
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+fn collect_unsolved(query: & str) -> Vec<& str> {
+    if query.contains("NOT") {
+        query.split("NOT ").skip(1).filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
+    }
+    else if query.contains("AND") {
+        query.split(" AND ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
+    }
+    else if query.contains("OR") {
+        query.split(" OR ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
+    }
+    else if query.contains("LSHIFT") {
+        query.split(" LSHIFT ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
+    }
+    else if query.contains("RSHIFT") {
+        query.split(" RSHIFT ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
+    } else {
+        if let Err(_) = u16::from_str_radix(query, 10) {
+            vec![query]
+        } else {
+            vec![]
+        }
+    }
+}
+
+fn solve(gates: &mut HashMap<String, MaybeInt>, id: &str) -> Result<()> {
+    //query the hashmap (defensively, we'll be mutating later)
+    let v = gates.get(id).expect(id).clone();
+    match v {
+        MaybeInt::solved(u) => {
+            Ok(())
+        },
+        //entire query as string
+        MaybeInt::unsolved(query) => {
+            //collect unsolved into vectors
+            let to_solve = collect_unsolved(&query[..]);
+            for s in to_solve.iter() {
+                solve(gates, s);
+            }
+
+            //at this point, queries should be solved (but not parsed)
+            //so we can rebuild the query, DEFINITELY getting integers
+            let v = gates.get(id).expect(id).clone();
+            let op = Op::new(gates, &v);
+            let v = match op.op {
+                OpCodes::ASSIGN => {
+
+                    MaybeInt::solved(op.val[0])
+                },
+                OpCodes::RSHIFT => {
+                    MaybeInt::solved(op.val[0] >> op.val[1])
+                }
+                OpCodes::LSHIFT => {
+                    MaybeInt::solved(op.val[0] << op.val[1])
+                }
+                OpCodes::AND => {
+                    MaybeInt::solved(op.val[0] & op.val[1])
+                }
+                OpCodes::OR => {
+                    MaybeInt::solved(op.val[0] | op.val[1])
+                }
+                OpCodes::NOT => {
+                    MaybeInt::solved(!op.val[0])
+                }
+            };
+            let g = gates.get_mut(id).unwrap();
+            *g = v;
+
+            Ok(())
+        }
+    }
+}
+
+pub fn get_input() -> HashMap<String, MaybeInt> {
     let lines = fs::read_to_string("../data/7.txt").unwrap();
     let mut gates = HashMap::new();
     for l in lines.lines() {
         let cmd = l.split(" -> ").collect::<Vec<&str>>();
-        let (left, id) = (cmd[0], cmd[1]);
-        let inputs = get_operation(left);
-        gates.insert(id.to_string(), inputs);
+        let (lhs, id) = (cmd[0], cmd[1]);
+        let mint = MaybeInt::new(lhs);
+        gates.insert(id.to_string(), mint);
     }
     gates
 }
 
-pub fn part_1(gates: &HashMap<String, Op>) -> u16 {
-    let mut g = gates.clone();
-    solve(&mut g, "a").unwrap();
+pub fn part_1(gates: &HashMap<String, MaybeInt>) -> u16 {
+    let mut gates = gates.clone();
+    solve(&mut gates, "a");
     match gates.get("a").unwrap() {
-        Op::VAL(x) => *x,
-        _ => panic!("unable to solve")
+        MaybeInt::solved(x) => *x,
+        MaybeInt::unsolved(y) => panic!("unable to solve") 
     }
 }
+
+pub fn part_2(gates: &HashMap<String, MaybeInt>) -> u16 {
+    let mut first = gates.clone();
+    let mut second = gates.clone();
+    solve(&mut first, "a");
+    let a = first.get("a").unwrap();
+    let b = second.get_mut("b").unwrap();
+    if let MaybeInt::solved(v) = a {
+        *b = MaybeInt::solved(*v);
+    }
+    solve(&mut second, "a");
+    match second.get("a").unwrap() {
+        MaybeInt::solved(v) => *v,
+        MaybeInt::unsolved(_) => panic!("unable to solve") 
+    }
+}
+
