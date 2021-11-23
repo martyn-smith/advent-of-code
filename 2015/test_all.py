@@ -1,4 +1,3 @@
-
 def test_day_5():
     import aoc5
     assert aoc5.part_1() == 258
@@ -17,3 +16,8 @@ def test_day_9():
     import aoc9
     assert aoc9.part_1() == 251
     assert aoc9.part_2() == 898
+
+def test_day_12():
+    import aoc12
+    assert aoc12.part_1() == 156366
+    assert aoc12.part_2() == 96852
