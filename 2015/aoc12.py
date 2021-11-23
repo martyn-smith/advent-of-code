@@ -16,23 +16,10 @@ def find_nums(items, no_red = False):
     else:
         return 0
 
-def filter_red(items):
-    if type(items) == dict:
-        try:
-            items.pop("red")
-            for item in items.values():
-                filter_red(item)
-        except KeyError:
-            pass
-    elif type(items) == list:
-        for item in items:
-            filter_red(item)
-
 def part_1():
     return find_nums(items)
 
 def part_2():
-    filter_red(items)
     return find_nums(items, True)
 
 if __name__ == "__main__":
