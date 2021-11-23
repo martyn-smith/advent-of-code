@@ -1,7 +1,7 @@
 use std::fs;
 
 fn get_fuel(module_mass: &usize) -> usize {
-    (module_mass / 3).checked_sub(2).unwrap_or(0)
+    (module_mass / 3).saturating_sub(2)
 }
 
 fn get_recursive_fuel(module_mass: &usize) -> usize {
