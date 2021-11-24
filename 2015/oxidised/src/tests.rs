@@ -49,4 +49,11 @@ fn test_day_10() {
     assert_eq!(6989950, aoc10::part_2(&input));
 }
 
+#[test]
+fn test_day_11() {
+    let input = aoc11::get_input();
+    assert_eq!("cqjxxyzz", &aoc11::part_1(&input));
+    assert_eq!("cqkaabcc", &aoc11::part_2(&input));
+}
+
 
