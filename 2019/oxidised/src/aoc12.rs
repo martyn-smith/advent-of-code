@@ -74,7 +74,7 @@ pub fn part_1(input: &Vec<Moon>) -> usize {
     }
     moons.iter().map(|m| m.e()).sum()
 }
-//503560201099704
+
 pub fn part_2(input: &Vec<Moon>) -> usize {
     let mut moons: Vec<Moon> = input.clone();
     let mut ctr = 0;
@@ -92,21 +92,20 @@ pub fn part_2(input: &Vec<Moon>) -> usize {
         for m in &mut moons {
             m.velocity();
         }
-        //186028
         let x = moons.iter().map(|m| (m.x, m.v_x)).collect::<Vec<_>>();
         let y = moons.iter().map(|m| (m.y, m.v_y)).collect::<Vec<_>>();
         let z = moons.iter().map(|m| (m.z, m.v_z)).collect::<Vec<_>>();
-        if let None = period[0] { 
+        if let None = period[0] {
             if !x_history.insert(x) {
                 period[0] = Some(ctr);
             }
         }
-        if let None = period[1] { 
+        if let None = period[1] {
             if !y_history.insert(y) {
                 period[1] = Some(ctr);
             }
         }
-        if let None = period[2] { 
+        if let None = period[2] {
             if !z_history.insert(z) {
                 period[2] = Some(ctr);
             }
@@ -119,7 +118,5 @@ pub fn part_2(input: &Vec<Moon>) -> usize {
         }
         ctr += 1;
     }
-    println!("{:?}", period);
-    //period[0].unwrap()
     period.iter().fold(1, |acc, x| lcm(acc, x.unwrap()))
 }
