@@ -6,6 +6,7 @@ mod aoc6;
 mod aoc7;
 mod aoc10;
 mod aoc11;
+mod aoc14;
 
 #[cfg(test)]
 mod tests;
