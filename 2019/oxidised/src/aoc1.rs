@@ -15,7 +15,7 @@ fn get_recursive_fuel(module_mass: &usize) -> usize {
 }
 
 pub fn get_input() -> Vec<usize> {
-    let input = fs::read_to_string("../data/1.txt").unwrap();
+    let input = include_str!("../../data/1.txt");
     input.lines().map(|l| l.parse::<usize>().unwrap()).collect()
 }
 

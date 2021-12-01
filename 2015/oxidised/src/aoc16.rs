@@ -1,7 +1,6 @@
 use anyhow::Result;
 use std::collections::HashMap;
 use std::fs;
-use std::cmp::min;
 use regex::{Captures, Regex};
 
 #[derive(Debug, Clone)]
@@ -10,17 +9,21 @@ pub struct Sue {
     attrs: HashMap<String, usize>
 }
 
-const attrs: [& 'static str; 10] = ["children", "cats", "samoyeds", "pomeranians", "akitas", "vizslas",
+const ATTRS: [& 'static str; 10] = ["children", "cats", "samoyeds", "pomeranians", "akitas", "vizslas",
                                    "goldfish", "trees", "cars", "perfumes"];
 
-const refsue: & 'static str = "Sue 0: children: 3, cats: 7, samoyeds: 2, pomeranians: 3, akitas: 0, vizslas: 0, goldfish: 5, trees: 3, cars: 2, perfumes: 1";
+const GT_ATTRS: [& 'static str; 2] = ["cats", "trees"];
+
+const LT_ATTRS: [& 'static str; 2] = ["pomeranians", "goldfish"];
+
+const REFSUE: & 'static str = "Sue 0: children: 3, cats: 7, samoyeds: 2, pomeranians: 3, akitas: 0, vizslas: 0, goldfish: 5, trees: 3, cars: 2, perfumes: 1";
 
 impl Sue {
     fn new(description: &str) -> Self {
         let idx_srch = &description[4..description.find(":").unwrap()];
         let id = usize::from_str_radix(idx_srch, 10).unwrap();
         let mut s_attrs = HashMap::new();
-        for a in attrs {
+        for a in ATTRS {
             if let Some(idx) = description.find(a) {
                 let start = description[idx..].find(":").unwrap() + idx + 2;
                 let end = match description[idx..].find(",") {
@@ -70,14 +73,14 @@ impl Sue {
 }
 
 pub fn get_input() -> Vec<Sue> {
-    let input = fs::read_to_string("../data/16.txt").unwrap();
+    let input = include_str!("../../data/16.txt");
     input.lines()
          .map(|l| Sue::new(l))
          .collect()
 }
 
 pub fn part_1(input: &Vec<Sue>) -> usize {
-    let refs = Sue::new(refsue);
+    let refs = Sue::new(REFSUE);
     input.iter()
         .filter(|sue| sue.hunt(&refs))
         .map(|sue| sue.id)
@@ -86,7 +89,7 @@ pub fn part_1(input: &Vec<Sue>) -> usize {
 }
 
 pub fn part_2(input: &Vec<Sue>) -> usize {
-    let refs = Sue::new(refsue);
+    let refs = Sue::new(REFSUE);
     input.iter()
         .filter(|sue| sue.range_hunt(&refs))
         .map(|sue| sue.id)

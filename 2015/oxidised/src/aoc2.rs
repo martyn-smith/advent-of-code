@@ -1,5 +1,4 @@
 use std::cmp::min;
-use std::fs;
 
 fn make_dims(l: &str) -> (usize, usize, usize) {
     let dims = l.split('x')
@@ -9,7 +8,7 @@ fn make_dims(l: &str) -> (usize, usize, usize) {
 }
 
 pub fn get_input() -> Vec<(usize, usize, usize)> {
-    fs::read_to_string("../data/2.txt").unwrap()
+    include_str!("../../data/2.txt")
         .lines()
         .map(|l| make_dims(l))
         .collect()

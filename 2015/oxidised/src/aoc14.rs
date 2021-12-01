@@ -40,7 +40,7 @@ impl Reindeer {
 }
 
 pub fn get_input() -> Vec<Reindeer> {
-    let input = fs::read_to_string("../data/14.txt").unwrap();
+    let input = include_str!("../../data/14.txt");
     let re = Regex::new(r"^(\w.*) .* fly ([0-9]+) .* for ([0-9]+) .* for ([0-9]+) .*$").unwrap();
     input.lines()
          .map(|l| Reindeer::new(re.captures(l).unwrap()).unwrap())

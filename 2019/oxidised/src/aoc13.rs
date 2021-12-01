@@ -35,7 +35,7 @@ impl Tile {
 }
 
 pub fn get_input() -> Vec<isize> {
-    let input = fs::read_to_string("../data/13.txt").unwrap();
+    let input = include_str!("../../data/13.txt");
     input
         .trim()
         .split(',')

@@ -46,7 +46,7 @@ fn encode(s: &String) -> String {
 }
 
 pub fn get_input() -> Vec<String> {
-    fs::read_to_string("../data/8.txt").unwrap()
+    include_str!("../../data/8.txt")
             .lines()
             .map(|l| l.to_string())
             .collect()

@@ -1,9 +1,7 @@
 use ndarray::{Array, Array2};
 use std::fs;
-use std::iter::FromIterator;
 use std::collections::HashSet;
-use itertools::iproduct;
-use itertools::Itertools;
+use itertools::{iproduct, Itertools};
 use num::integer::gcd;
 
 fn count_asteroids(point: (usize, usize), asteroid_map: &Array2<bool>) -> usize {
@@ -34,7 +32,7 @@ fn count_asteroids(point: (usize, usize), asteroid_map: &Array2<bool>) -> usize 
 fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usize))
 -> Option<(usize, usize)>
 {
-    //start by pointing straight up ((-1,0) - again, remember points are (y,x))
+    //start by pointing straight up ((-1,0))
     //handle right and left halves separately, dealing with cardinals (-1,0) and (1,0) discretely.
 
     //handle N cardinal
@@ -55,7 +53,7 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
     //handle E cardinal
     //SE sector
     //handle S cardinal
-    for y in (0..start.0) {
+    for y in 0..start.0 {
         if *asteroid_map.get([y, start.1]).unwrap() {
             *asteroid_map.get_mut([y, start.1]).unwrap() = false;
             *ctr += 1;
@@ -72,16 +70,14 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
 }
 
 pub fn get_input() -> Array2<bool> {
-    let input = fs::read_to_string("../data/10.txt").unwrap();
+    let input = include_str!("../../data/10.txt");
     let width = input.lines().next().unwrap().len();
     let depth = input.lines().count();
     let input = input.chars()
                      .filter(|&c| c != '\n')
                      .map(|c| c == '#')
                      .collect::<Vec<bool>>();
-    Array::from_shape_vec(
-        (width, depth), input
-        ).unwrap()
+    Array::from_shape_vec((width, depth), input).unwrap().reversed_axes()
 }
 
 pub fn part_1(input: &Array2<bool>) -> usize {

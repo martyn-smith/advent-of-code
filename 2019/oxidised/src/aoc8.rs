@@ -1,4 +1,4 @@
-use ndarray::{azip, Array, Array2};
+use ndarray::{Array, Array2};
 use std::fs;
 
 // Create a table of i × j (with i and j from 1 to 3)
@@ -13,12 +13,11 @@ fn add_layers(a: &Array2<usize>, b: &Array2<usize>) -> Array2<usize> {
     out
 }
 
-//azip!((a in &mut a, &b in &b) *a = if a == 2 {b} else {a});
 
 pub fn get_input() -> Vec<Array2<usize>> {
     let width = 25;
     let height = 6;
-    let input = fs::read_to_string("../data/8.txt").unwrap();
+    let input = include_str!("../../data/8.txt");
     input
         .trim()
         .chars()
@@ -49,8 +48,4 @@ pub fn part_2(input: &Vec<Array2<usize>>) {
         .fold(Array2::<usize>::zeros(input[0].raw_dim()), |acc, x| {
             add_layers(&acc, x)
         });
-    // let printable =  output.rows()
-    //     .map(|x| if x == 1 {'*'} else {' '}).collect().collect()
-    // ;
-    // println!("{}", printable);
 }

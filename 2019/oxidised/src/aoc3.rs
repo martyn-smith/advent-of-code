@@ -102,7 +102,7 @@ fn get_wire(line: &str) -> Vec<Point> {
 }
 
 pub fn get_input() -> (Vec<Point>, Vec<Point>) {
-    let input = fs::read_to_string("../data/3.txt").unwrap();
+    let input = include_str!("../../data/3.txt");
     let wires = input
         .lines()
         .map(|l| get_wire(l))

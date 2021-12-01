@@ -1,10 +1,9 @@
 use std::collections::HashSet;
-use std::fs;
 
 pub fn get_input() -> Vec<(i32, i32)> {
-    fs::read_to_string("../data/3.txt").unwrap()
+    include_str!("../../data/3.txt")
             .chars()
-            .map(|c| 
+            .map(|c|
                 match c {
                 '>' => (1,0),
                 '<' => (-1,0),

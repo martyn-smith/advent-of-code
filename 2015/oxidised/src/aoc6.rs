@@ -1,4 +1,3 @@
-use std::fs;
 use regex::{Regex, Match};
 
 enum Action {
@@ -38,7 +37,7 @@ impl Instruction {
 }
 
 pub fn get_input() -> Vec<Instruction> {
-    fs::read_to_string("../data/6.txt").unwrap()
+    include_str!("../../data/6.txt")
         .lines()
         .map(|l| Instruction::new(l))
         .collect()

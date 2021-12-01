@@ -1,7 +1,7 @@
 use std::fs;
 
 pub fn get_input() -> Vec<usize> {
-    let input = fs::read_to_string("../data/16.txt").unwrap();
+    let input = include_str!("../../data/16.txt");
     input
         .trim()
         .chars()
@@ -14,7 +14,7 @@ macro_rules! leading {
         {
             let lead_slice = &$src[0..$n];
             lead_slice.iter().fold(0, |acc, x| acc * 10 + x)
-    
+
         }
     }
 }

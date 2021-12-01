@@ -1,8 +1,7 @@
-use std::fs;
 use regex::Regex;
 
 pub fn get_input() -> Vec<String> {
-    fs::read_to_string("../data/5.txt").unwrap()
+    include_str("../../data/5.txt")
         .lines()
         .map(|l| l.to_string())
         .collect()

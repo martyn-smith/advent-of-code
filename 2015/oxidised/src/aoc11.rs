@@ -1,13 +1,13 @@
 use std::str;
 
-const letters: &'static str = "abcdefghijklmnopqrstuvwxyz";
+const LETTERS: &'static str = "abcdefghijklmnopqrstuvwxyz";
 
 pub fn get_input() -> String {
     "cqjxjnds".to_string()
 }
 
 fn increasing(pw:&str) -> bool {
-    letters.as_bytes()
+    LETTERS.as_bytes()
         .windows(3)
         .any(|w| pw.contains(str::from_utf8(&w).unwrap()))
 }
@@ -17,10 +17,9 @@ fn confusing(pw: &str) -> bool {
 }
 
 fn pairs(pw: &str) -> bool {
-    if let Some(a) = letters
-                        .find(|c| pw.contains(&format!("{}{}", c, c)))
+    if let Some(a) = LETTERS.find(|c| pw.contains(&format!("{}{}", c, c)))
     {
-        let mut different = letters.to_string();
+        let mut different = LETTERS.to_string();
         different.remove(a);
         different.chars()
                   .any(|c|
@@ -35,7 +34,7 @@ fn validate(pw: &str) -> bool {
 }
 
 fn increment(cand: &mut String) {
-    let pairs = letters.as_bytes()
+    let pairs = LETTERS.as_bytes()
         .windows(2)
         .map(|p| str::from_utf8(&p).unwrap());
     let c = cand.pop().unwrap();

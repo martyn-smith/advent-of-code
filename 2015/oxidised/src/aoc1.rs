@@ -1,7 +1,5 @@
-use std::fs;
-
 pub fn get_input() -> String {
-    fs::read_to_string("../data/1.txt").unwrap()
+    include_str!("../../data/1.txt").to_string()
 }
 
 pub fn part_1(instructions: &String) -> usize {

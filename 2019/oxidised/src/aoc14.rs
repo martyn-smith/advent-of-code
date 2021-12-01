@@ -50,10 +50,10 @@ fn hunt(input: &Vec<IngredientString>, target: &str, endpoint: &str) -> usize {
                      .find(|&i| i.output.1 == target).unwrap();
         l.inputs.iter()
             .map(|i| {
-                let mut qty = i.0 * hunt(input, &i.1, endpoint); 
-                qty = qty / l.output.0 + (qty % l.output.0 != 0) as usize; 
+                let mut qty = i.0 * hunt(input, &i.1, endpoint);
+                qty = qty / l.output.0 + (qty % l.output.0 != 0) as usize;
                 //qty /= l.output.0 as f64;
-                println!("{} {}", i.1, qty); 
+                println!("{} {}", i.1, qty);
                 qty
             })
             .sum()
@@ -63,8 +63,7 @@ fn hunt(input: &Vec<IngredientString>, target: &str, endpoint: &str) -> usize {
 }
 
 pub fn get_input() -> Vec<IngredientString> {
-    fs::read_to_string("../data/14_very_small.txt")
-        .unwrap()
+    include_str!("../../data/14_very_small.txt")
         .lines()
         .map(|l| IngredientString::new(l))
         .collect()

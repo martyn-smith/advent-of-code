@@ -14,7 +14,7 @@ fn get_orbits(orbits: &HashMap<String, Vec<String>>, planet: &str) -> usize {
 }
 
 pub fn get_input() -> HashMap<String, Vec<String>> {
-    let input = fs::read_to_string("../data/6.txt").unwrap();
+    let input = include_str!("../../data/6.txt");
     let mut orbits = HashMap::<String, Vec<String>>::new();
 
     for l in input.lines() {

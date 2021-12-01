@@ -174,7 +174,7 @@ fn solve(gates: &mut HashMap<String, MaybeInt>, id: &str) -> Result<()> {
 }
 
 pub fn get_input() -> HashMap<String, MaybeInt> {
-    let lines = fs::read_to_string("../data/7.txt").unwrap();
+    let lines = include_str!("../../data/7.txt");
     let mut gates = HashMap::new();
     for l in lines.lines() {
         let cmd = l.split(" -> ").collect::<Vec<&str>>();
@@ -190,7 +190,7 @@ pub fn part_1(gates: &HashMap<String, MaybeInt>) -> u16 {
     solve(&mut gates, "a");
     match gates.get("a").unwrap() {
         MaybeInt::solved(x) => *x,
-        MaybeInt::unsolved(y) => panic!("unable to solve") 
+        MaybeInt::unsolved(y) => panic!("unable to solve")
     }
 }
 
@@ -206,7 +206,7 @@ pub fn part_2(gates: &HashMap<String, MaybeInt>) -> u16 {
     solve(&mut second, "a");
     match second.get("a").unwrap() {
         MaybeInt::solved(v) => *v,
-        MaybeInt::unsolved(_) => panic!("unable to solve") 
+        MaybeInt::unsolved(_) => panic!("unable to solve")
     }
 }
 
