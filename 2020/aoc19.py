@@ -29,8 +29,8 @@ def builder(rules, root="0") -> str:
     elif l := lone_rule.match(rule):
         return builder(rules, l.group(2))
     elif sr := sequence_rec_rule.match(rule):
-        return "(" + "|".join(["((" + builder(rules, sr.group(2)) + "){" + str(i) + "}(" 
-                              + builder(rules, sr.group(3)) + "){" + str(i) + "})" 
+        return "(" + "|".join(["((" + builder(rules, sr.group(2)) + "){" + str(i) + "}("
+                              + builder(rules, sr.group(3)) + "){" + str(i) + "})"
                              for i in range(1,8)]) + ")"
     elif s := sequence_rule.match(rule):
         return builder(rules, s.group(2)) + builder(rules, s.group(3))

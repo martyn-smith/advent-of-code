@@ -32,28 +32,34 @@ fn count_asteroids(point: (usize, usize), asteroid_map: &Array2<bool>) -> usize 
 fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usize))
 -> Option<(usize, usize)>
 {
-    //start by pointing straight up ((-1,0))
+    //start by pointing straight up ((0,-1))
     //handle right and left halves separately, dealing with cardinals (-1,0) and (1,0) discretely.
 
     //handle N cardinal
-    for y in (0..start.0).rev() {
-        if *asteroid_map.get([y, start.1]).unwrap() {
-            *asteroid_map.get_mut([y, start.1]).unwrap() = false;
+    for y in (0..start.1).rev() {
+        if *asteroid_map.get([start.0, y]).unwrap() {
+            *asteroid_map.get_mut([start.0, y]).unwrap() = false;
             *ctr += 1;
-            break;
+            if *ctr == 200 {
+                return Some((0,0));
+            } else {
+                break;
+            }
         }
     }
-    if *ctr == 200 {
-        return Some((0,0));
-    }
-    //NE secotr
-    for c in iproduct!(start.0..asteroid_map.nrows(), start.1..asteroid_map.ncols()) {
-        //collect asteroids and sort by
+    //NE sector
+    for c in iproduct!(start.0 + 1..asteroid_map.ncols(), 0..y) {
+        //collect asteroids and sort by angle
     }
     //handle E cardinal
+    for x in start.0 + 1..asteroid_map.ncols() {
+    }
     //SE sector
+    for c in iproduct!(start.0 + 1..asteroid_map.ncols(),
+                       start.1 + 1..asteroid_map.nrows()) {
+    }
     //handle S cardinal
-    for y in 0..start.0 {
+    for y in start.1 + 1..asteroid_map.nrows() {
         if *asteroid_map.get([y, start.1]).unwrap() {
             *asteroid_map.get_mut([y, start.1]).unwrap() = false;
             *ctr += 1;
@@ -64,8 +70,14 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
         return Some((0,0));
     }
     //SW sector
+    for c in iproduct!((0..start.0).rev(), (start.1 + 1..asteroid_map.nrows()).rev()) {
+    }
     //handle W cardinal
+    for x in (0..start.0).rev() {
+    }
     //NW sector
+    for c in iproduct!(0..start.0, (0..start.1).rev()) {
+    }
     None
 }
 
