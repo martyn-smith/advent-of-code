@@ -34,3 +34,10 @@ fn test_day_5() {
     assert_eq!(8111, aoc5::part_1(&input));
     assert_eq!(22088, aoc5::part_2(&input));
 }
+
+#[test]
+fn test_day_6() {
+    let input = aoc6::get_input();
+    assert_eq!(394994, aoc6::part_1(&input));
+    assert_eq!(1765974267455, aoc6::part_2(&input));
+}
