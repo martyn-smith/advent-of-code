@@ -35,8 +35,7 @@ impl Tile {
 }
 
 pub fn get_input() -> Vec<isize> {
-    let input = include_str!("../../data/13.txt");
-    input
+    include_str!("../../data/13.txt")
         .trim()
         .split(',')
         .map(|l| l.parse::<isize>().unwrap())
@@ -44,7 +43,7 @@ pub fn get_input() -> Vec<isize> {
 }
 
 pub fn part_1(intcodes: &Vec<isize>) -> usize {
-    let mut computer = Intcode::new(intcodes);
+    let mut computer = Intcode::from_vec(intcodes).unwrap();
     let outputs = computer.run(vec![]).unwrap();
     let tiles: Vec<Tile> = outputs.chunks(3)
                             .map(|t| Tile::new(t).unwrap())
@@ -58,7 +57,7 @@ pub fn part_1(intcodes: &Vec<isize>) -> usize {
 pub fn part_2(intcodes: &Vec<isize>) -> usize {
     let mut intcodes = intcodes.clone();
     intcodes[0] = 2;
-    let mut computer = Intcode::new(&intcodes);
+    let mut computer = Intcode::from_vec(&intcodes).unwrap();
     let mut command = vec![0isize];
     let mut paddle = 0isize;
     let mut score = 0;

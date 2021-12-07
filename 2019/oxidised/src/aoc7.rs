@@ -62,7 +62,7 @@ impl AmpChain {
 }
 
 pub fn get_input() -> Intcode {
-    Intcode::load("../data/7.txt").unwrap()
+    Intcode::from_str(include_str!("../../data/7.txt")).unwrap()
 }
 
 pub fn part_1(intcodes: &Intcode) -> usize {

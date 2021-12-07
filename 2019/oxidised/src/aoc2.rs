@@ -1,31 +1,35 @@
 use super::intcode::Intcode;
 use itertools::Itertools;
 
-pub fn prepro(computer: &mut Intcode, noun: isize, verb: isize) {
-    computer.intcodes[1] = noun;
-    computer.intcodes[2] = verb;
+pub fn get_input() -> Vec<isize> {
+    include_str!("../../data/2.txt")
+                    .trim()
+                    .split(',')
+                    .map(|l| l.parse::<isize>().unwrap())
+                    .collect()
 }
 
-pub fn get_input() -> Intcode {
-    Intcode::load("../data/2.txt").unwrap()
-}
-
-pub fn part_1(program: &Intcode) -> usize {
+pub fn part_1(program: &Vec<isize>) -> usize {
     let mut program = program.clone();
-    prepro(&mut program, 12, 2);
-    program.run(vec![]).unwrap();
-    program.intcodes[0] as usize
+    program[1] = 12;
+    program[2] = 2;
+    let mut computer = Intcode::from_vec(&program).unwrap();
+    computer.run(vec![]).unwrap();
+    computer.intcodes[0] as usize
 }
 
-pub fn part_2(program: &Intcode) -> usize {
+pub fn part_2(program: &Vec<isize>) -> usize {
     let target = 19690720;
     let range = (0..100).permutations(2);
-    for it in range {
-        let mut candidate = program.clone();
-        prepro(&mut candidate, it[0], it[1]);
+    for r in range {
+        let (noun, verb) = (r[0], r[1]);
+        let mut program = program.clone();
+        program[1] = noun;
+        program[2] = verb;
+        let mut candidate = Intcode::from_vec(&program).unwrap();
         candidate.run(vec![]).unwrap();
         if candidate.intcodes[0] as usize == target {
-            return (it[0] * 100 + it[1]) as usize;
+            return (noun * 100 + verb) as usize;
         }
     }
     panic!("no solution found!");

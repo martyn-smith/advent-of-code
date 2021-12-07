@@ -1,4 +1,4 @@
-use itertools::{Either, Itertools, iproduct};
+use itertools::{Either, Itertools};
 use std::collections::HashSet;
 
 #[derive(Debug, PartialEq)]
@@ -68,7 +68,7 @@ impl Line {
             },
             Direction::Diagonal => {
                 let rev = self.y.1 < self.y.0;
-                let x_rng = (self.x.0..=self.x.1);
+                let x_rng = self.x.0..=self.x.1;
                 let y_rng = if rev {
                     Either::Right((self.y.1..=self.y.0).rev())
                 } else {

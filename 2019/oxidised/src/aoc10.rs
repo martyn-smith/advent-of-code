@@ -48,7 +48,7 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
         }
     }
     //NE sector
-    for c in iproduct!(start.0 + 1..asteroid_map.ncols(), 0..y) {
+    for c in iproduct!(start.0 + 1..asteroid_map.ncols(), 0..start.1) {
         //collect asteroids and sort by angle
     }
     //handle E cardinal

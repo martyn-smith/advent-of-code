@@ -1,6 +1,5 @@
 use regex::Regex;
 use std::fs;
-use std:: collections::HashSet;
 
 #[derive(Debug)]
 pub struct IngredientString {

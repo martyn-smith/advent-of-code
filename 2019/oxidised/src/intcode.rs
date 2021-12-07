@@ -169,6 +169,25 @@ impl Intcode {
         })
     }
 
+    pub fn from_str(s: &str) -> Result<Self> {
+        let intcodes = s.trim().split(',')
+                            .map(|l| l.parse::<isize>().unwrap())
+                            .collect::<Vec<isize>>();
+        Ok(Self {
+            intcodes: intcodes,
+            ptr: 0,
+            base: 0
+        })
+    }
+
+    pub fn from_vec(intcodes: &Vec<isize>) -> Result<Self> {
+        Ok(Self {
+            intcodes: intcodes.clone(),
+            ptr: 0,
+            base: 0
+        })
+    }
+
     pub fn run(&mut self, mut inputs: Vec<isize>) -> Result<Vec<isize>, isize> {
         let mut outputs: Vec<isize> = vec![];
         'a: loop {
