@@ -1,17 +1,42 @@
 use cached::proc_macro::cached;
 use std::collections::HashMap;
 
+/*
+ * Since a lanternfish cannot be more than 8 days old,
+ * there are clearly only 8 solutions at time t.
+ *
+ * Starting at zero, population cycles:
+ *
+ *   day   |    pop
+ *   --------------
+ *   0        1
+ *   1        6 8
+ *   ...      ...
+ *   7        0 2
+ *
+ *   leading to a functional relation:
+ *
+ *   g(0,0)     => 1
+ *   g(0,1..=7) => 2
+ *   g(0,t)     => g(0,t-7) + g(2,t-7)
+ *   g(n,t)     => g(0,t-n) //<-check this sub for underflow
+ */
 #[cached]
-fn grow(time: isize) -> usize {
-    if time <= 0 {
-        1
+fn g(i: usize, t: usize) -> usize {
+    if i > 0 {
+        g(0, t.saturating_sub(i))
     } else {
-       grow(time - 7) + grow(time - 9)
+        if t == 0 {
+            1
+        } else if t < 7 {
+            2
+        } else  {
+            g(0, t - 7) + g(2, t - 7)
+        }
     }
 }
 
 pub fn get_input() -> Vec<usize> {
-//    vec![0]
     include_str!("../../data/6.txt")
             .trim()
             .split(',')
@@ -21,8 +46,8 @@ pub fn get_input() -> Vec<usize> {
 
 pub fn part_1(input: &Vec<usize>) -> usize {
     let mut growth = HashMap::new();
-    for i in 0..8usize {
-        growth.insert(i, grow(80 - i as isize));
+    for i in 0..8 {
+        growth.insert(i, g(i, 80));
     }
     input.iter()
         .map(|i| growth.get(&i).unwrap())
@@ -31,8 +56,8 @@ pub fn part_1(input: &Vec<usize>) -> usize {
 
 pub fn part_2(input: &Vec<usize>) -> usize {
     let mut growth = HashMap::new();
-    for i in 0..8usize {
-        growth.insert(i, grow(256 - i as isize));
+    for i in 0..8 {
+        growth.insert(i, g(i, 256));
     }
     input.iter()
         .map(|i| growth.get(&i).unwrap())
