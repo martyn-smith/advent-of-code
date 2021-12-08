@@ -1,21 +1,9 @@
-use cached::proc_macro::cached;
+///
+/// Advent of Code day 7: Crab Submarines
+///
 
-pub fn get_input() -> Vec<usize> {
-    include_str!("../../data/7.txt")
-        .trim()
-        .split(',')
-        .map(|l| l.parse::<usize>().unwrap())
-        .collect()
-}
-
-#[cached]
 fn triangle(n: usize) -> usize {
     n * (n + 1) / 2
-    // if n == 0 {
-    //     0
-    // } else {
-    //     1 + triangle(n-1)
-    // }
 }
 
 fn cost(n: usize, input: &Vec<usize>) -> usize {
@@ -30,19 +18,27 @@ fn tri_cost(n: usize, input: &Vec<usize>) -> usize {
         .sum()
 }
 
+pub fn get_input() -> Vec<usize> {
+    include_str!("../../data/7.txt")
+        .trim()
+        .split(',')
+        .map(|l| l.parse::<usize>().unwrap())
+        .collect()
+}
+
 pub fn part_1(input: &Vec<usize>) -> usize {
-    let mn = *input.iter().min().unwrap();
-    let mx = *input.iter().max().unwrap();
-    (mn..mx)
-        .map(|n| cost(n, input))
+    let mut input = input.clone();
+    input.sort();
+    let median = input[input.len() / 2];
+    (median - 1 ..= median + 1)
+        .map(|n| cost(n, &input))
         .min()
         .unwrap()
 }
 
 pub fn part_2(input: &Vec<usize>) -> usize {
-    let mn = *input.iter().min().unwrap();
-    let mx = *input.iter().max().unwrap();
-    (mn..mx)
+     let mean = input.iter().sum::<usize>() / input.len();
+     (mean - 1 ..= mean + 1)
         .map(|n| tri_cost(n, input))
         .min()
         .unwrap()

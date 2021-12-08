@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 2: Piloting a submarine
+///
+
 fn get_vector(l: &str) -> (i32, i32) {
     let mut l = l.split(" ");
     let sign = match l.next().unwrap() {

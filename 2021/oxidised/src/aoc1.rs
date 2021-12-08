@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 1: scanning the sea floor
+///
+
 pub fn get_input() -> Vec<usize> {
     include_str!("../../data/1.txt")
         .lines()

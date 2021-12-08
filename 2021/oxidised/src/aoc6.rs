@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 6: All the lanternfish
+///
+
 use cached::proc_macro::cached;
 use std::collections::HashMap;
 

@@ -1,12 +1,9 @@
+///
+/// Advent of Code day 3: Bit-shifting based diagnostics
+///
+
 //used as a bit of a hack, Rust only has an integer log() as nightly.
 const MAX_BASE: u16 = 12;
-
-pub fn get_input() -> Vec<u16> {
-    include_str!("../../data/3.txt")
-        .lines()
-        .map(|l| u16::from_str_radix(l, 2).unwrap())
-        .collect()
-}
 
 fn count_ones(pos:u16, input: &Vec<u16>) -> usize {
     input.iter()
@@ -64,6 +61,13 @@ fn co2(input: &Vec<u16>) -> usize {
         cand.retain(|&i| (i >> pos) & 1 == r);
     }
     cand[0] as usize
+}
+
+pub fn get_input() -> Vec<u16> {
+    include_str!("../../data/3.txt")
+        .lines()
+        .map(|l| u16::from_str_radix(l, 2).unwrap())
+        .collect()
 }
 
 pub fn part_1(input: &Vec<u16>) -> usize {

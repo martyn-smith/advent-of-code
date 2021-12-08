@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 4: Squid Bingo!
+///
+
 use ndarray::{Array, Array2};
 
 const BOARD_SIZE: usize = 5;
