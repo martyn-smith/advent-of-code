@@ -2,7 +2,7 @@
 /// Advent of Code day 1: The Rocket Equation
 ///
 
-use std::fs;
+//use std::fs;
 
 fn get_fuel(module_mass: &usize) -> usize {
     (module_mass / 3).saturating_sub(2)

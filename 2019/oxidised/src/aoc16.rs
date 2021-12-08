@@ -1,4 +1,4 @@
-use std::fs;
+//use std::fs;
 
 pub fn get_input() -> Vec<usize> {
     let input = include_str!("../../data/16.txt");

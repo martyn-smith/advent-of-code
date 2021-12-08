@@ -1,19 +1,19 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use std::collections::HashMap;
-use std::fs;
+//use std::fs;
 
 #[derive(Clone,Debug)]
 pub enum MaybeInt {
-    solved(u16),
-    unsolved(String)
+    Solved(u16),
+    Unsolved(String)
 }
 
 impl MaybeInt {
     fn new(left: &str) -> Self {
         if let Ok(x) = u16::from_str_radix(left, 10) {
-            Self::solved(x)
+            Self::Solved(x)
         } else {
-            Self::unsolved(left.to_string())
+            Self::Unsolved(left.to_string())
         }
     }
 }
@@ -35,9 +35,9 @@ struct Op {
 }
 
 fn get_u16(gates: &HashMap<String, MaybeInt>, operand: &str) -> u16 {
-    if let Ok(v) = u16::from_str_radix(operand, 10) {
+    if let Ok(v) = operand.parse::<u16>() {
         v
-    } else if let Some(MaybeInt::solved(v)) = gates.get(operand) {
+    } else if let Some(MaybeInt::Solved(v)) = gates.get(operand) {
         *v
     } else {
         panic!()
@@ -47,14 +47,14 @@ fn get_u16(gates: &HashMap<String, MaybeInt>, operand: &str) -> u16 {
 impl Op {
     fn new(gates: &HashMap<String, MaybeInt>, left: &MaybeInt) -> Self {
         match left {
-            MaybeInt::solved(v) => {
+            MaybeInt::Solved(v) => {
             //I don't think we should ever be here...
                 Self {
                     op: OpCodes::ASSIGN,
                     val: vec![*v]
                 }
             },
-            MaybeInt::unsolved(lhs) => {
+            MaybeInt::Unsolved(lhs) => {
                 if lhs.contains("NOT") {
                     let operands = lhs.split("NOT ").collect::<Vec<&str>>();
                     Self {
@@ -129,15 +129,15 @@ fn solve(gates: &mut HashMap<String, MaybeInt>, id: &str) -> Result<()> {
     //query the hashmap (defensively, we'll be mutating later)
     let v = gates.get(id).expect(id).clone();
     match v {
-        MaybeInt::solved(u) => {
+        MaybeInt::Solved(_) => {
             Ok(())
         },
         //entire query as string
-        MaybeInt::unsolved(query) => {
+        MaybeInt::Unsolved(query) => {
             //collect unsolved into vectors
             let to_solve = collect_unsolved(&query[..]);
             for s in to_solve.iter() {
-                solve(gates, s);
+                solve(gates, s).unwrap();
             }
 
             //at this point, queries should be solved (but not parsed)
@@ -146,23 +146,22 @@ fn solve(gates: &mut HashMap<String, MaybeInt>, id: &str) -> Result<()> {
             let op = Op::new(gates, &v);
             let v = match op.op {
                 OpCodes::ASSIGN => {
-
-                    MaybeInt::solved(op.val[0])
+                    MaybeInt::Solved(op.val[0])
                 },
                 OpCodes::RSHIFT => {
-                    MaybeInt::solved(op.val[0] >> op.val[1])
+                    MaybeInt::Solved(op.val[0] >> op.val[1])
                 }
                 OpCodes::LSHIFT => {
-                    MaybeInt::solved(op.val[0] << op.val[1])
+                    MaybeInt::Solved(op.val[0] << op.val[1])
                 }
                 OpCodes::AND => {
-                    MaybeInt::solved(op.val[0] & op.val[1])
+                    MaybeInt::Solved(op.val[0] & op.val[1])
                 }
                 OpCodes::OR => {
-                    MaybeInt::solved(op.val[0] | op.val[1])
+                    MaybeInt::Solved(op.val[0] | op.val[1])
                 }
                 OpCodes::NOT => {
-                    MaybeInt::solved(!op.val[0])
+                    MaybeInt::Solved(!op.val[0])
                 }
             };
             let g = gates.get_mut(id).unwrap();
@@ -187,26 +186,26 @@ pub fn get_input() -> HashMap<String, MaybeInt> {
 
 pub fn part_1(gates: &HashMap<String, MaybeInt>) -> u16 {
     let mut gates = gates.clone();
-    solve(&mut gates, "a");
+    solve(&mut gates, "a").unwrap();
     match gates.get("a").unwrap() {
-        MaybeInt::solved(x) => *x,
-        MaybeInt::unsolved(y) => panic!("unable to solve")
+        MaybeInt::Solved(x) => *x,
+        MaybeInt::Unsolved(_) => panic!("unable to solve")
     }
 }
 
 pub fn part_2(gates: &HashMap<String, MaybeInt>) -> u16 {
     let mut first = gates.clone();
     let mut second = gates.clone();
-    solve(&mut first, "a");
+    solve(&mut first, "a").unwrap();
     let a = first.get("a").unwrap();
     let b = second.get_mut("b").unwrap();
-    if let MaybeInt::solved(v) = a {
-        *b = MaybeInt::solved(*v);
+    if let MaybeInt::Solved(v) = a {
+        *b = MaybeInt::Solved(*v);
     }
-    solve(&mut second, "a");
+    solve(&mut second, "a").unwrap();
     match second.get("a").unwrap() {
-        MaybeInt::solved(v) => *v,
-        MaybeInt::unsolved(_) => panic!("unable to solve")
+        MaybeInt::Solved(v) => *v,
+        MaybeInt::Unsolved(_) => panic!("unable to solve")
     }
 }
 

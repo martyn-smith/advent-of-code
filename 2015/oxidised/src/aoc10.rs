@@ -5,8 +5,8 @@
 fn play_game(input: &str, reps: usize) -> usize {
     let mut prev = input.to_string();
     let mut next = String::new();
-    let mut cursor: Option<char> = None;
-    let mut counter = 0;
+    let mut cursor ;
+    let mut counter ;
     for _ in 0..reps {
         next.clear();
         cursor = None;

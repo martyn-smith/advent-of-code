@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::fs;
+//use std::fs;
 
 fn get_orbits(orbits: &HashMap<String, Vec<String>>, planet: &str) -> usize {
     let planets = orbits.get(planet);

@@ -188,7 +188,7 @@ impl Intcode {
         })
     }
 
-    pub fn ASCII(&mut self, mut inputs: Vec<isize>) -> Result<String> {
+    pub fn ascii(&mut self, inputs: Vec<isize>) -> Result<String> {
         Ok(String::from_utf8(self.run(inputs)?.iter().map(|&c| c as u8).collect())?)
     }
 

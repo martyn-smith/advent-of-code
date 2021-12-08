@@ -1,7 +1,7 @@
 use ndarray::{Array, Array2};
-use std::fs;
+//use std::fs;
 use std::collections::HashSet;
-use itertools::{iproduct, Itertools};
+use itertools::iproduct;
 use num::integer::gcd;
 
 fn count_asteroids(point: (usize, usize), asteroid_map: &Array2<bool>) -> usize {
@@ -48,14 +48,14 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
         }
     }
     //NE sector
-    for c in iproduct!(start.0 + 1..asteroid_map.ncols(), 0..start.1) {
+    for _c in iproduct!(start.0 + 1..asteroid_map.ncols(), 0..start.1) {
         //collect asteroids and sort by angle
     }
     //handle E cardinal
-    for x in start.0 + 1..asteroid_map.ncols() {
+    for _x in start.0 + 1..asteroid_map.ncols() {
     }
     //SE sector
-    for c in iproduct!(start.0 + 1..asteroid_map.ncols(),
+    for _c in iproduct!(start.0 + 1..asteroid_map.ncols(),
                        start.1 + 1..asteroid_map.nrows()) {
     }
     //handle S cardinal
@@ -70,13 +70,13 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
         return Some((0,0));
     }
     //SW sector
-    for c in iproduct!((0..start.0).rev(), (start.1 + 1..asteroid_map.nrows()).rev()) {
+    for _c in iproduct!((0..start.0).rev(), (start.1 + 1..asteroid_map.nrows()).rev()) {
     }
     //handle W cardinal
-    for x in (0..start.0).rev() {
+    for _x in (0..start.0).rev() {
     }
     //NW sector
-    for c in iproduct!(0..start.0, (0..start.1).rev()) {
+    for _c in iproduct!(0..start.0, (0..start.1).rev()) {
     }
     None
 }

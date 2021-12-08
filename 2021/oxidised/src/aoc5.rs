@@ -2,7 +2,7 @@
 /// Advent of Code day 5: lines of dodgy magma
 ///
 
-use itertools::{Either, Itertools};
+use itertools::{Either}; //Itertools
 use std::collections::HashSet;
 
 #[derive(Debug, PartialEq)]

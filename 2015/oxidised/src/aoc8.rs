@@ -1,4 +1,4 @@
-use std::fs;
+//use std::fs;
 
 fn diff(s: &String) -> usize {
     let in_mem = s.len();
@@ -32,8 +32,8 @@ fn diff(s: &String) -> usize {
 
 fn encode(s: &String) -> String {
     let mut out = String::new();
-    let mut tmp = String::new();
-    let mut escape = Some(0);
+    // let mut tmp = String::new();
+    // let mut escape = Some(0);
     let mut s = s.chars().peekable();
     while let Some(c) = s.next() {
         if c == '"' || c == '\\' {

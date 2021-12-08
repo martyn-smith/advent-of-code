@@ -1,5 +1,5 @@
 use ndarray::{Array, Array2};
-use std::fs;
+//use std::fs;
 
 // Create a table of i × j (with i and j from 1 to 3)
 
@@ -38,14 +38,14 @@ pub fn part_1(input: &Vec<Array2<usize>>) -> usize {
     });
     input[0].iter().filter(|&&i| i == 1).count() * input[0].iter().filter(|&&i| i == 2).count()
 }
-
+/*
 pub fn part_2(input: &Vec<Array2<usize>>) {
-    let width = 25;
-    let height = 6;
+//    let width = 25;
+//    let height = 6;
     let output = input
         .iter()
         .rev()
         .fold(Array2::<usize>::zeros(input[0].raw_dim()), |acc, x| {
             add_layers(&acc, x)
         });
-}
+}*/
