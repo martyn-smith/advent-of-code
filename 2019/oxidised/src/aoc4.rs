@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 4: Password cracking
+///
+
 fn is_valid(num: usize) -> bool {
     //TODO: slow in debug mode, probably due to this initial collection. Consider ways to avoid.
     let digits = num

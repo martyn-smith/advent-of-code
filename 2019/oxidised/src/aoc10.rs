@@ -10,7 +10,7 @@ fn count_asteroids(point: (usize, usize), asteroid_map: &Array2<bool>) -> usize 
     for c in iproduct!(0..asteroid_map.nrows(), 0..asteroid_map.ncols())
     {
         if !(p.0 == c.0 as i32 && p.1 == c.1 as i32)
-           && *asteroid_map.get([c.0, c.1]).unwrap()
+           && asteroid_map[[c.0, c.1]]
         {
             let c = (c.0 as i32, c.1 as i32);
             let mut angle = (p.0 - c.0, p.1 - c.1);
@@ -37,7 +37,7 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
 
     //handle N cardinal
     for y in (0..start.1).rev() {
-        if *asteroid_map.get([start.0, y]).unwrap() {
+        if asteroid_map[[start.0, y]] {
             *asteroid_map.get_mut([start.0, y]).unwrap() = false;
             *ctr += 1;
             if *ctr == 200 {
@@ -60,7 +60,7 @@ fn rotate(asteroid_map: &mut Array2<bool>, ctr: &mut usize, start: &(usize, usiz
     }
     //handle S cardinal
     for y in start.1 + 1..asteroid_map.nrows() {
-        if *asteroid_map.get([y, start.1]).unwrap() {
+        if asteroid_map[[y, start.1]] {
             *asteroid_map.get_mut([y, start.1]).unwrap() = false;
             *ctr += 1;
             break;

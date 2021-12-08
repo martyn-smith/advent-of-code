@@ -1,12 +1,5 @@
 use regex::Regex;
 
-pub fn get_input() -> Vec<String> {
-    include_str("../../data/5.txt")
-        .lines()
-        .map(|l| l.to_string())
-        .collect()
-}
-
 fn is_nice(s: &String) -> bool {
     let vowels = Regex::new(r"[aeiou]").unwrap();
     let repeat = Regex::new(r"[(a-z)]\1").unwrap();
@@ -15,6 +8,13 @@ fn is_nice(s: &String) -> bool {
     vowels.find_iter(s).count() >= 3
     && repeat.is_match(s)
     && !naughty.is_match(s)
+}
+
+pub fn get_input() -> Vec<String> {
+    include_str("../../data/5.txt")
+        .lines()
+        .map(|l| l.to_string())
+        .collect()
 }
 
 // < 575

@@ -1,3 +1,4 @@
+
 use std::cmp::min;
 
 fn make_dims(l: &str) -> (usize, usize, usize) {
@@ -5,13 +6,6 @@ fn make_dims(l: &str) -> (usize, usize, usize) {
         .map(|c| c.parse::<usize>().unwrap())
         .collect::<Vec<usize>>();
     (dims[0], dims[1], dims[2])
-}
-
-pub fn get_input() -> Vec<(usize, usize, usize)> {
-    include_str!("../../data/2.txt")
-        .lines()
-        .map(|l| make_dims(l))
-        .collect()
 }
 
 fn paper(dims: &(usize, usize, usize)) -> usize {
@@ -25,6 +19,13 @@ fn ribbon(dims: &(usize, usize, usize)) -> usize {
     let volume = dims.0 * dims.1 * dims.2;
     min(min(perimeters.0, perimeters.1), perimeters.2)
     + volume
+}
+
+pub fn get_input() -> Vec<(usize, usize, usize)> {
+    include_str!("../../data/2.txt")
+        .lines()
+        .map(|l| make_dims(l))
+        .collect()
 }
 
 pub fn part_1(dims: &Vec<(usize, usize, usize)>) -> usize {

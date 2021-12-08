@@ -1,10 +1,10 @@
+///
+/// Advent of Code day 11: password generation
+///
+
 use std::str;
 
 const LETTERS: &'static str = "abcdefghijklmnopqrstuvwxyz";
-
-pub fn get_input() -> String {
-    "cqjxjnds".to_string()
-}
 
 fn increasing(pw:&str) -> bool {
     LETTERS.as_bytes()
@@ -46,6 +46,10 @@ fn increment(cand: &mut String) {
     }
     increment(cand);
     cand.push('a');
+}
+
+pub fn get_input() -> String {
+    "cqjxjnds".to_string()
 }
 
 pub fn part_1(input: &String) -> String {

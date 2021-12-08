@@ -1,21 +1,28 @@
+"""
+Advent of Code day 5: naughty/nice strings
+"""
 import re
+
+vowels = re.compile(r"([aeiou].*){3}")
+repeat = re.compile(r"(\w)\1")
+pairs = re.compile(r"(ab)|(cd)|(pq)|(xy)")
+non_overlap = re.compile(r"(\w{2}).*\1")
+sandwich = re.compile(r"(\w)[^\1]\1")
+
+def nice_or_naughty(line):
+    return (vowels.search(line)
+            and repeat.search(line)
+            and not pairs.search(line))
+
+def nice_or_naughty_2(line):
+    return (non_overlap.search(line)
+            and sandwich.search(line))
 
 with open("data/5.txt") as f:
     lines = f.readlines()
 
-
-def nice_or_naughty(line):
-    return (re.search(r"([aeiou].*){3}", line)
-            and re.search(r"(\w)\1", line)
-            and not re.search(r"(ab)|(cd)|(pq)|(xy)", line))
-
-def nice_or_naughty_2(line):
-    return (re.search(r"(\w{2}).*\1", line)
-            and re.search(r"(\w)[^\1]\1", line))
-
 def part_1():
     return sum(1 for line in lines if nice_or_naughty(line))
-
 
 def part_2():
     return sum(1 for line in lines if nice_or_naughty_2(line))

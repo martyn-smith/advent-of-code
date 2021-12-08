@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 1: counting braces
+///
+
 pub fn get_input() -> String {
     include_str!("../../data/1.txt").to_string()
 }

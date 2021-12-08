@@ -1,16 +1,22 @@
+"""
+Advent of Code day 6: orbit-based tree traversal.
+"""
+
+with open("data/6.txt") as f:
+    orbits = [line.strip("\n").split(")") for line in f.readlines()]
+
 def part_1():
     """
-    Identifies the total number of orbits (direct and indirect) specified in a 
+    Identifies the total number of orbits (direct and indirect) specified in a
     text file with the following spec:
 
     Each line has the form:
-    
+
     PLAN)SAT
 
     where "PLAN" is the planet and "SAT" the satellite.
     """
-    with open("data/6.txt") as f:
-        orbits = [line.strip("\n").split(")") for line in f.readlines()]
+    global orbits
     num_orbits = 0
     while len(orbits):
         num_orbits += len(orbits)

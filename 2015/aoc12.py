@@ -1,3 +1,6 @@
+"""
+Advent of Code day 12: JSON-loading
+"""
 import json
 
 with open("data/12.txt") as f:

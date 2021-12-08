@@ -1,3 +1,11 @@
+///
+/// Advent of Code day 2: 1202 Error
+///
+
+/*
+ * The first Intcode-based problem
+ */
+
 use super::intcode::Intcode;
 use itertools::Itertools;
 

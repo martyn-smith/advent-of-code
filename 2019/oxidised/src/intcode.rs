@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Result, bail};
 use std::fs;
 
 #[derive(Clone)]
@@ -42,7 +42,6 @@ impl Intcode {
     fn input(&mut self, input: &mut Vec<isize>) -> usize {
         let mode_arg = self.intcodes[self.ptr] / 100;
         let w = self.get_pointer(self.ptr + 1, mode_arg % 10) as usize;
-        //let w = self.intcodes[self.ptr + 1] as usize;
         let write_val = input.pop().unwrap();
         if w >= self.intcodes.len() {
             self.intcodes.resize(w + 1, 0);
@@ -148,6 +147,7 @@ impl Intcode {
         }
     }
 
+// plan to discontinue, or at least redoc, these
     pub fn new(intcodes: &Vec<isize>) -> Self {
         Intcode {
             intcodes: intcodes.clone(),
@@ -168,7 +168,7 @@ impl Intcode {
             base: 0,
         })
     }
-
+//
     pub fn from_str(s: &str) -> Result<Self> {
         let intcodes = s.trim().split(',')
                             .map(|l| l.parse::<isize>().unwrap())
@@ -188,7 +188,13 @@ impl Intcode {
         })
     }
 
-    pub fn run(&mut self, mut inputs: Vec<isize>) -> Result<Vec<isize>, isize> {
+    pub fn ASCII(&mut self, mut inputs: Vec<isize>) -> Result<String> {
+        Ok(String::from_utf8(self.run(inputs)?.iter().map(|&c| c as u8).collect())?)
+    }
+
+    //run to halt
+    //TODO: or lack of inputs
+    pub fn run(&mut self, mut inputs: Vec<isize>) -> Result<Vec<isize>> {
         let mut outputs: Vec<isize> = vec![];
         'a: loop {
             //dbg!(self.ptr, self.intcodes[self.ptr] % 100);
@@ -196,6 +202,9 @@ impl Intcode {
                 1 => State::Continue(self.add()),
                 2 => State::Continue(self.mult()),
                 3 => State::Continue(self.input(&mut inputs)),
+                /*
+                 * 3 => if let Some(i) = inputs.pop() { State::Continue(i)} else { State::Pause }
+                 */
                 4 => State::Continue(self.output(&mut outputs)),
                 5 => State::Continue(self.jt()),
                 6 => State::Continue(self.jf()),
@@ -204,8 +213,7 @@ impl Intcode {
                 9 => State::Continue(self.rb()),
                 99 => State::Halt,
                 _ => {
-                    println!("invalid opcode at {}", self.ptr);
-                    return Err(-1);
+                    bail!("invalid opcode at {}", self.ptr);
                 }
             };
             if let State::Continue(i) = adv {

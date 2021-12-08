@@ -1,3 +1,6 @@
+"""
+Advent of Code day 1: The Rocket Equation
+"""
 def get_fuel(module_mass):
     return (module_mass // 3 - 2)
 

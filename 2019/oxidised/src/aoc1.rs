@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 1: The Rocket Equation
+///
+
 use std::fs;
 
 fn get_fuel(module_mass: &usize) -> usize {

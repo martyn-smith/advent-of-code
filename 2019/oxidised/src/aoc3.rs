@@ -1,3 +1,7 @@
+///
+/// Advent of Code day 3: Finding wire intersections
+///
+
 use itertools::Itertools;
 use std::fs;
 
@@ -26,7 +30,6 @@ impl Point {
 
 impl Intersection {
     fn new(p: Point, p1: &Point, p2: &Point) -> Self {
-        //println!("{:?} {} {}", p, p1.l, p2.l);
         Intersection {
             r: p.x.abs() as usize + p.y.abs() as usize,
             t: p1.l

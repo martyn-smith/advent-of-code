@@ -1,6 +1,6 @@
-pub fn get_input() -> String {
-    "1321131112".to_string()
-}
+///
+/// Advent of Code day 10: speak-and-say
+///
 
 fn play_game(input: &str, reps: usize) -> usize {
     let mut prev = input.to_string();
@@ -30,6 +30,10 @@ fn play_game(input: &str, reps: usize) -> usize {
         prev = next.clone();
     }
     next.len()
+}
+
+pub fn get_input() -> String {
+    "1321131112".to_string()
 }
 
 pub fn part_1(input: &str) -> usize {
