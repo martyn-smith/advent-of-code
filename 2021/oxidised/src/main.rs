@@ -9,12 +9,13 @@ mod aoc7;
 mod aoc8;
 mod aoc9;
 mod aoc10;
+mod aoc11;
 
 #[cfg(test)]
 mod tests;
 
 fn main() {
-    let input = aoc10::get_input();
-    println!("{}", aoc10::part_1(&input));
-    println!("{}", aoc10::part_2(&input));
+    let input = aoc11::get_input();
+    println!("{}", aoc11::part_1(&input));
+    println!("{}", aoc11::part_2(&input));
 }
