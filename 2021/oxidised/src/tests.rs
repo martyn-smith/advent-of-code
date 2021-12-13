@@ -76,3 +76,17 @@ fn test_day_11() {
     assert_eq!(1665, aoc11::part_1(&input));
     assert_eq!(235, aoc11::part_2(&input));
 }
+
+#[test]
+fn test_day_12() {
+    let input = aoc12::get_input();
+    assert_eq!(5457, aoc12::part_1(&input));
+    assert_eq!(128506, aoc12::part_2(&input));
+}
+
+#[test]
+fn test_day_13() {
+    let input = aoc13::get_input();
+    assert_eq!(666, aoc13::part_1(&input));
+}
+
