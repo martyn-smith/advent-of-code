@@ -2,14 +2,13 @@
 /// Advent of Code day 13: Origami
 ///
 
-
 use std::collections::HashSet;
 
-pub type paper = HashSet<(usize, usize)>;
-pub type foldtype = (Option<usize>, Option<usize>);
-pub type foldlist = Vec<(Option<usize>, Option<usize>)>;
+pub type Paper = HashSet<(usize, usize)>;
+pub type Fold = (Option<usize>, Option<usize>);
+pub type FoldList = Vec<(Option<usize>, Option<usize>)>;
 
-fn fold(manual: &mut paper, f: foldtype) {
+fn fold(manual: &mut Paper, f: Fold) {
     let mut to_replace = vec![];
     match f {
         (Some(x), None) => {
@@ -38,7 +37,7 @@ fn fold(manual: &mut paper, f: foldtype) {
     }
 }
 
-pub fn get_input() -> (paper, foldlist) {
+pub fn get_input() -> (Paper, FoldList) {
     let input = include_str!("../../data/13.txt");
     let mut s = input.split("\n\n");
     let mut coords = HashSet::new();
@@ -63,14 +62,13 @@ pub fn get_input() -> (paper, foldlist) {
     (coords, splits)
 }
 
-pub fn part_1(input: &(paper, foldlist)) -> usize {
+pub fn part_1(input: &(Paper, FoldList)) -> usize {
     let mut manual = input.0.clone();
     fold(&mut manual, input.1[0]);
     manual.len()
 }
 
-
-pub fn part_2(input: &(paper, foldlist)) {
+pub fn part_2(input: &(Paper, FoldList)) {
     let mut manual = input.0.clone();
     for i in input.1.iter() {
         fold(&mut manual, *i);
@@ -80,7 +78,7 @@ pub fn part_2(input: &(paper, foldlist)) {
     for y in 0..=y_max {
         let mut line = String::new();
         for x in 0..=x_max {
-            line.push( if manual.contains(&(x,y)) {'#'} else {'.'});
+            line.push( if manual.contains(&(x,y)) {'#'} else {' '});
         }
         println!("{}", line);
     }
