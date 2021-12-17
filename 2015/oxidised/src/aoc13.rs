@@ -1,20 +1,34 @@
-use std::collections::{HashMap, HashSet};
 use itertools::Itertools;
 use regex::Regex;
+use std::collections::{HashMap, HashSet};
 
 pub type JoyMap = HashMap<(String, String), isize>;
 
 fn get_distance(seating: Vec<&String>, d: &JoyMap) -> isize {
-    seating.windows(3)
-                .map(|w| {
-                          *d.get(&(w[1].to_string(), w[0].to_string())).unwrap()
-                        + *d.get(&(w[1].to_string(), w[2].to_string())).unwrap()
-                })
-                .sum::<isize>()
-    + d.get(&(seating[0].to_string(), seating[seating.len()-1].to_string())).unwrap()
-    + d.get(&(seating[0].to_string(), seating[1].to_string())).unwrap()
-    + d.get(&(seating[seating.len()-1].to_string(), seating[0].to_string())).unwrap()
-    + d.get(&(seating[seating.len()-1].to_string(), seating[seating.len()-2].to_string())).unwrap()
+    seating
+        .windows(3)
+        .map(|w| {
+            *d.get(&(w[1].to_string(), w[0].to_string())).unwrap()
+                + *d.get(&(w[1].to_string(), w[2].to_string())).unwrap()
+        })
+        .sum::<isize>()
+        + d.get(&(
+            seating[0].to_string(),
+            seating[seating.len() - 1].to_string(),
+        ))
+        .unwrap()
+        + d.get(&(seating[0].to_string(), seating[1].to_string()))
+            .unwrap()
+        + d.get(&(
+            seating[seating.len() - 1].to_string(),
+            seating[0].to_string(),
+        ))
+        .unwrap()
+        + d.get(&(
+            seating[seating.len() - 1].to_string(),
+            seating[seating.len() - 2].to_string(),
+        ))
+        .unwrap()
 }
 
 pub fn get_input() -> (HashSet<String>, JoyMap) {
@@ -41,10 +55,12 @@ pub fn get_input() -> (HashSet<String>, JoyMap) {
 
 pub fn part_1(input: &(HashSet<String>, JoyMap)) -> isize {
     let (prsns, joys) = (&input.0, &input.1);
-    prsns.iter().permutations(prsns.len())
-            .map(|p| get_distance(p, &joys))
-            .max()
-            .unwrap()
+    prsns
+        .iter()
+        .permutations(prsns.len())
+        .map(|p| get_distance(p, joys))
+        .max()
+        .unwrap()
 }
 
 pub fn part_2(input: &(HashSet<String>, JoyMap)) -> isize {
@@ -55,8 +71,10 @@ pub fn part_2(input: &(HashSet<String>, JoyMap)) -> isize {
         joys.insert((p.clone(), m.clone()), 0);
     }
     prsns.insert(m);
-    prsns.iter().permutations(prsns.len())
-            .map(|p| get_distance(p, &joys))
-            .max()
-            .unwrap()
+    prsns
+        .iter()
+        .permutations(prsns.len())
+        .map(|p| get_distance(p, &joys))
+        .max()
+        .unwrap()
 }

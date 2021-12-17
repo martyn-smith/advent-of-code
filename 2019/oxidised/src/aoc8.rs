@@ -13,7 +13,6 @@ fn add_layers(a: &Array2<usize>, b: &Array2<usize>) -> Array2<usize> {
     out
 }
 
-
 pub fn get_input() -> Vec<Array2<usize>> {
     let width = 25;
     let height = 6;
@@ -28,8 +27,8 @@ pub fn get_input() -> Vec<Array2<usize>> {
         .collect()
 }
 
-pub fn part_1(input: &Vec<Array2<usize>>) -> usize {
-    let mut input = input.clone();
+pub fn part_1(input: &[Array2<usize>]) -> usize {
+    let mut input = input.to_owned();
     input.sort_by(|a, b| {
         a.iter()
             .filter(|&&i| i == 0)

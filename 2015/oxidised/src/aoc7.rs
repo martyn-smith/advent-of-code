@@ -2,15 +2,15 @@ use anyhow::Result;
 use std::collections::HashMap;
 //use std::fs;
 
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 pub enum MaybeInt {
     Solved(u16),
-    Unsolved(String)
+    Unsolved(String),
 }
 
 impl MaybeInt {
     fn new(left: &str) -> Self {
-        if let Ok(x) = u16::from_str_radix(left, 10) {
+        if let Ok(x) = left.parse::<u16>() {
             Self::Solved(x)
         } else {
             Self::Unsolved(left.to_string())
@@ -19,19 +19,19 @@ impl MaybeInt {
 }
 
 #[derive(Debug)]
-enum OpCodes{
-    AND,
-    OR,
-    NOT,
-    LSHIFT,
-    RSHIFT,
-    ASSIGN,
+enum OpCodes {
+    And,
+    Or,
+    Not,
+    Lshift,
+    Rshift,
+    Assign,
 }
 
 #[derive(Debug)]
 struct Op {
-    op : OpCodes,
-    val : Vec<u16>
+    op: OpCodes,
+    val: Vec<u16>,
 }
 
 fn get_u16(gates: &HashMap<String, MaybeInt>, operand: &str) -> u16 {
@@ -48,51 +48,47 @@ impl Op {
     fn new(gates: &HashMap<String, MaybeInt>, left: &MaybeInt) -> Self {
         match left {
             MaybeInt::Solved(v) => {
-            //I don't think we should ever be here...
+                //I don't think we should ever be here...
                 Self {
-                    op: OpCodes::ASSIGN,
-                    val: vec![*v]
+                    op: OpCodes::Assign,
+                    val: vec![*v],
                 }
-            },
+            }
             MaybeInt::Unsolved(lhs) => {
-                if lhs.contains("NOT") {
-                    let operands = lhs.split("NOT ").collect::<Vec<&str>>();
+                if lhs.contains("Not") {
+                    let operands = lhs.split("Not ").collect::<Vec<&str>>();
                     Self {
-                        op: OpCodes::NOT,
-                        val: vec![get_u16(gates, operands[1])]
+                        op: OpCodes::Not,
+                        val: vec![get_u16(gates, operands[1])],
                     }
-                }
-                else if lhs.contains("AND") {
-                    let operands = lhs.split(" AND ").collect::<Vec<&str>>();
+                } else if lhs.contains("And") {
+                    let operands = lhs.split(" And ").collect::<Vec<&str>>();
                     Self {
-                        op: OpCodes::AND,
-                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                        op: OpCodes::And,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
                     }
-                }
-                else if lhs.contains("OR") {
-                    let operands = lhs.split(" OR ").collect::<Vec<&str>>();
+                } else if lhs.contains("Or") {
+                    let operands = lhs.split(" Or ").collect::<Vec<&str>>();
                     Self {
-                        op: OpCodes::OR,
-                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                        op: OpCodes::Or,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
                     }
-                }
-                else if lhs.contains("LSHIFT") {
-                    let operands = lhs.split(" LSHIFT ").collect::<Vec<&str>>();
+                } else if lhs.contains("Lshift") {
+                    let operands = lhs.split(" Lshift ").collect::<Vec<&str>>();
                     Self {
-                        op: OpCodes::LSHIFT,
-                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                        op: OpCodes::Lshift,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
                     }
-                }
-                else if lhs.contains("RSHIFT") {
-                    let operands = lhs.split(" RSHIFT ").collect::<Vec<&str>>();
+                } else if lhs.contains("Rshift") {
+                    let operands = lhs.split(" Rshift ").collect::<Vec<&str>>();
                     Self {
-                        op: OpCodes::RSHIFT,
-                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])]
+                        op: OpCodes::Rshift,
+                        val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
                     }
                 } else {
                     Self {
-                        op: OpCodes::ASSIGN,
-                        val: vec![get_u16(gates, lhs)]
+                        op: OpCodes::Assign,
+                        val: vec![get_u16(gates, lhs)],
                     }
                 }
             }
@@ -100,24 +96,35 @@ impl Op {
     }
 }
 
-
-fn collect_unsolved(query: & str) -> Vec<& str> {
-    if query.contains("NOT") {
-        query.split("NOT ").skip(1).filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
-    }
-    else if query.contains("AND") {
-        query.split(" AND ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
-    }
-    else if query.contains("OR") {
-        query.split(" OR ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
-    }
-    else if query.contains("LSHIFT") {
-        query.split(" LSHIFT ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
-    }
-    else if query.contains("RSHIFT") {
-        query.split(" RSHIFT ").filter(|l| !u16::from_str_radix(l, 10).is_ok()).collect::<Vec<&str>>()
+fn collect_unsolved(query: &str) -> Vec<&str> {
+    if query.contains("Not") {
+        query
+            .split("Not ")
+            .skip(1)
+            .filter(|l| l.parse::<u16>().is_err())
+            .collect::<Vec<&str>>()
+    } else if query.contains("And") {
+        query
+            .split(" And ")
+            .filter(|l| l.parse::<u16>().is_err())
+            .collect::<Vec<&str>>()
+    } else if query.contains("Or") {
+        query
+            .split(" Or ")
+            .filter(|l| l.parse::<u16>().is_err())
+            .collect::<Vec<&str>>()
+    } else if query.contains("Lshift") {
+        query
+            .split(" Lshift ")
+            .filter(|l| l.parse::<u16>().is_err())
+            .collect::<Vec<&str>>()
+    } else if query.contains("Rshift") {
+        query
+            .split(" Rshift ")
+            .filter(|l| l.parse::<u16>().is_err())
+            .collect::<Vec<&str>>()
     } else {
-        if let Err(_) = u16::from_str_radix(query, 10) {
+        if query.parse::<u16>().is_err() {
             vec![query]
         } else {
             vec![]
@@ -129,9 +136,7 @@ fn solve(gates: &mut HashMap<String, MaybeInt>, id: &str) -> Result<()> {
     //query the hashmap (defensively, we'll be mutating later)
     let v = gates.get(id).expect(id).clone();
     match v {
-        MaybeInt::Solved(_) => {
-            Ok(())
-        },
+        MaybeInt::Solved(_) => Ok(()),
         //entire query as string
         MaybeInt::Unsolved(query) => {
             //collect unsolved into vectors
@@ -145,24 +150,12 @@ fn solve(gates: &mut HashMap<String, MaybeInt>, id: &str) -> Result<()> {
             let v = gates.get(id).expect(id).clone();
             let op = Op::new(gates, &v);
             let v = match op.op {
-                OpCodes::ASSIGN => {
-                    MaybeInt::Solved(op.val[0])
-                },
-                OpCodes::RSHIFT => {
-                    MaybeInt::Solved(op.val[0] >> op.val[1])
-                }
-                OpCodes::LSHIFT => {
-                    MaybeInt::Solved(op.val[0] << op.val[1])
-                }
-                OpCodes::AND => {
-                    MaybeInt::Solved(op.val[0] & op.val[1])
-                }
-                OpCodes::OR => {
-                    MaybeInt::Solved(op.val[0] | op.val[1])
-                }
-                OpCodes::NOT => {
-                    MaybeInt::Solved(!op.val[0])
-                }
+                OpCodes::Assign => MaybeInt::Solved(op.val[0]),
+                OpCodes::Rshift => MaybeInt::Solved(op.val[0] >> op.val[1]),
+                OpCodes::Lshift => MaybeInt::Solved(op.val[0] << op.val[1]),
+                OpCodes::And => MaybeInt::Solved(op.val[0] & op.val[1]),
+                OpCodes::Or => MaybeInt::Solved(op.val[0] | op.val[1]),
+                OpCodes::Not => MaybeInt::Solved(!op.val[0]),
             };
             let g = gates.get_mut(id).unwrap();
             *g = v;
@@ -189,7 +182,7 @@ pub fn part_1(gates: &HashMap<String, MaybeInt>) -> u16 {
     solve(&mut gates, "a").unwrap();
     match gates.get("a").unwrap() {
         MaybeInt::Solved(x) => *x,
-        MaybeInt::Unsolved(_) => panic!("unable to solve")
+        MaybeInt::Unsolved(_) => panic!("unable to solve"),
     }
 }
 
@@ -205,7 +198,6 @@ pub fn part_2(gates: &HashMap<String, MaybeInt>) -> u16 {
     solve(&mut second, "a").unwrap();
     match second.get("a").unwrap() {
         MaybeInt::Solved(v) => *v,
-        MaybeInt::Unsolved(_) => panic!("unable to solve")
+        MaybeInt::Unsolved(_) => panic!("unable to solve"),
     }
 }
-

@@ -15,9 +15,9 @@ pub struct Moon {
 impl Moon {
     fn new(x: isize, y: isize, z: isize) -> Self {
         Moon {
-            x: x,
-            y: y,
-            z: z,
+            x,
+            y,
+            z,
             v_x: 0,
             v_y: 0,
             v_z: 0,
@@ -59,8 +59,8 @@ fn gravity(moons: &mut Vec<Moon>, i: usize, j: usize) {
     moons[j].v_z += a_z;
 }
 
-pub fn part_1(input: &Vec<Moon>) -> usize {
-    let mut moons: Vec<Moon> = input.clone();
+pub fn part_1(input: &[Moon]) -> usize {
+    let mut moons: Vec<Moon> = input.to_owned();
     for _ in 0..1000 {
         // apply gravity
         for p in (0..moons.len()).combinations(2) {
@@ -75,8 +75,8 @@ pub fn part_1(input: &Vec<Moon>) -> usize {
     moons.iter().map(|m| m.e()).sum()
 }
 
-pub fn part_2(input: &Vec<Moon>) -> usize {
-    let mut moons: Vec<Moon> = input.clone();
+pub fn part_2(input: &[Moon]) -> usize {
+    let mut moons: Vec<Moon> = input.to_owned();
     let mut ctr = 0;
     let mut period: [Option<usize>; 3] = [None; 3];
     let mut x_history = HashSet::new();
@@ -95,25 +95,22 @@ pub fn part_2(input: &Vec<Moon>) -> usize {
         let x = moons.iter().map(|m| (m.x, m.v_x)).collect::<Vec<_>>();
         let y = moons.iter().map(|m| (m.y, m.v_y)).collect::<Vec<_>>();
         let z = moons.iter().map(|m| (m.z, m.v_z)).collect::<Vec<_>>();
-        if let None = period[0] {
-            if !x_history.insert(x) {
-                period[0] = Some(ctr);
-            }
+        if period[0].is_none() && !x_history.insert(x) {
+            period[0] = Some(ctr);
         }
-        if let None = period[1] {
-            if !y_history.insert(y) {
-                period[1] = Some(ctr);
-            }
+
+        if period[1].is_none() && !y_history.insert(y) {
+            period[1] = Some(ctr);
         }
-        if let None = period[2] {
-            if !z_history.insert(z) {
-                period[2] = Some(ctr);
-            }
+
+        if period[2].is_none() && !z_history.insert(z) {
+            period[2] = Some(ctr);
         }
+
         if let [Some(_), Some(_), Some(_)] = period {
             break;
         }
-        if ctr % 100_0 == 0 {
+        if ctr % 1_000 == 0 {
             //println!("{}", ctr);
         }
         ctr += 1;

@@ -60,17 +60,9 @@ impl Robot {
             self.computer.step(vec![])?,
         );
         let painted = match output.0 {
-            0 => match hull.insert(self.position, false) {
-                Some(_) => false,
-                None => true,
-            },
-            1 => match hull.insert(self.position, true) {
-                Some(_) => false,
-                None => true,
-            },
-            _ => {
-                panic!();
-            }
+            0 => hull.insert(self.position, false).is_none(),
+            1 => hull.insert(self.position, true).is_none(),
+            _ => panic!(),
         };
         let _ = match output.1 {
             0 => {
@@ -108,7 +100,7 @@ pub fn get_input() -> Intcode {
 pub fn part_1(input: &Intcode) -> usize {
     let mut robot = Robot::new(input);
     let mut hull = HashMap::new();
-    while let Some(_) = robot.step(&mut hull) {}
+    while robot.step(&mut hull).is_some() {}
     hull.len()
 }
 
@@ -116,7 +108,7 @@ pub fn part_2(input: &Intcode) -> usize {
     let mut robot = Robot::new(input);
     let mut hull = HashMap::new();
     hull.insert((0, 0), true);
-    while let Some(_) = robot.step(&mut hull) {}
+    while robot.step(&mut hull).is_some() {}
     println!("{:?}", hull);
     0
 }

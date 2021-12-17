@@ -1,4 +1,4 @@
-use anyhow::{Result, bail};
+use anyhow::{bail, Result};
 use std::fs;
 
 #[derive(Clone)]
@@ -147,7 +147,7 @@ impl Intcode {
         }
     }
 
-// plan to discontinue, or at least redoc, these
+    // plan to discontinue, or at least redoc, these
     pub fn new(intcodes: &Vec<isize>) -> Self {
         Intcode {
             intcodes: intcodes.clone(),
@@ -163,20 +163,22 @@ impl Intcode {
             .map(|l| l.parse::<isize>().unwrap())
             .collect::<Vec<isize>>();
         Ok(Intcode {
-            intcodes: intcodes,
+            intcodes,
             ptr: 0,
             base: 0,
         })
     }
-//
+    //
     pub fn from_str(s: &str) -> Result<Self> {
-        let intcodes = s.trim().split(',')
-                            .map(|l| l.parse::<isize>().unwrap())
-                            .collect::<Vec<isize>>();
+        let intcodes = s
+            .trim()
+            .split(',')
+            .map(|l| l.parse::<isize>().unwrap())
+            .collect::<Vec<isize>>();
         Ok(Self {
-            intcodes: intcodes,
+            intcodes,
             ptr: 0,
-            base: 0
+            base: 0,
         })
     }
 
@@ -184,12 +186,14 @@ impl Intcode {
         Ok(Self {
             intcodes: intcodes.clone(),
             ptr: 0,
-            base: 0
+            base: 0,
         })
     }
 
     pub fn ascii(&mut self, inputs: Vec<isize>) -> Result<String> {
-        Ok(String::from_utf8(self.run(inputs)?.iter().map(|&c| c as u8).collect())?)
+        Ok(String::from_utf8(
+            self.run(inputs)?.iter().map(|&c| c as u8).collect(),
+        )?)
     }
 
     //run to halt

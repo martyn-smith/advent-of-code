@@ -45,13 +45,9 @@ pub fn get_input() -> Vec<isize> {
 pub fn part_1(intcodes: &Vec<isize>) -> usize {
     let mut computer = Intcode::from_vec(intcodes).unwrap();
     let outputs = computer.run(vec![]).unwrap();
-    let tiles: Vec<Tile> = outputs.chunks(3)
-                            .map(|t| Tile::new(t).unwrap())
-                            .collect();
+    let tiles: Vec<Tile> = outputs.chunks(3).map(|t| Tile::new(t).unwrap()).collect();
     //note this does NOT account for overwriting chunks, but that seems to be okay.
-    tiles.iter()
-        .filter(|&i| TileType::Block == i.tile)
-        .count()
+    tiles.iter().filter(|&i| TileType::Block == i.tile).count()
 }
 
 pub fn part_2(intcodes: &Vec<isize>) -> usize {
@@ -67,13 +63,13 @@ pub fn part_2(intcodes: &Vec<isize>) -> usize {
         match (x, y, z) {
             (-1, 0, _) => {
                 score = z as usize;
-            },
+            }
             (_, _, 3) => {
                 paddle = x;
-            },
+            }
             (_, _, 4) => {
                 command[0] = (x - paddle).signum();
-            },
+            }
             _ => {}
         }
     }

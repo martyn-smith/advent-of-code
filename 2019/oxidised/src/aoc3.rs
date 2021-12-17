@@ -1,7 +1,6 @@
 ///
 /// Advent of Code day 3: Finding wire intersections
 ///
-
 use itertools::Itertools;
 //use std::fs;
 
@@ -44,16 +43,16 @@ impl Intersection {
 
 fn direction(p: &(Point, Point)) -> Direction {
     if p.0.x == p.1.x {
-        return Direction::Vertical;
+        Direction::Vertical
     } else if p.0.y == p.1.y {
-        return Direction::Horizontal;
+        Direction::Horizontal
     } else {
-        panic!("{:?} {:?}", p.0, p.1);
+        panic!("{:?} {:?}", p.0, p.1)
     }
 }
 
 fn get_intersection(a: &(Point, Point), b: &(Point, Point)) -> Option<Intersection> {
-    match (direction(&a), direction(&b)) {
+    match (direction(a), direction(b)) {
         (Direction::Horizontal, Direction::Vertical) => {
             if ((a.0.x < b.0.x && b.0.x < a.1.x) || (a.1.x < b.0.x && b.0.x < a.0.x))
                 && ((b.0.y < a.0.y && a.0.y < b.1.y) || (b.1.y < a.0.y && a.0.y < b.0.y))
@@ -88,7 +87,7 @@ fn get_wire(line: &str) -> Vec<Point> {
     let mut wire: Vec<Point> = vec![Point::new(0, 0, 0)];
     for l in line.trim().split(',') {
         let mag = str::parse::<i32>(&l[1..]).unwrap();
-        let vec = match l.chars().nth(0).unwrap() {
+        let vec = match l.chars().next().unwrap() {
             'L' => (-mag, 0i32),
             'R' => (mag, 0i32),
             'U' => (0i32, mag),

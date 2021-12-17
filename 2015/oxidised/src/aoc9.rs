@@ -1,21 +1,22 @@
-use std::collections::{HashMap, HashSet};
 use itertools::Itertools;
 use regex::Regex;
+use std::collections::{HashMap, HashSet};
 
 pub type DistanceMap = HashMap<(String, String), usize>;
 
 fn get_distance(itinerary: Vec<&String>, d: &DistanceMap) -> usize {
-    itinerary.windows(2)
-                .map(|w| {
-                    if let Some(x) = d.get(&(w[0].to_string(), w[1].to_string())) {
-                        x
-                    } else if let Some(x) = d.get(&(w[1].to_string(), w[0].to_string())) {
-                        x
-                    } else {
-                        panic!("{:?} doesn't have a match in {:?}", w, d);
-                    }
-                })
-                .sum()
+    itinerary
+        .windows(2)
+        .map(|w| {
+            if let Some(x) = d.get(&(w[0].to_string(), w[1].to_string())) {
+                x
+            } else if let Some(x) = d.get(&(w[1].to_string(), w[0].to_string())) {
+                x
+            } else {
+                panic!("{:?} doesn't have a match in {:?}", w, d);
+            }
+        })
+        .sum()
 }
 
 pub fn get_input() -> (HashSet<String>, DistanceMap) {
@@ -38,16 +39,20 @@ pub fn get_input() -> (HashSet<String>, DistanceMap) {
 
 pub fn part_1(input: &(HashSet<String>, DistanceMap)) -> usize {
     let (towns, distances) = (&input.0, &input.1);
-    towns.iter().permutations(towns.len())
-            .map(|p| get_distance(p, &distances))
-            .min()
-            .unwrap()
+    towns
+        .iter()
+        .permutations(towns.len())
+        .map(|p| get_distance(p, distances))
+        .min()
+        .unwrap()
 }
 
 pub fn part_2(input: &(HashSet<String>, DistanceMap)) -> usize {
     let (towns, distances) = (&input.0, &input.1);
-    towns.iter().permutations(towns.len())
-            .map(|p| get_distance(p, &distances))
-            .max()
-            .unwrap()
+    towns
+        .iter()
+        .permutations(towns.len())
+        .map(|p| get_distance(p, distances))
+        .max()
+        .unwrap()
 }

@@ -1,12 +1,10 @@
 ///
 /// Advent of Code day 4: Santa's first Cryptominer
 ///
-
 /*
  * Sticking with a single threaded implementation for now, it seems speedy enough
  */
-
-use md5::{Md5, Digest};
+use md5::{Digest, Md5};
 
 pub fn get_input() -> &'static str {
     "iwrupvqb"

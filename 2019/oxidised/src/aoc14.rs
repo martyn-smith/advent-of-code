@@ -15,18 +15,15 @@ impl IngredientString {
         let (inputs, output) = (&split_match[1], &split_match[2]);
         let inputs: Vec<(usize, String)> = ingredient_srch
             .captures_iter(inputs)
-            .map(|c| (usize::from_str_radix(&c[1], 10).unwrap(), c[2].to_string()))
+            .map(|c| (c[1].parse::<usize>().unwrap(), c[2].to_string()))
             .collect();
         let output = ingredient_srch.captures(output).unwrap();
-        let output = (usize::from_str_radix(&output[1], 10).unwrap(), output[2].to_string());
-        IngredientString {
-            inputs,
-            output
-        }
+        let output = (output[1].parse::<usize>().unwrap(), output[2].to_string());
+        IngredientString { inputs, output }
     }
 }
 // 42108 < ans < 58302258
-fn hunt(input: &Vec<IngredientString>, target: &str, endpoint: &str) -> usize {
+fn hunt(input: &[IngredientString], target: &str, endpoint: &str) -> usize {
     /* we could just use the return type of .find() and assume None means we've found ore,
     but I'd prefer not to take the risk.
 
@@ -45,9 +42,9 @@ fn hunt(input: &Vec<IngredientString>, target: &str, endpoint: &str) -> usize {
     */
     println!("hunting for {}", target);
     if target != endpoint {
-        let l = input.iter()
-                     .find(|&i| i.output.1 == target).unwrap();
-        l.inputs.iter()
+        let l = input.iter().find(|&i| i.output.1 == target).unwrap();
+        l.inputs
+            .iter()
             .map(|i| {
                 let mut qty = i.0 * hunt(input, &i.1, endpoint);
                 qty = qty / l.output.0 + (qty % l.output.0 != 0) as usize;
@@ -68,6 +65,6 @@ pub fn get_input() -> Vec<IngredientString> {
         .collect()
 }
 
-pub fn part_1(input: &Vec<IngredientString>) -> usize {
+pub fn part_1(input: &[IngredientString]) -> usize {
     hunt(input, "FUEL", "ORE")
 }

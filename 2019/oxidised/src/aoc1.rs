@@ -23,10 +23,10 @@ pub fn get_input() -> Vec<usize> {
     input.lines().map(|l| l.parse::<usize>().unwrap()).collect()
 }
 
-pub fn part_1(masses: &Vec<usize>) -> usize {
+pub fn part_1(masses: &[usize]) -> usize {
     masses.iter().map(|i| get_fuel(i)).sum()
 }
 
-pub fn part_2(masses: &Vec<usize>) -> usize {
+pub fn part_2(masses: &[usize]) -> usize {
     masses.iter().map(|i| get_recursive_fuel(i)).sum()
 }

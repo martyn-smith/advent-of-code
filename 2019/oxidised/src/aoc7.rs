@@ -14,7 +14,7 @@ struct AmpChain {
 impl Amplifier {
     fn new(intcodes: &Intcode, phase: usize) -> Self {
         Amplifier {
-            phase: phase,
+            phase,
             computer: intcodes.clone(),
             first_run: true,
         }
@@ -50,12 +50,8 @@ impl AmpChain {
 
     fn run_closed(&mut self) -> Option<isize> {
         let mut output: Option<isize> = Some(0);
-        loop {
-            if let Some(o) = self.run_open(output) {
-                output = Some(o);
-            } else {
-                break;
-            }
+        while let Some(o) = self.run_open(output) {
+            output = Some(o);
         }
         output
     }

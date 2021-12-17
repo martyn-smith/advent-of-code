@@ -1,6 +1,6 @@
 //use std::fs;
 
-fn diff(s: &String) -> usize {
+fn diff(s: &str) -> usize {
     let in_mem = s.len();
     let mut repr = 0;
     let mut escape = Some(0);
@@ -12,7 +12,7 @@ fn diff(s: &String) -> usize {
                 Some('"') => Some(0),
                 Some('x') => Some(2),
                 Some(g) => panic!("unexpected non-escape char {}", g),
-                None => panic!("escape character at EOL")
+                None => panic!("escape character at EOL"),
             };
             continue;
         }
@@ -30,12 +30,11 @@ fn diff(s: &String) -> usize {
     in_mem - (repr - 2)
 }
 
-fn encode(s: &String) -> String {
+fn encode(s: &str) -> String {
     let mut out = String::new();
     // let mut tmp = String::new();
     // let mut escape = Some(0);
-    let mut s = s.chars().peekable();
-    while let Some(c) = s.next() {
+    for c in s.chars().peekable() {
         if c == '"' || c == '\\' {
             out.push(c);
         }
@@ -47,20 +46,16 @@ fn encode(s: &String) -> String {
 
 pub fn get_input() -> Vec<String> {
     include_str!("../../data/8.txt")
-            .lines()
-            .map(|l| l.to_string())
-            .collect()
+        .lines()
+        .map(|l| l.to_string())
+        .collect()
 }
 
-pub fn part_1(input: &Vec<String>) -> usize {
-    input.iter()
-         .map(|l| diff(l))
-         .sum()
+pub fn part_1(input: &[String]) -> usize {
+    input.iter().map(|l| diff(l)).sum()
 }
 
 //1474<x<2587
-pub fn part_2(input: &Vec<String>) -> usize {
-    input.iter()
-         .map(|l| diff(&encode(l))+diff(l))
-         .sum()
+pub fn part_2(input: &[String]) -> usize {
+    input.iter().map(|l| diff(&encode(l)) + diff(l)).sum()
 }

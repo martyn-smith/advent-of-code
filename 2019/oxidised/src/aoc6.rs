@@ -29,7 +29,7 @@ pub fn get_input() -> HashMap<String, Vec<String>> {
 }
 
 pub fn part_1(orbits: &HashMap<String, Vec<String>>) -> usize {
-    orbits.keys().map(|p| get_orbits(orbits, &p)).sum()
+    orbits.keys().map(|p| get_orbits(orbits, p)).sum()
 }
 
 pub fn part_2(orbits: &HashMap<String, Vec<String>>) -> usize {
