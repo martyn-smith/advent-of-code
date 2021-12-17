@@ -1,73 +1,102 @@
-use regex::Regex;
+use std::collections::HashMap;
+use std::collections::VecDeque;
 //use std::fs;
 
+pub type Menu = HashMap<String, (isize, Vec<Chemical>)>;
+
 #[derive(Debug)]
-pub struct IngredientString {
-    inputs: Vec<(usize, String)>,
-    output: (usize, String),
+pub struct Chemical {
+    name: String,
+    qty: isize
 }
 
-impl IngredientString {
-    fn new(l: &str) -> Self {
-        let ingredient_srch = Regex::new(r"(\d+) ([A-Z]+)").unwrap();
-        let split_srch = Regex::new(r"^(.*) => (.*)$").unwrap();
-        let split_match = split_srch.captures(l).unwrap();
-        let (inputs, output) = (&split_match[1], &split_match[2]);
-        let inputs: Vec<(usize, String)> = ingredient_srch
-            .captures_iter(inputs)
-            .map(|c| (usize::from_str_radix(&c[1], 10).unwrap(), c[2].to_string()))
-            .collect();
-        let output = ingredient_srch.captures(output).unwrap();
-        let output = (usize::from_str_radix(&output[1], 10).unwrap(), output[2].to_string());
-        IngredientString {
-            inputs,
-            output
+fn get_order_and_spares(required_qty: isize, batch_size: isize) -> (isize, isize) {
+    let n = required_qty / batch_size;
+    let remainder = required_qty % batch_size;
+    if remainder != 0 {
+        (n + 1, remainder - batch_size)
+    } else {
+        (n, 0)
+    }
+}
+
+// correct answer (31) for v_small input. Look for 165 on small.
+// 42108 < ans < 843541
+fn hunt(target: Chemical, recipes: &Menu) -> usize {
+    //we do need to collate.
+    let mut current = VecDeque::new();
+    current.push_front(target);
+    let mut ore = 0;
+    while current.iter().any(|c| c.qty > 0) {
+        println!("{:?}", current);
+        let mut requirement = current.pop_front().unwrap();
+        if requirement.qty < 0 {
+            for chem in current.iter_mut() {
+                if chem.name == requirement.name {
+                    requirement.qty += chem.qty;
+                    chem.qty = 0;
+                }
+            }
+            current.push_back(requirement);
+            continue;
+        } else if requirement.qty == 0 {
+            continue;
+        } else {
+            let (batch_size, next) = recipes.get(&requirement.name).unwrap();
+            //it is not specified but recipes that require ORE, require only ORE
+            let (num_orders, spare) = get_order_and_spares(requirement.qty, *batch_size);
+            if spare < 0 {
+                current.push_back(Chemical::new(&requirement.name[..], spare));
+            }
+            for n in next.into_iter() {
+                if &n.name == "ORE" {
+                    ore += n.qty * num_orders;
+                } else {
+                    current.push_back(Chemical::new(&n.name[..], n.qty * num_orders));
+                }
+            }
+        }
+    }
+    for c in current.into_iter() {
+        let excess = -1 * c.qty;
+        ore -= excess / recipes.get(&c.name).unwrap().0;
+    }
+    ore as usize
+}
+
+impl Chemical {
+
+    fn new(name: &str, qty: isize) -> Self {
+        Chemical {
+            name: name.to_string(),
+            qty: qty
+        }
+    }
+
+    fn from_str(s: &str) -> Self {
+        let mut s = s.trim().split(' ');
+        let qty = s.next().unwrap().parse::<isize>().unwrap();
+        let name = s.next().unwrap().to_string();
+        Chemical {
+            name,
+            qty
         }
     }
 }
-// 42108 < ans < 58302258
-fn hunt(input: &Vec<IngredientString>, target: &str, endpoint: &str) -> usize {
-    /* we could just use the return type of .find() and assume None means we've found ore,
-    but I'd prefer not to take the risk.
 
-    Unfortunately this recursive approach fails to identify the minimum requirement,
-    since, although the data structure is not cyclic, it is possible for multiple parents
-    to share a child. e.g:
+pub fn get_input() -> Menu {
+    let mut recipes = HashMap::new();
 
-    "3 ORE => 2 A", "1 A => 1 B", "1 A => 1 C", "1 B, 1 C => 1 FUEL" => 3 ORE
-
-    rules out integer accumulation
-
-    "3 ORE => 2 A", "3 ORE => 2 B", "1 A, 1 B => FUEL" => 4 ORE
-
-    rules out floating-point accumulation
-
-    */
-    println!("hunting for {}", target);
-    if target != endpoint {
-        let l = input.iter()
-                     .find(|&i| i.output.1 == target).unwrap();
-        l.inputs.iter()
-            .map(|i| {
-                let mut qty = i.0 * hunt(input, &i.1, endpoint);
-                qty = qty / l.output.0 + (qty % l.output.0 != 0) as usize;
-                //qty /= l.output.0 as f64;
-                println!("{} {}", i.1, qty);
-                qty
-            })
-            .sum()
-    } else {
-        1
+    for l in include_str!("../../data/14.small.txt").lines() {
+        let mut s = l.split(" => ");
+        let inputs = s.next().unwrap().split(',').map(|i| Chemical::from_str(i)).collect();
+        let output = Chemical::from_str(s.next().unwrap());
+        recipes.insert(output.name, (output.qty, inputs));
     }
+    recipes
 }
 
-pub fn get_input() -> Vec<IngredientString> {
-    include_str!("../../data/14_very_small.txt")
-        .lines()
-        .map(|l| IngredientString::new(l))
-        .collect()
-}
-
-pub fn part_1(input: &Vec<IngredientString>) -> usize {
-    hunt(input, "FUEL", "ORE")
+pub fn part_1(input: &Menu) -> usize {
+    let target = Chemical::new("FUEL", 1);
+    hunt(target, input)
 }
