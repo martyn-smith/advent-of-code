@@ -6,13 +6,13 @@ fn triangle(n: usize) -> usize {
     n * (n + 1) / 2
 }
 
-fn cost(n: usize, input: &Vec<usize>) -> usize {
+fn cost(n: usize, input: &[usize]) -> usize {
     input.iter()
         .map(|&i| (n as i32 - i as i32).abs() as usize)
         .sum()
 }
 
-fn tri_cost(n: usize, input: &Vec<usize>) -> usize {
+fn tri_cost(n: usize, input: &[usize]) -> usize {
     input.iter()
         .map(|&i| triangle((n as i32 - i as i32).abs() as usize))
         .sum()
@@ -26,9 +26,9 @@ pub fn get_input() -> Vec<usize> {
         .collect()
 }
 
-pub fn part_1(input: &Vec<usize>) -> usize {
-    let mut input = input.clone();
-    input.sort();
+pub fn part_1(input: &[usize]) -> usize {
+    let mut input = input.to_owned();
+    input.sort_unstable();
     let median = input[input.len() / 2];
     (median - 1 ..= median + 1)
         .map(|n| cost(n, &input))
@@ -36,7 +36,7 @@ pub fn part_1(input: &Vec<usize>) -> usize {
         .unwrap()
 }
 
-pub fn part_2(input: &Vec<usize>) -> usize {
+pub fn part_2(input: &[usize]) -> usize {
      let mean = input.iter().sum::<usize>() / input.len();
      (mean - 1 ..= mean + 1)
         .map(|n| tri_cost(n, input))

@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use std::ops::Index;
 
 
-const LETTERS: &'static str = "ABCDEFGHIJKLNOPQRSTUVWXYZ";
+const LETTERS: &str = "ABCDEFGHIJKLNOPQRSTUVWXYZ";
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Pair {
@@ -103,7 +103,7 @@ fn polymerise(mut counts: Counts, reactions: &HashMap<Pair, (Pair, Pair)>) -> Co
             if let Some(n) = next.get_mut(p) {
                 *n += count;
             } else {
-                next.insert(p.clone(), count);
+                next.insert(*p, count);
             }
         }
     }
@@ -131,9 +131,8 @@ pub fn part_1(input: &(Counts, HashMap<Pair, (Pair, Pair)>)) -> usize {
     let reactions = &input.1;
     let count_n = (0..10usize)
                     .fold(count_0, |counts, _| {
-                        let count = polymerise(counts, reactions);
-//                        println!("after step {}: {}", i + 1, count.cts.values().sum::<usize>() + 1);
-                        count
+                        //println!("after step {}: {}", i + 1, count.cts.values().sum::<usize>() + 1);
+                        polymerise(counts, reactions)
                     });
 
     let counts = LETTERS.chars()

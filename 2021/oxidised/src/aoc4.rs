@@ -85,7 +85,7 @@ pub fn part_2(input: &(Vec<usize>, Vec<Board>)) -> usize {
     let mut cmd = input.0.iter();
     let mut boards = input.1.clone();
     let mut score = 0;
-    while boards.len() >= 1 {
+    while !boards.is_empty() {
         let n = cmd.next().unwrap();
         let mut retain = vec![true; boards.len()];
 

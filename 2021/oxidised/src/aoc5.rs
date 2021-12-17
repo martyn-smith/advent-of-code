@@ -21,8 +21,8 @@ pub struct Line {
 impl Line {
     fn new(l: &str) -> Self {
         let mut l = l.split(" -> ");
-        let mut start = l.next().unwrap().split(",");
-        let mut end = l.next().unwrap().split(",");
+        let mut start = l.next().unwrap().split(',');
+        let mut end = l.next().unwrap().split(',');
         let mut x = (start.next().unwrap().parse::<usize>().unwrap(),
                      end.next().unwrap().parse::<usize>().unwrap());
         let mut y = (start.next().unwrap().parse::<usize>().unwrap(),
@@ -104,7 +104,7 @@ pub fn get_input() -> Vec<Line> {
         .collect()
 }
 
-pub fn part_1(input: &Vec<Line>) -> usize {
+pub fn part_1(input: &[Line]) -> usize {
     let (mut once, mut twice) = (HashSet::new(), HashSet::new());
     let lines = input.iter().filter(|&l| l.direction() != Direction::Diagonal);
     for l in lines {
@@ -113,7 +113,7 @@ pub fn part_1(input: &Vec<Line>) -> usize {
     twice.len()
 }
 
-pub fn part_2(input: &Vec<Line>) -> usize {
+pub fn part_2(input: &[Line]) -> usize {
     let (mut once, mut twice) = (HashSet::new(), HashSet::new());
     let lines = input.iter();
     for l in lines {

@@ -29,14 +29,12 @@ use std::collections::HashMap;
 fn g(i: usize, t: usize) -> usize {
     if i > 0 {
         g(0, t.saturating_sub(i))
+    } else if t == 0 {
+        1
+    } else if t < 7 {
+        2
     } else {
-        if t == 0 {
-            1
-        } else if t < 7 {
-            2
-        } else  {
-            g(0, t - 7) + g(2, t - 7)
-        }
+        g(0, t - 7) + g(2, t - 7)
     }
 }
 
@@ -48,22 +46,22 @@ pub fn get_input() -> Vec<usize> {
             .collect()
 }
 
-pub fn part_1(input: &Vec<usize>) -> usize {
+pub fn part_1(input: &[usize]) -> usize {
     let mut growth = HashMap::new();
     for i in 0..8 {
         growth.insert(i, g(i, 80));
     }
     input.iter()
-        .map(|i| growth.get(&i).unwrap())
+        .map(|i| growth.get(i).unwrap())
         .sum()
 }
 
-pub fn part_2(input: &Vec<usize>) -> usize {
+pub fn part_2(input: &[usize]) -> usize {
     let mut growth = HashMap::new();
     for i in 0..8 {
         growth.insert(i, g(i, 256));
     }
     input.iter()
-        .map(|i| growth.get(&i).unwrap())
+        .map(|i| growth.get(i).unwrap())
         .sum()
 }

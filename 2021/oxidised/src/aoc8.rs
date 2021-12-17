@@ -27,12 +27,12 @@
 use std::collections::{HashMap};
 use itertools::Itertools;
 
-const NUMBERS: [&'static str; 10] = ["abcefg", "cf", "acdeg", "acdfg", "bcdf",
+const NUMBERS: [&str; 10] = ["abcefg", "cf", "acdeg", "acdfg", "bcdf",
                                      "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"];
 
 pub type Display = (Vec<String>, Vec<String>);
 
-fn count_1478(line: &Vec<String>) -> usize {
+fn count_1478(line: &[String]) -> usize {
     line.iter()
         .filter(|&l| by_len(l).is_some())
         .count()
@@ -73,7 +73,7 @@ fn by_intersection(x: &str, nums: &[Option<&str>; 10]) -> usize {
     }
 }
 
-fn solve(line: &Vec<String>) -> HashMap<&str, usize> {
+fn solve(line: &[String]) -> HashMap<&str, usize> {
     let mut nums : [Option<&str>; 10] = [None; 10];
     let mut seg = HashMap::new();
     for l in line.iter() {
@@ -109,14 +109,14 @@ pub fn get_input() -> Vec<(Vec<String>, Vec<String>)> {
                     .collect()
 }
 
-pub fn part_1(input: &Vec<Display>) -> usize {
+pub fn part_1(input: &[Display]) -> usize {
     input
         .iter()
         .map(|l| count_1478(&l.1))
         .sum()
 }
 
-pub fn part_2(input: &Vec<Display>) -> usize {
+pub fn part_2(input: &[Display]) -> usize {
     input.iter().map(|l| {
         let m = solve(&l.0);
         let mut s = String::new();

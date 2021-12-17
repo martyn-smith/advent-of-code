@@ -127,8 +127,7 @@ pub fn get_input() -> Array2<u8> {
         .filter_map(|c| c.to_digit(10))
         .map(|c| c as u8)
         .collect::<Vec<u8>>();
-    let arr = Array::from_shape_vec((depth, width), pic).unwrap();
-    arr
+    Array::from_shape_vec((depth, width), pic).unwrap()
 }
 
 pub fn part_1(input: &Array2<u8>) -> usize {

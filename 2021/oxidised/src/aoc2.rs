@@ -3,7 +3,7 @@
 ///
 
 fn get_vector(l: &str) -> (i32, i32) {
-    let mut l = l.split(" ");
+    let mut l = l.split(' ');
     let sign = match l.next().unwrap() {
         "forward" => (1, 0),
         "backward" => (-1, 0),
@@ -32,13 +32,13 @@ pub fn get_input() -> Vec<(i32, i32)> {
         .collect()
 }
 
-pub fn part_1(input: &Vec<(i32, i32)>) -> usize {
+pub fn part_1(input: &[(i32, i32)]) -> usize {
     let pos = input.iter()
                     .fold((0i32, 0i32), |pos, v| (pos.0 + v.0, pos.1 + v.1));
     (pos.0 * pos.1) as usize
 }
 
-pub fn part_2(input: &Vec<(i32, i32)>) -> usize {
+pub fn part_2(input: &[(i32, i32)]) -> usize {
     let pos = input.iter()
                     .fold((0i32, 0i32, 0i32), |pos, &v| aim(pos, v));
     (pos.0 * pos.1) as usize

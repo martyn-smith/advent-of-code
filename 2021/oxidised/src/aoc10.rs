@@ -8,7 +8,7 @@ const OPENING: [char; 4] = ['(','[','{','<'];
 const CLOSING: [char; 4] = [')',']','}','>'];
 */
 
-fn illegal_char(line: &String) -> Option<char> {
+fn illegal_char(line: &str) -> Option<char> {
     let mut close = vec![];
     for c in line.chars() {
         match c {
@@ -23,7 +23,7 @@ fn illegal_char(line: &String) -> Option<char> {
     None
 }
 
-fn completion_chars(line: &String) -> Option<String> {
+fn completion_chars(line: &str) -> Option<String> {
     let mut close = vec![];
     for c in line.chars() {
         match c {
@@ -67,19 +67,19 @@ pub fn get_input() -> Vec<String> {
         .collect()
 }
 
-pub fn part_1(input: &Vec<String>) -> usize {
+pub fn part_1(input: &[String]) -> usize {
     input.iter()
         .filter_map(|l| illegal_char(l))
-        .map(|c| score_corrupted(c))
+        .map(score_corrupted)
         .sum()
 }
 
-pub fn part_2(input: &Vec<String>) -> usize {
+pub fn part_2(input: &[String]) -> usize {
     let mut scores = input.iter()
                         .filter_map(|l| completion_chars(l))
-                        .map(|s| score_completion(s))
+                        .map(score_completion)
                         .collect::<Vec<usize>>();
 
-    scores.sort();
+    scores.sort_unstable();
     scores[scores.len() / 2]
 }
