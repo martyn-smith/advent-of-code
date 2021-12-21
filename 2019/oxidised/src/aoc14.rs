@@ -1,70 +1,80 @@
 use regex::Regex;
 //use std::fs;
 
-#[derive(Debug)]
-pub struct IngredientString {
-    inputs: Vec<(usize, String)>,
-    output: (usize, String),
+pub type Menu: HashMap<String, (usize, Vec<Chemical>)>;
+
+pub struct Chemical {
+    name: String,
+    qty: usize
 }
 
-impl IngredientString {
-    fn new(l: &str) -> Self {
-        let ingredient_srch = Regex::new(r"(\d+) ([A-Z]+)").unwrap();
-        let split_srch = Regex::new(r"^(.*) => (.*)$").unwrap();
-        let split_match = split_srch.captures(l).unwrap();
-        let (inputs, output) = (&split_match[1], &split_match[2]);
-        let inputs: Vec<(usize, String)> = ingredient_srch
-            .captures_iter(inputs)
-            .map(|c| (c[1].parse::<usize>().unwrap(), c[2].to_string()))
-            .collect();
-        let output = ingredient_srch.captures(output).unwrap();
-        let output = (output[1].parse::<usize>().unwrap(), output[2].to_string());
-        IngredientString { inputs, output }
+impl Chemical {
+    fn new(name: &str, qty: usize) -> Self {
+        Chemical {
+            name: name.to_string(),
+            qty
+        }
     }
-}
-// 42108 < ans < 58302258
-fn hunt(input: &[IngredientString], target: &str, endpoint: &str) -> usize {
-    /* we could just use the return type of .find() and assume None means we've found ore,
-    but I'd prefer not to take the risk.
 
-    Unfortunately this recursive approach fails to identify the minimum requirement,
-    since, although the data structure is not cyclic, it is possible for multiple parents
-    to share a child. e.g:
+    fn from_str(s: &str) -> Self {
+        let mut s = s.trim().split(' ');
+        let qty = s.next().unwrap().parse::<usize>().unwrap();
+        let name = s.next().unwrap().to_string();
+        Chemical {
+            name,
+            qty
+        }
+   }
+}
+
+fn ceiling_div(a: usize, b: usize) -> usize {
+    a / b + (if a % b != 0 {1} else {0})
+}
+
+//31 for x small, 165 for small
+//42108 < and < 843541 for full
+fn hunt(target: Chemical, recipes: &Menu) -> usize {
+    /*
+     * Unfortunately this recursive approach fails to identify the minimum requirement,
+     * since, although the data structure is not cyclic, it is possible for multiple parents
+     * to share a child. e.g:
 
     "3 ORE => 2 A", "1 A => 1 B", "1 A => 1 C", "1 B, 1 C => 1 FUEL" => 3 ORE
 
-    rules out integer accumulation
-
-    "3 ORE => 2 A", "3 ORE => 2 B", "1 A, 1 B => FUEL" => 4 ORE
-
-    rules out floating-point accumulation
-
-    */
-    println!("hunting for {}", target);
-    if target != endpoint {
-        let l = input.iter().find(|&i| i.output.1 == target).unwrap();
-        l.inputs
-            .iter()
-            .map(|i| {
-                let mut qty = i.0 * hunt(input, &i.1, endpoint);
-                qty = qty / l.output.0 + (qty % l.output.0 != 0) as usize;
-                //qty /= l.output.0 as f64;
-                println!("{} {}", i.1, qty);
-                qty
-            })
-            .sum()
-    } else {
-        1
+     * approach: use two stacks, plus an ore counter.
+     * pop stack and check if spares can (even partially!) fulfil the requirement;
+     * if spares exceed demand, substract requirement from spares.
+     * if spares equal demand, subtract and pop from spares.
+     * if demand exceeds spares or no spares, subtract and continue.
+     *     calculate minimum number of orders (i.e. ceiling division)
+     *     look up recipe, mult by number of orders,
+     *     push onto stack, collapsing as you go.
+     */
+    let mut requirements = vec![target];
+    let mut spares: Vec<Chemical> = vec![];
+    let mut ore = 0;
+    while !requirements.is_empty() {
+        let r = requirements.pop().unwrap();
+        if let Some(i) = spares.find(&order) {
+            let s = spares[i];
+        }
     }
+    ore as usize
 }
 
-pub fn get_input() -> Vec<IngredientString> {
-    include_str!("../../data/14_very_small.txt")
-        .lines()
-        .map(|l| IngredientString::new(l))
-        .collect()
+pub fn get_input() -> Menu {
+    let mut recipes = HashMap::new();
+
+    for l in include_str!("../../data/14.small.txt").lines() {
+        let mut s = l.split(" => ");
+        let inputs = s.next().unwrap().split(',').map(|i| Chemical::from_str(i)).collect();
+        let output = Chemical::from_str(s.next().unwrap());
+        recipes.insert(output.name, (output.qty, inputs));
+    }
+    recipes
 }
 
-pub fn part_1(input: &[IngredientString]) -> usize {
-    hunt(input, "FUEL", "ORE")
+pub fn part_1(input: &Menu) -> usize {
+    let target = Chemical::new("FUEL", 1);
+    hunt(target, input)
 }
