@@ -103,8 +103,7 @@ pub fn part_2(input: &[Player]) -> usize {
     let mut die = Die::new();
     let mut p1_wins = 0;
     let mut p2_wins = 0;
-    let mut p1_scores = vec![];
-    let mut p2_scores = vec![];
-    loop 
+    // let mut p1_scores = vec![];
+    // let mut p2_scores = vec![];
     0
 }

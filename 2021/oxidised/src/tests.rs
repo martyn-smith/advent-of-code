@@ -102,3 +102,9 @@ fn test_day_21() {
     let input = aoc21::get_input();
     assert_eq!(920079, aoc21::part_1(&input));
 }
+
+#[test]
+fn test_day_22() {
+    let input = aoc22::get_input();
+    assert_eq!(551693, aoc22::part_1(&input));
+}
