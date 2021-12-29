@@ -3,7 +3,8 @@ Advent of code day 20: rotating images to find Nessy.
 """
 from math import prod
 
-sea_monster = """
+sea_monster = \
+"""
                   # 
 #    ##    ##    ###
  #  #  #  #  #  #   
@@ -30,8 +31,8 @@ class Image:
             self.tiles.remove(tile)
             try:
                 #print(f"checking right... {tile.ID}")
-                next_tile = next(test_tile for test_tile in self.tiles 
-                                    if tile.right_edge in test_tile.all_edges 
+                next_tile = next(test_tile for test_tile in self.tiles
+                                    if tile.right_edge in test_tile.all_edges
                                     or tile.right_edge[::-1] in test_tile.all_edges)
                 #print(f"found {next_tile.ID}")
                 next_tile.find_transform(tile.right_edge, "left")
@@ -41,8 +42,8 @@ class Image:
                 tile = self.grid[-1][0]
                 try:
                     #print(f"checking down... {tile.ID}")
-                    next_tile = next(test_tile for test_tile in self.tiles 
-                                        if tile.bottom_edge in test_tile.all_edges 
+                    next_tile = next(test_tile for test_tile in self.tiles
+                                        if tile.bottom_edge in test_tile.all_edges
                                         or tile.bottom_edge[::-1] in test_tile.all_edges)
                     #print(f"found {next_tile.ID}")
                     next_tile.find_transform(tile.bottom_edge, "top")
@@ -77,10 +78,10 @@ class Image:
             grid = rot90(grid)
             for y in range(len(grid) - len(monster)):
                 for x in range(len(grid[0]) - len(monster[0])):
-                    candidate_monster = ["".join("#" if grid[y+i][x+j] == "#" 
-                                                        and monster[i][j] == "#" 
-                                                        else " " 
-                                                    for j in range(len(monster[0]))) 
+                    candidate_monster = ["".join("#" if grid[y+i][x+j] == "#"
+                                                        and monster[i][j] == "#"
+                                                        else " "
+                                                    for j in range(len(monster[0])))
                                                 for i in range(len(monster))]
                     #print("\n".join(m + "\t" + c for m, c in zip(monster, candidate_monster)))
                     if candidate_monster == monster:

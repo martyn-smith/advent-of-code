@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+mod alu;
 mod aoc1;
 mod aoc2;
 mod aoc3;
@@ -13,14 +14,16 @@ mod aoc11;
 mod aoc12;
 mod aoc13;
 mod aoc14;
+//mod aoc15;
 mod aoc21;
 mod aoc22;
+mod aoc24;
 
 #[cfg(test)]
 mod tests;
 
 fn main() {
-    let input = aoc22::get_input();
-    println!("{}", aoc22::part_1(&input));
-    println!("{}", aoc22::part_2(&input));
+    let input = aoc24::get_input();
+    println!("{}", aoc24::part_1(&input));
+    //println!("{}", aoc21::part_2(&input));
 }

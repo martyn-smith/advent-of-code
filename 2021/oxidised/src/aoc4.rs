@@ -24,6 +24,8 @@ impl Board {
     }
 
     fn play(&mut self, n: &usize) -> Option<usize> {
+        //clippy appears wrong to require flatten here - we need to access point as an enum
+        #[allow(clippy::manual_flatten)]
         for point in self.board.iter_mut() {
             if let Some(c) = point {
                 if c == n {
