@@ -1,20 +1,7 @@
 #![allow(dead_code)]
-mod aoc1;
-mod aoc10;
-mod aoc11;
-mod aoc12;
-mod aoc13;
-mod aoc14;
-mod aoc17;
-mod aoc2;
-mod aoc3;
-mod aoc4;
-mod aoc5;
-mod aoc6;
-mod aoc7;
-mod aoc8;
-mod aoc9;
 mod intcode;
+mod aoc2;
+mod aoc5;
 
 #[cfg(test)]
 mod tests;
@@ -28,9 +15,7 @@ mod tests;
 // }
 
 fn main() {
-    let input = aoc17::get_input();
-    println!("{}", aoc17::part_1(&input));
-    // let input = aoc10::get_input();
-    // println!("{}", aoc10::part_1(&input));
-    // println!("{}", aoc10::part_2(&input));
+    let input = aoc5::get_input();
+    println!("{}", aoc5::part_1(&input));
+    println!("{}", aoc5::part_2(&input));
 }

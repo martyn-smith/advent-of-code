@@ -1,29 +1,23 @@
-use super::intcode::Intcode;
+use super::intcode::{Intcode, Program, from_str};
 
-pub fn get_input() -> Intcode {
-    Intcode::from_str(include_str!("../../data/5.txt")).unwrap()
+pub fn get_input() -> Program {
+    from_str(include_str!("../../data/5.txt"))
 }
 
-pub fn part_1(computer: &Intcode) -> usize {
-    let mut computer = computer.clone();
+pub fn part_1(p: &Program) -> usize {
+    let mut p = p.clone();
+    let mut computer = Intcode::new(&mut p);
     let system_id = 1isize;
     let inputs = vec![system_id];
-    let outputs = computer.run(inputs).unwrap();
-    assert!(
-        outputs.iter().filter(|&&i| i != 0).count() <= 1,
-        "ERROR: intcode returned too many non-zero status codes"
-    );
-    *outputs.last().unwrap() as usize
+    computer.inputs = inputs;
+    computer.last().unwrap() as usize
 }
 
-pub fn part_2(computer: &Intcode) -> usize {
-    let mut computer = computer.clone();
+pub fn part_2(p: &Program) -> usize {
+    let mut p = p.clone();
+    let mut computer = Intcode::new(&mut p);
     let system_id = 5isize;
     let inputs = vec![system_id];
-    let outputs = computer.run(inputs).unwrap();
-    assert!(
-        outputs.iter().filter(|&&i| i != 0).count() <= 1,
-        "ERROR: intcode returned too many non-zero status codes"
-    );
-    *outputs.last().unwrap() as usize
+    computer.inputs = inputs;
+    computer.last().unwrap() as usize
 }

@@ -19,9 +19,9 @@ pub fn part_1(program: &Vec<isize>) -> usize {
     let mut program = program.clone();
     program[1] = 12;
     program[2] = 2;
-    let mut computer = Intcode::from_vec(&program).unwrap();
-    computer.run(vec![]).unwrap();
-    computer.intcodes[0] as usize
+    let mut computer = Intcode::new(&mut program);
+    computer.run(vec![]);
+    program[0] as usize
 }
 
 pub fn part_2(program: &Vec<isize>) -> usize {
@@ -29,12 +29,12 @@ pub fn part_2(program: &Vec<isize>) -> usize {
     let range = (0..100).permutations(2);
     for r in range {
         let (noun, verb) = (r[0], r[1]);
-        let mut program = program.clone();
-        program[1] = noun;
-        program[2] = verb;
-        let mut candidate = Intcode::from_vec(&program).unwrap();
-        candidate.run(vec![]).unwrap();
-        if candidate.intcodes[0] as usize == target {
+        let mut candidate = program.clone();
+        candidate[1] = noun;
+        candidate[2] = verb;
+        let mut computer = Intcode::new(&mut candidate);
+        computer.run(vec![]);
+        if candidate[0] as usize == target {
             return (noun * 100 + verb) as usize;
         }
     }
