@@ -1,7 +1,8 @@
 use regex::Regex;
+use std::collections::HashMap;
 //use std::fs;
 
-pub type Menu: HashMap<String, (usize, Vec<Chemical>)>;
+pub type Menu = HashMap<String, (usize, Vec<Chemical>)>;
 
 pub struct Chemical {
     name: String,
@@ -39,7 +40,7 @@ fn hunt(target: Chemical, recipes: &Menu) -> usize {
      * since, although the data structure is not cyclic, it is possible for multiple parents
      * to share a child. e.g:
 
-    "3 ORE => 2 A", "1 A => 1 B", "1 A => 1 C", "1 B, 1 C => 1 FUEL" => 3 ORE
+     "3 ORE => 2 A", "1 A => 1 B", "1 A => 1 C", "1 B, 1 C => 1 FUEL" => 3 ORE
 
      * approach: use two stacks, plus an ore counter.
      * pop stack and check if spares can (even partially!) fulfil the requirement;
@@ -54,11 +55,12 @@ fn hunt(target: Chemical, recipes: &Menu) -> usize {
     let mut spares: Vec<Chemical> = vec![];
     let mut ore = 0;
     while !requirements.is_empty() {
-        let r = requirements.pop().unwrap();
-        if let Some(i) = spares.find(&order) {
-            let s = spares[i];
+        let order = requirements.pop().unwrap();
+        if spares.find(&order) {
+        } else {
         }
     }
+
     ore as usize
 }
 
