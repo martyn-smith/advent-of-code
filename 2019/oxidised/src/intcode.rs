@@ -1,3 +1,8 @@
+/*
+ * Intcode Interpreter package,
+ *
+ * n/b: problems that use intcode are 2, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25
+ */
 use anyhow::{bail, Result};
 use std::fs;
 
