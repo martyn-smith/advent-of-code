@@ -47,8 +47,16 @@ fn rotate(
         }
     }
     //NE sector
-    for _c in iproduct!(start.0 + 1..asteroid_map.ncols(), 0..start.1) {
+    for a in iproduct!(
+        start.0 + 1..asteroid_map.ncols(),
+        0..start.1
+        )
+        .filter(|c| asteroid_map[[c.0, c.1]])
+        .collect::<Vec<[usize; 2]>>()
+    {
         //collect asteroids and sort by angle
+
+
     }
     //handle E cardinal
     for _x in start.0 + 1..asteroid_map.ncols() {}
@@ -118,7 +126,6 @@ pub fn part_2(input: &Array2<bool>) -> usize {
         .filter(|(i, j)| *input.get([*i, *j]).unwrap())
         .find(|point| count_asteroids(*point, input) == max_val)
         .unwrap();
-    println!("{:?}", pos);
     if let Some(p) = rotate(&mut asteroid_map, &mut destroyed, &pos) {
         p.1 * 100 + p.0
     } else {
