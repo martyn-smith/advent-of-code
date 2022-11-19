@@ -1,47 +1,57 @@
 //use std::fs;
 
-fn diff(s: &str) -> usize {
-    let in_mem = s.len();
-    let mut repr = 0;
-    let mut escape = Some(0);
-    let mut s = s.chars().peekable();
-    while let Some(c) = s.next() {
-        if c == '\\' && escape.is_none() {
-            escape = match s.peek() {
-                Some('\\') => Some(0),
-                Some('"') => Some(0),
-                Some('x') => Some(2),
-                Some(g) => panic!("unexpected non-escape char {}", g),
-                None => panic!("escape character at EOL"),
-            };
-            continue;
-        }
-        if let Some(ctr) = escape {
-            if ctr == 0 {
-                escape = None;
-                repr += 1;
-            } else {
-                escape = Some(ctr - 1);
+fn decode(s: &str) -> String {
+    let s = &s[1..s.len()-1];
+    let mut out = String::new();
+    let mut p = s.chars();
+    while let Some(c) = p.next() {
+        if c == '\\' {
+            match p.next().expect("illegal escape character position") {
+                '\\' => {
+                    out.push('\\');
+                },
+                '"' => {
+                    out.push('"');
+                },
+                'x' => {
+                    let n = u8::from_str_radix(
+                                &format!("{}{}",
+                                           p.next().expect("illegal hex character position"),
+                                           p.next().expect("illegal hex character position"))[..],
+                                16)
+                            .expect("couldn't parse as byte");
+                    if n.is_ascii_digit() {
+                        out.push(char::from(n));
+                    } else {
+                        out.push('X');
+                    }
+                },
+                _ => {unreachable!()}
             }
-            continue;
+        } else {
+            out.push(c);
         }
-        repr += 1;
     }
-    in_mem - (repr - 2)
+    out
 }
 
 fn encode(s: &str) -> String {
     let mut out = String::new();
-    // let mut tmp = String::new();
-    // let mut escape = Some(0);
-    for c in s.chars().peekable() {
-        if c == '"' || c == '\\' {
-            out.push(c);
+    let mut p = s.chars();
+    while let Some(c) = p.next() {
+        match c {
+            '"' => {
+                out.push_str("\\\"");
+            },
+            '\\' => {
+                out.push_str("\\\\");
+            },
+            _ => {
+                out.push(c);
+            }
         }
-        out.push(c);
     }
-    println!("{}", out);
-    out
+    format!("\"{}\"", out)
 }
 
 pub fn get_input() -> Vec<String> {
@@ -52,10 +62,9 @@ pub fn get_input() -> Vec<String> {
 }
 
 pub fn part_1(input: &[String]) -> usize {
-    input.iter().map(|l| diff(l)).sum()
+    input.iter().map(|l| l.len() - decode(l).len()).sum()
 }
 
-//1474<x<2587
 pub fn part_2(input: &[String]) -> usize {
-    input.iter().map(|l| diff(&encode(l)) + diff(l)).sum()
+    input.iter().map(|l| encode(l).len() - l.len()).sum()
 }

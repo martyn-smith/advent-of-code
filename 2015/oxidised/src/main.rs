@@ -17,7 +17,7 @@ mod aoc9;
 mod tests;
 
 fn main() {
-    let input = aoc13::get_input();
-    println!("{}", aoc13::part_1(&input));
-    println!("{}", aoc13::part_2(&input));
+    let input = aoc8::get_input();
+    println!("{}", aoc8::part_1(&input));
+    println!("{}", aoc8::part_2(&input));
 }
