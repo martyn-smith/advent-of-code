@@ -7,12 +7,6 @@ pub struct Intcode {
     base: isize,
 }
 
-enum State {
-    Continue,
-    Pause,
-    Halt,
-}
-
 impl Intcode {
     fn add(&mut self) {
         let mode_args = self.intcodes[self.ptr] / 100;
