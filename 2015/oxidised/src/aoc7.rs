@@ -123,12 +123,10 @@ fn collect_unsolved(query: &str) -> Vec<&str> {
             .split(" Rshift ")
             .filter(|l| l.parse::<u16>().is_err())
             .collect::<Vec<&str>>()
+    } else if query.parse::<u16>().is_err() {
+        vec![query]
     } else {
-        if query.parse::<u16>().is_err() {
-            vec![query]
-        } else {
-            vec![]
-        }
+        vec![]
     }
 }
 

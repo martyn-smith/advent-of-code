@@ -1,5 +1,4 @@
 use anyhow::{bail, Result};
-use std::fs;
 
 #[derive(Clone)]
 pub struct Intcode {
@@ -147,28 +146,6 @@ impl Intcode {
         }
     }
 
-    // plan to discontinue, or at least redoc, these
-    pub fn new(intcodes: &Vec<isize>) -> Self {
-        Intcode {
-            intcodes: intcodes.clone(),
-            ptr: 0,
-            base: 0,
-        }
-    }
-
-    pub fn load(filename: &str) -> Result<Self> {
-        let intcodes = fs::read_to_string(filename)?
-            .trim()
-            .split(',')
-            .map(|l| l.parse::<isize>().unwrap())
-            .collect::<Vec<isize>>();
-        Ok(Intcode {
-            intcodes,
-            ptr: 0,
-            base: 0,
-        })
-    }
-    //
     pub fn from_str(s: &str) -> Result<Self> {
         let intcodes = s
             .trim()

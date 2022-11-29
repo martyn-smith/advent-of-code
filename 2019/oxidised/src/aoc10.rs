@@ -47,12 +47,12 @@ fn rotate(
         }
     }
     //NE sector
-    for a in iproduct!(
+    for _a in iproduct!(
         start.0 + 1..asteroid_map.ncols(),
         0..start.1
         )
         .filter(|c| asteroid_map[[c.0, c.1]])
-        .collect::<Vec<[usize; 2]>>()
+        .collect::<Vec<(usize, usize)>>()
     {
         //collect asteroids and sort by angle
 

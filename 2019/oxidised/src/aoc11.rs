@@ -94,7 +94,8 @@ impl Robot {
 }
 
 pub fn get_input() -> Intcode {
-    Intcode::load("../data/11.txt").unwrap()
+    let program = include_str!("../../data/11.txt");
+    Intcode::from_str(program).unwrap()
 }
 
 pub fn part_1(input: &Intcode) -> usize {

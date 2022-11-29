@@ -44,7 +44,7 @@ impl Instruction {
 pub fn get_input() -> Vec<Instruction> {
     include_str!("../../data/6.txt")
         .lines()
-        .map(|l| Instruction::new(l))
+        .map(Instruction::new)
         .collect()
 }
 

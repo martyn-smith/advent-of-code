@@ -59,7 +59,7 @@ class Interpreter():
             if r[0] == RetCode.HALTED:
                 return self.accumulator
             self.reset()
-            self.ops[i] = "nop" 
+            self.ops[i] = "nop"
         for i in self.jmp_lines:
             self.ops[i] = "nop"
             r = self.run()

@@ -37,8 +37,7 @@ fn decode(s: &str) -> String {
 
 fn encode(s: &str) -> String {
     let mut out = String::new();
-    let mut p = s.chars();
-    while let Some(c) = p.next() {
+    for c in s.chars() {
         match c {
             '"' => {
                 out.push_str("\\\"");

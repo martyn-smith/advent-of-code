@@ -26,7 +26,7 @@ fn ribbon(dims: &(usize, usize, usize)) -> usize {
 pub fn get_input() -> Vec<(usize, usize, usize)> {
     include_str!("../../data/2.txt")
         .lines()
-        .map(|l| make_dims(l))
+        .map(make_dims)
         .collect()
 }
 

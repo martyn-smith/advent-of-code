@@ -43,7 +43,7 @@ impl Sue {
                     Some(e) => e + idx,
                     None => description.len(),
                 };
-                let val = (&description[start..end]).parse::<usize>().unwrap();
+                let val = (description[start..end]).parse::<usize>().unwrap();
                 attrs.insert(description[idx..start - 2].to_string(), val);
             }
         }
@@ -85,8 +85,10 @@ impl Sue {
 }
 
 pub fn get_input() -> Vec<Sue> {
-    let input = include_str!("../../data/16.txt");
-    input.lines().map(|l| Sue::new(l)).collect()
+    include_str!("../../data/16.txt")
+        .lines()
+        .map(Sue::new)
+        .collect()
 }
 
 pub fn part_1(input: &[Sue]) -> usize {

@@ -1,7 +1,8 @@
 use super::intcode::Intcode;
 
 pub fn get_input() -> Intcode {
-    Intcode::load("../data/9.txt").unwrap()
+    let program = include_str!("../../data/9.txt");
+    Intcode::from_str(program).unwrap()
 }
 
 pub fn part_1(computer: &Intcode) -> usize {
