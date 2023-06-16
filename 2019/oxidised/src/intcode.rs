@@ -203,6 +203,16 @@ impl Intcode {
     // }
 }
 
+impl From<Vec<isize>> for Intcode {
+    fn from(intcodes: Vec<isize>) -> Self {
+        Self {
+            intcodes,
+            ptr: 0,
+            base:0
+        }
+    }
+}
+
 impl From<&[isize]> for Intcode {
     fn from(intcodes: &[isize]) -> Self {
         Self {

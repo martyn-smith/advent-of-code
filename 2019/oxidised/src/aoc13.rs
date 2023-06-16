@@ -53,7 +53,7 @@ pub fn part_1(program: &[isize]) -> usize {
 pub fn part_2(program: &[isize]) -> usize {
     let mut program = program.to_owned();
     program[0] = 2;
-    let mut computer = Intcode::from(&program[..]);
+    let mut computer = Intcode::from(program);
     let mut command = vec![0isize];
     let mut paddle = 0isize;
     let mut score = 0;
