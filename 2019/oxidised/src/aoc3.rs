@@ -27,6 +27,8 @@ impl Point {
     }
 }
 
+//clippy generates incorrect suggestions here, turn it off
+#[allow(clippy::cast_abs_to_unsigned)]
 impl Intersection {
     fn new(p: Point, p1: &Point, p2: &Point) -> Self {
         Intersection {

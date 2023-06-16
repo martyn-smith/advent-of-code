@@ -1,4 +1,4 @@
-use super::intcode::Intcode;
+use super::intcode::{asciify, FromStr, Intcode};
 use itertools::iproduct;
 use ndarray::Array;
 
@@ -6,9 +6,9 @@ pub fn get_input() -> Intcode {
     Intcode::from_str(include_str!("../../data/17.txt")).unwrap()
 }
 
-pub fn part_1(input: &Intcode) -> usize {
-    let mut program = input.clone();
-    let _pic = program.ascii(vec![]).unwrap();
+pub fn part_1(computer: &Intcode) -> usize {
+    let mut computer = computer.clone();
+    let _pic = asciify!(computer.run(vec![]).unwrap());
     //some weirdness with input data here - lines is one too high when read directly from String ?!
     let pic = include_str!("../../data/pic.txt");
     let width = pic.lines().next().unwrap().len();

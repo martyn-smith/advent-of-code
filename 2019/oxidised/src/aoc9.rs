@@ -1,4 +1,4 @@
-use super::intcode::Intcode;
+use super::intcode::{FromStr, Intcode};
 
 pub fn get_input() -> Intcode {
     let program = include_str!("../../data/9.txt");

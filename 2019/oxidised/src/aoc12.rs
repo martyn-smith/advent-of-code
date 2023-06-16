@@ -45,7 +45,7 @@ pub fn get_input() -> Vec<Moon> {
     ]
 }
 
-fn gravity(moons: &mut Vec<Moon>, i: usize, j: usize) {
+fn gravity(moons: &mut [Moon], i: usize, j: usize) {
     let a_x = (moons[i].x - moons[j].x).signum();
     let a_y = (moons[i].y - moons[j].y).signum();
     let a_z = (moons[i].z - moons[j].z).signum();

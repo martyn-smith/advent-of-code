@@ -28,64 +28,24 @@ fn count_asteroids(point: (usize, usize), asteroid_map: &Array2<bool>) -> usize 
 
 fn rotate(
     asteroid_map: &mut Array2<bool>,
-    ctr: &mut usize,
-    start: &(usize, usize),
+    point: (usize, usize),
 ) -> Option<(usize, usize)> {
     //start by pointing straight up ((0,-1))
     //handle right and left halves separately, dealing with cardinals (-1,0) and (1,0) discretely.
-
-    //handle N cardinal
-    for y in (0..start.1).rev() {
-        if asteroid_map[[start.0, y]] {
-            *asteroid_map.get_mut([start.0, y]).unwrap() = false;
-            *ctr += 1;
-            if *ctr == 200 {
-                return Some((0, 0));
-            } else {
-                break;
-            }
-        }
+    let mut polars = Vec::<(f64, f64, usize, usize)>::new();
+    for c in iproduct!(0..asteroid_map.nrows(), 0..asteroid_map.ncols()) {
+       let angle = (point.0 as f64 - c.0 as f64).atan2(point.1 as f64 - c.1 as f64);
+       let distance = ((point.0 as f64 - c.0 as f64).abs().powi(2)
+                      + (point.1 as f64 - c.1 as f64).abs().powi(2)).sqrt();
+       polars.push((angle, distance, c.0, c.1));
     }
-    //NE sector
-    for _a in iproduct!(
-        start.0 + 1..asteroid_map.ncols(),
-        0..start.1
-        )
-        .filter(|c| asteroid_map[[c.0, c.1]])
-        .collect::<Vec<(usize, usize)>>()
-    {
-        //collect asteroids and sort by angle
-
-
+    polars.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+    dbg!(&polars);
+    for _ in 0..200 {
+        polars.pop();
     }
-    //handle E cardinal
-    for _x in start.0 + 1..asteroid_map.ncols() {}
-    //SE sector
-    for _c in iproduct!(
-        start.0 + 1..asteroid_map.ncols(),
-        start.1 + 1..asteroid_map.nrows()
-    ) {}
-    //handle S cardinal
-    for y in start.1 + 1..asteroid_map.nrows() {
-        if asteroid_map[[y, start.1]] {
-            *asteroid_map.get_mut([y, start.1]).unwrap() = false;
-            *ctr += 1;
-            break;
-        }
-    }
-    if *ctr == 200 {
-        return Some((0, 0));
-    }
-    //SW sector
-    for _c in iproduct!(
-        (0..start.0).rev(),
-        (start.1 + 1..asteroid_map.nrows()).rev()
-    ) {}
-    //handle W cardinal
-    for _x in (0..start.0).rev() {}
-    //NW sector
-    for _c in iproduct!(0..start.0, (0..start.1).rev()) {}
-    None
+    let survivor = polars.pop().unwrap();
+    Some((survivor.2, survivor.3))
 }
 
 pub fn get_input() -> Array2<bool> {
@@ -118,16 +78,16 @@ pub fn part_1(input: &Array2<bool>) -> usize {
  * note points are (y,x)
  */
 
+//923 < x < 2309
 pub fn part_2(input: &Array2<bool>) -> usize {
     let mut asteroid_map = input.clone();
-    let mut destroyed = 0;
     let max_val = part_1(input);
     let pos = iproduct!(0..input.nrows(), 0..input.ncols())
         .filter(|(i, j)| *input.get([*i, *j]).unwrap())
         .find(|point| count_asteroids(*point, input) == max_val)
         .unwrap();
-    if let Some(p) = rotate(&mut asteroid_map, &mut destroyed, &pos) {
-        p.1 * 100 + p.0
+    if let Some(p) = rotate(&mut asteroid_map, pos) {
+        p.0 * 100 + p.1
     } else {
         0
     }

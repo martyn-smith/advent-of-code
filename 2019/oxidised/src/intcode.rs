@@ -1,3 +1,6 @@
+pub use std::convert::From;
+pub use std::str::FromStr;
+//use std::fmt::Display;
 use anyhow::{bail, Result};
 
 #[derive(Clone)]
@@ -20,7 +23,7 @@ impl Intcode {
         self.ptr += 4;
     }
 
-    fn mult(&mut self) {
+    fn mul(&mut self) {
         let mode_args = self.intcodes[self.ptr] / 100;
         let a = self.get_value(self.ptr + 1, mode_args % 10);
         let b = self.get_value(self.ptr + 2, (mode_args / 10) % 10);
@@ -50,7 +53,7 @@ impl Intcode {
         self.ptr += 2;
     }
 
-    fn jt(&mut self)  {
+    fn jt(&mut self) {
         //Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
         let mode_args = self.intcodes[self.ptr] / 100;
         let a = self.get_value(self.ptr + 1, mode_args % 10);
@@ -63,7 +66,9 @@ impl Intcode {
     }
 
     fn jf(&mut self) {
-        // Opcode 6 is jump-if-false: if the first parameter is zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+        // Opcode 6 is jump-if-false: if the first parameter is zero,
+        // it sets the instruction pointer to the value from the second parameter.
+        // Otherwise, it does nothing.
         let mode_args = self.intcodes[self.ptr] / 100;
         let a = self.get_value(self.ptr + 1, mode_args % 10);
         let b = self.get_value(self.ptr + 2, (mode_args / 10) % 10);
@@ -80,7 +85,7 @@ impl Intcode {
         let a = self.get_value(self.ptr + 1, mode_args % 10);
         let b = self.get_value(self.ptr + 2, (mode_args / 10) % 10);
         let w = self.get_pointer(self.ptr + 3, (mode_args / 100) % 10) as usize;
-        if w as usize >= self.intcodes.len() {
+        if w >= self.intcodes.len() {
             self.intcodes.resize(w + 1, 0);
         }
         self.intcodes[w] = if a < b { 1 } else { 0 };
@@ -93,7 +98,7 @@ impl Intcode {
         let a = self.get_value(self.ptr + 1, mode_args % 10);
         let b = self.get_value(self.ptr + 2, (mode_args / 10) % 10);
         let w = self.get_pointer(self.ptr + 3, (mode_args / 100) % 10) as usize;
-        if w as usize >= self.intcodes.len() {
+        if w >= self.intcodes.len() {
             self.intcodes.resize(w + 1, 0);
         }
         self.intcodes[w] = if a == b { 1 } else { 0 };
@@ -138,44 +143,27 @@ impl Intcode {
         }
     }
 
-    pub fn from_str(s: &str) -> Result<Self> {
-        let intcodes = s
-            .trim()
-            .split(',')
-            .map(|l| l.parse::<isize>().unwrap())
-            .collect::<Vec<isize>>();
-        Ok(Self {
-            intcodes,
-            ptr: 0,
-            base: 0,
-        })
-    }
-
-    pub fn from_vec(intcodes: &Vec<isize>) -> Result<Self> {
-        Ok(Self {
-            intcodes: intcodes.clone(),
-            ptr: 0,
-            base: 0,
-        })
-    }
+    //runs to first call to output
     pub fn step(&mut self, mut inputs: Vec<isize>) -> Option<isize> {
         let mut outputs: Vec<isize> = vec![];
         loop {
             //dbg!(self.ptr, self.intcodes[self.ptr] % 100);
             match self.intcodes[self.ptr] % 100 {
                 1 => self.add(),
-                2 => self.mult(),
+                2 => self.mul(),
                 3 => self.input(&mut inputs),
                 4 => {
                     self.output(&mut outputs);
                     return Some(*outputs.last().unwrap());
-                },
+                }
                 5 => self.jt(),
                 6 => self.jf(),
                 7 => self.lt(),
                 8 => self.eq(),
                 9 => self.rb(),
-                99 => {return None;}
+                99 => {
+                    return None;
+                }
                 _ => {
                     panic!("invalid opcode at {}", self.ptr);
                 }
@@ -184,14 +172,13 @@ impl Intcode {
     }
 
     //run to halt
-    //TODO: or lack of inputs
     pub fn run(&mut self, mut inputs: Vec<isize>) -> Result<Vec<isize>> {
         let mut outputs: Vec<isize> = vec![];
         loop {
             //dbg!(self.ptr, self.intcodes[self.ptr] % 100);
             match self.intcodes[self.ptr] % 100 {
                 1 => self.add(),
-                2 => self.mult(),
+                2 => self.mul(),
                 3 => self.input(&mut inputs),
                 4 => self.output(&mut outputs),
                 5 => self.jt(),
@@ -199,7 +186,9 @@ impl Intcode {
                 7 => self.lt(),
                 8 => self.eq(),
                 9 => self.rb(),
-                99 => {return Ok(outputs);},
+                99 => {
+                    return Ok(outputs);
+                }
                 _ => {
                     bail!("invalid opcode at {}", self.ptr);
                 }
@@ -207,9 +196,44 @@ impl Intcode {
         }
     }
 
-    pub fn ascii(&mut self, inputs: Vec<isize>) -> Result<String> {
-        Ok(String::from_utf8(
-            self.run(inputs)?.iter().map(|&c| c as u8).collect(),
-        )?)
+    // pub fn ascii(&mut self, inputs: Vec<isize>) -> Result<String> {
+    //     Ok(String::from_utf8(
+    //         self.run(inputs)?.iter().map(|&c| c as u8).collect(),
+    //     )?)
+    // }
+}
+
+impl From<&[isize]> for Intcode {
+    fn from(intcodes: &[isize]) -> Self {
+        Self {
+            intcodes: intcodes.to_owned(),
+            ptr: 0,
+            base: 0,
+        }
     }
 }
+
+impl FromStr for Intcode {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self> {
+        let intcodes = s
+            .trim()
+            .split(',')
+            .map(|l| l.parse::<isize>().unwrap())
+            .collect::<Vec<_>>();
+        Ok(Self {
+            intcodes,
+            ptr: 0,
+            base: 0,
+        })
+    }
+}
+
+macro_rules! asciify {
+    ($out:expr) => {{
+        String::from_utf8($out.iter().map(|&c| c as u8).collect()).unwrap()
+    }};
+}
+
+pub(crate) use asciify;

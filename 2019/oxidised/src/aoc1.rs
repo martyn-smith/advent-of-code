@@ -24,9 +24,9 @@ pub fn get_input() -> Vec<usize> {
 }
 
 pub fn part_1(masses: &[usize]) -> usize {
-    masses.iter().map(|i| get_fuel(i)).sum()
+    masses.iter().map(get_fuel).sum()
 }
 
 pub fn part_2(masses: &[usize]) -> usize {
-    masses.iter().map(|i| get_recursive_fuel(i)).sum()
+    masses.iter().map(get_recursive_fuel).sum()
 }

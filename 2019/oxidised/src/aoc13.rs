@@ -1,4 +1,4 @@
-use super::intcode::Intcode;
+use super::intcode::{From, Intcode};
 //use std::fs;
 
 #[derive(PartialEq)]
@@ -42,18 +42,18 @@ pub fn get_input() -> Vec<isize> {
         .collect::<Vec<isize>>()
 }
 
-pub fn part_1(intcodes: &Vec<isize>) -> usize {
-    let mut computer = Intcode::from_vec(intcodes).unwrap();
+pub fn part_1(program: &[isize]) -> usize {
+    let mut computer = Intcode::from(program);
     let outputs = computer.run(vec![]).unwrap();
     let tiles: Vec<Tile> = outputs.chunks(3).map(|t| Tile::new(t).unwrap()).collect();
     //note this does NOT account for overwriting chunks, but that seems to be okay.
     tiles.iter().filter(|&i| TileType::Block == i.tile).count()
 }
 
-pub fn part_2(intcodes: &Vec<isize>) -> usize {
-    let mut intcodes = intcodes.clone();
-    intcodes[0] = 2;
-    let mut computer = Intcode::from_vec(&intcodes).unwrap();
+pub fn part_2(program: &[isize]) -> usize {
+    let mut program = program.to_owned();
+    program[0] = 2;
+    let mut computer = Intcode::from(&program[..]);
     let mut command = vec![0isize];
     let mut paddle = 0isize;
     let mut score = 0;

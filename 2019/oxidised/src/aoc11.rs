@@ -1,4 +1,4 @@
-use super::intcode::Intcode;
+use super::intcode::{FromStr, Intcode};
 use std::collections::HashMap;
 
 #[derive(Debug, Copy, Clone)]
@@ -64,7 +64,7 @@ impl Robot {
             1 => hull.insert(self.position, true).is_none(),
             _ => panic!(),
         };
-        let _ = match output.1 {
+        match output.1 {
             0 => {
                 self.direction.rotate_left();
             }
@@ -75,7 +75,7 @@ impl Robot {
                 panic!();
             }
         };
-        let _ = match self.direction {
+        match self.direction {
             Direction::North => {
                 self.position.1 += 1;
             }
@@ -98,15 +98,15 @@ pub fn get_input() -> Intcode {
     Intcode::from_str(program).unwrap()
 }
 
-pub fn part_1(input: &Intcode) -> usize {
-    let mut robot = Robot::new(input);
+pub fn part_1(computer: &Intcode) -> usize {
+    let mut robot = Robot::new(computer);
     let mut hull = HashMap::new();
     while robot.step(&mut hull).is_some() {}
     hull.len()
 }
 
-pub fn part_2(input: &Intcode) -> usize {
-    let mut robot = Robot::new(input);
+pub fn part_2(computer: &Intcode) -> usize {
+    let mut robot = Robot::new(computer);
     let mut hull = HashMap::new();
     hull.insert((0, 0), true);
     while robot.step(&mut hull).is_some() {}

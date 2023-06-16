@@ -1,4 +1,4 @@
-use super::intcode::Intcode;
+use super::intcode::{FromStr, Intcode};
 use itertools::Itertools;
 
 struct Amplifier {
@@ -12,10 +12,10 @@ struct AmpChain {
 }
 
 impl Amplifier {
-    fn new(intcodes: &Intcode, phase: usize) -> Self {
+    fn new(computer: &Intcode, phase: usize) -> Self {
         Amplifier {
             phase,
-            computer: intcodes.clone(),
+            computer: computer.clone(),
             first_run: true,
         }
     }
@@ -33,11 +33,11 @@ impl Amplifier {
 }
 
 impl AmpChain {
-    fn new(intcodes: &Intcode, phases: Vec<usize>) -> Self {
+    fn new(computer: &Intcode, phases: Vec<usize>) -> Self {
         AmpChain {
             amps: phases
                 .iter()
-                .map(|&p| Amplifier::new(intcodes, p))
+                .map(|&p| Amplifier::new(computer, p))
                 .collect(),
         }
     }
@@ -61,25 +61,25 @@ pub fn get_input() -> Intcode {
     Intcode::from_str(include_str!("../../data/7.txt")).unwrap()
 }
 
-pub fn part_1(intcodes: &Intcode) -> usize {
+pub fn part_1(computer: &Intcode) -> usize {
     let amp_count = 5;
     (0..amp_count)
         .permutations(amp_count)
         .map(|phases| {
-            let mut a = AmpChain::new(intcodes, phases);
+            let mut a = AmpChain::new(computer, phases);
             a.run_open(Some(0)).unwrap() as usize
         })
         .max()
         .unwrap()
 }
 
-pub fn part_2(intcodes: &Intcode) -> usize {
+pub fn part_2(computer: &Intcode) -> usize {
     let amp_count = 5;
     let offset = 5;
     (offset..amp_count + offset)
         .permutations(amp_count)
         .map(|phases| {
-            let mut a = AmpChain::new(intcodes, phases);
+            let mut a = AmpChain::new(computer, phases);
             a.run_closed().unwrap() as usize
         })
         .max()
