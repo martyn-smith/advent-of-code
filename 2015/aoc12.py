@@ -6,7 +6,8 @@ import json
 with open("data/12.txt") as f:
     items = [json.loads(line) for line in f.readlines()]
 
-def find_nums(items, no_red = False):
+
+def find_nums(items, no_red=False):
     if type(items) == int:
         return items
     elif type(items) == list:
@@ -19,11 +20,14 @@ def find_nums(items, no_red = False):
     else:
         return 0
 
+
 def part_1():
     return find_nums(items)
 
+
 def part_2():
     return find_nums(items, True)
+
 
 if __name__ == "__main__":
     print(part_1())

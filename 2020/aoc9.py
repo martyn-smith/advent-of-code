@@ -1,9 +1,11 @@
 """
 Advent of code day 9: Breaking the in-flight entertainment's copy-protection.
 """
+
 from itertools import combinations
 
 preamble_len = 25
+
 
 def find_invalid_XMAS_number() -> int:
     """
@@ -12,12 +14,13 @@ def find_invalid_XMAS_number() -> int:
     for i, number in enumerate(lines[preamble_len:]):
         found = False
         i += preamble_len
-        for j, k in combinations(lines[i-preamble_len:i], 2):
+        for j, k in combinations(lines[i - preamble_len : i], 2):
             if j != k and j + k == number:
                 found = True
                 break
         if not found:
             return number
+
 
 def find_contiguous_set(invalid_num: int) -> (int, int):
     """
@@ -31,18 +34,22 @@ def find_contiguous_set(invalid_num: int) -> (int, int):
             i += 1
     return i, j
 
-#setup
+
+# setup
 with open("data/9.txt") as f:
     lines = [int(l) for l in f.readlines()]
+
 
 def part_1():
     invalid_num = find_invalid_XMAS_number()
     return invalid_num
 
+
 def part_2():
     invalid_num = part_1()
     i, j = find_contiguous_set(invalid_num)
     return min(lines[i:j]) + max(lines[i:j])
+
 
 if __name__ == "__main__":
     print(part_1())

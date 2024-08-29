@@ -1,8 +1,11 @@
 from functools import cache
+
 gates = {}
+
 
 def maybe_int(x):
     return int(x) if x.isdigit() else x
+
 
 with open("data/7.txt", "r") as f:
     for line in f.read().splitlines():
@@ -29,6 +32,7 @@ with open("data/7.txt", "r") as f:
         else:
             gates[gate_id] = maybe_int(lhs)
 
+
 @cache
 def solve(tgt):
     if type(tgt) is int:
@@ -50,14 +54,17 @@ def solve(tgt):
         else:
             return solve(gate)
 
+
 def part_1():
     return solve("a")
+
 
 def part_2():
     x = solve("a")
     gates["b"] = x
     solve.cache_clear()
     return solve("a")
+
 
 if __name__ == "__main__":
     print(part_1())

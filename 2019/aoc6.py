@@ -5,6 +5,7 @@ Advent of Code day 6: orbit-based tree traversal.
 with open("data/6.txt") as f:
     orbits = [line.strip("\n").split(")") for line in f.readlines()]
 
+
 def part_1():
     """
     Identifies the total number of orbits (direct and indirect) specified in a
@@ -29,6 +30,7 @@ def part_1():
                     new_orbits.append(d_orbit)
         orbits = new_orbits
     return num_orbits
+
 
 if __name__ == "__main__":
     print(part_1())

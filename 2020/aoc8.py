@@ -1,14 +1,16 @@
 """
 Advent of code day 8: building a basic interpreter for someone's not-a-Game-Boy(TM)
 """
+
 from enum import Enum, auto
+
 
 class RetCode(Enum):
     REPEATED = auto()
     HALTED = auto()
 
-class Interpreter():
 
+class Interpreter:
     def nop(self, arg):
         self.cursor += 1
 
@@ -20,11 +22,7 @@ class Interpreter():
         self.cursor += arg
 
     def __init__(self):
-        self.opcodes = {
-            "nop" : self.nop,
-            "acc" : self.acc,
-            "jmp" : self.jmp
-        }
+        self.opcodes = {"nop": self.nop, "acc": self.acc, "jmp": self.jmp}
         self.cursor = 0
         self.accumulator = 0
         self.executed_lines = []
@@ -34,7 +32,7 @@ class Interpreter():
             self.args = [int(l[4:]) for l in lines]
 
     def run(self) -> (RetCode, int):
-        while(True):
+        while True:
             try:
                 self.executed_lines.append(self.cursor)
                 fetched = self.ops[self.cursor]
@@ -63,19 +61,23 @@ class Interpreter():
         for i in self.jmp_lines:
             self.ops[i] = "nop"
             r = self.run()
-            if r[0]  == RetCode.HALTED:
+            if r[0] == RetCode.HALTED:
                 return self.accumulator
             self.reset()
             self.ops[i] = "jmp"
 
-#setup
+
+# setup
 i = Interpreter()
+
 
 def part_1():
     return i.run()[1]
 
+
 def part_2():
     return i.hunt()
+
 
 if __name__ == "__main__":
     print(part_1())

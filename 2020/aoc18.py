@@ -2,6 +2,7 @@
 Advent of code day 18: horrible stack-based order of operations.
 """
 
+
 def find_closing_brace(expression) -> int:
     braces_level = 1
     for i, c in enumerate(expression):
@@ -12,6 +13,7 @@ def find_closing_brace(expression) -> int:
         if braces_level == 0:
             return i
     return None
+
 
 def find_operator(expression, operator) -> int:
     braces_level = 0
@@ -26,16 +28,19 @@ def find_operator(expression, operator) -> int:
             return i
     return None
 
+
 def accumulate(value, operator, operand) -> int:
     if operator == "+":
         return value + operand
     if operator == "*":
         return value * operand
 
+
 def tokenise(expression: str) -> list:
-        l = list(expression.rstrip().replace(" ", ""))
-        l = [int(c) if c.isdigit() else c for c in l]
-        return l
+    l = list(expression.rstrip().replace(" ", ""))
+    l = [int(c) if c.isdigit() else c for c in l]
+    return l
+
 
 def solve(expression: list, precedence="equal") -> int:
     if len(expression) == 1:
@@ -45,8 +50,8 @@ def solve(expression: list, precedence="equal") -> int:
         j = find_closing_brace(expression[1:]) + 1
         operand = solve(expression[1:j], precedence)
         acc = accumulate(0, "+", operand)
-        return solve([acc] + expression[j+1:], precedence)
-    #careful, order of precedence HERE is also killer.
+        return solve([acc] + expression[j + 1 :], precedence)
+    # careful, order of precedence HERE is also killer.
     if operator == "*" and precedence == "AM":
         j = find_operator(expression[2:], "*")
         if j is not None:
@@ -54,28 +59,32 @@ def solve(expression: list, precedence="equal") -> int:
             operand = solve(expression[2:j], precedence)
             acc = accumulate(value, operator, operand)
             return solve([acc] + expression[j:], precedence)
-        else: 
+        else:
             operand = solve(expression[2:], precedence)
             return accumulate(value, operator, operand)
     if operand == "(":
         j = find_closing_brace(expression[3:]) + 3
         operand = solve(expression[3:j], precedence)
         acc = accumulate(value, operator, operand)
-        return solve([acc] + expression[j+1:], precedence)
+        return solve([acc] + expression[j + 1 :], precedence)
     else:
         acc = accumulate(value, operator, operand)
         return solve([acc] + expression[3:], precedence)
     if value in ("+", "*"):
         raise ValueError(f"{expression} is invalid")
 
+
 with open("data/18.txt") as f:
     lines = f.readlines()
+
 
 def part_1():
     return sum(solve(tokenise(line)) for line in lines)
 
+
 def part_2():
     return sum(solve(tokenise(line), "AM") for line in lines)
+
 
 if __name__ == "__main__":
     print(part_1())

@@ -1,20 +1,17 @@
 """
 Advent of code day 12: steering a ferry.
 """
+
 from itertools import cycle
 
-directions = {
-    "N" : (0,1),
-    "S" : (0,-1),
-    "E" : (1,0),
-    "W" : (-1,0)
-}
+directions = {"N": (0, 1), "S": (0, -1), "E": (1, 0), "W": (-1, 0)}
+
 
 def move() -> (int, int):
     """
     moves the ferry.
     """
-    pos = [0,0]
+    pos = [0, 0]
     direction = "E"
     rotations = {"L": -1, "R": 1}
     rotation_order = ["N", "E", "S", "W"]
@@ -23,24 +20,27 @@ def move() -> (int, int):
         action, magnitude = line[0], int(line[1:])
         if action in directions:
             sgn = directions[action]
-            pos = [p + (s*m) for p, s, m in zip(pos, sgn, cycle([magnitude]))]
+            pos = [p + (s * m) for p, s, m in zip(pos, sgn, cycle([magnitude]))]
         elif action in rotations:
             magnitude //= 90
             sgn = rotations[action]
-            direction = rotation_order[(rotation_order.index(direction) + (sgn * magnitude)) % 4]
+            direction = rotation_order[
+                (rotation_order.index(direction) + (sgn * magnitude)) % 4
+            ]
         elif action == "F":
             sgn = directions[direction]
-            pos = [p + (s*m) for p, s, m in zip(pos, sgn, cycle([magnitude]))]
+            pos = [p + (s * m) for p, s, m in zip(pos, sgn, cycle([magnitude]))]
         else:
             pass
         yield pos
+
 
 def move_with_waypoint() -> (int, int):
     """
     moves the waypoint around the ferry, and occasionally the ferry itself.
     """
-    ship_pos = [0,0]
-    waypoint_pos = [10,1]
+    ship_pos = [0, 0]
+    waypoint_pos = [10, 1]
     waypoint_direction = "E"
     rotations = {"L": 1, "R": -1}
 
@@ -48,7 +48,9 @@ def move_with_waypoint() -> (int, int):
         action, magnitude = line[0], int(line[1:])
         if action in directions:
             sgn = directions[action]
-            waypoint_pos = [p + (s*m) for p, s, m in zip(waypoint_pos, sgn, cycle([magnitude]))]
+            waypoint_pos = [
+                p + (s * m) for p, s, m in zip(waypoint_pos, sgn, cycle([magnitude]))
+            ]
         elif action in rotations:
             distance = [(w - p) for w, p in zip(waypoint_pos, ship_pos)]
             distance = complex(distance[0], distance[1])
@@ -64,17 +66,21 @@ def move_with_waypoint() -> (int, int):
             pass
         yield ship_pos
 
-#setup
+
+# setup
 with open("data/12.txt") as f:
-        lines = f.readlines()
+    lines = f.readlines()
+
 
 def part_1():
     pos = [p for p in move()][-1]
     return sum(abs(p) for p in pos)
 
+
 def part_2():
     pos = [p for p in move_with_waypoint()][-1]
     return sum(abs(p) for p in pos)
+
 
 if __name__ == "__main__":
     print(part_1())

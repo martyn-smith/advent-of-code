@@ -3,14 +3,16 @@ import re
 mask_srch = re.compile(r"^mask = (.*)")
 mem_srch = re.compile(r"^mem\[(\d+)\] = (\d+)")
 
+
 def mask_overwite(value, mask):
     """
     Returns the masked value for part 1.
     """
-    #slightly cribbed, and I'm not super-happy with this implementation, since it constructs 
-    #superfluous variables. That said, it's likely to be *much* faster than an if-then-else solution.
-    #Still feel there's a nice number-theory solution to be found.
+    # slightly cribbed, and I'm not super-happy with this implementation, since it constructs
+    # superfluous variables. That said, it's likely to be *much* faster than an if-then-else solution.
+    # Still feel there's a nice number-theory solution to be found.
     return value & int(mask.replace("X", "1"), 2) | int(mask.replace("X", "0"), 2)
+
 
 def get_addresses(address, mask):
     # If the bitmask bit is 0, the corresponding memory address bit is unchanged.
@@ -20,14 +22,23 @@ def get_addresses(address, mask):
         if address.find("X") == -1:
             return [int(address, 2)]
         else:
-            return (address_overwrite(address.replace("X", "1", 1)) 
-                   + address_overwrite(address.replace("X", "0", 1)))
-    address = ''.join([m if m == "1" or m == "X" else a for a, m in zip(bin(address)[2:].zfill(36), mask)])
+            return address_overwrite(address.replace("X", "1", 1)) + address_overwrite(
+                address.replace("X", "0", 1)
+            )
+
+    address = "".join(
+        [
+            m if m == "1" or m == "X" else a
+            for a, m in zip(bin(address)[2:].zfill(36), mask)
+        ]
+    )
     return address_overwrite(address)
 
-#setup
+
+# setup
 with open("data/14.txt") as f:
     lines = f.readlines()
+
 
 def part_1():
     memory = {}
@@ -40,6 +51,7 @@ def part_1():
             memory[address] = value
     return sum(memory[m] for m in memory)
 
+
 def part_2():
     memory = {}
     for line in lines:
@@ -51,6 +63,7 @@ def part_2():
             for addr in addresses:
                 memory[addr] = value
     return sum(memory[m] for m in memory)
+
 
 if __name__ == "__main__":
     print(part_1())
