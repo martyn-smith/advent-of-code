@@ -1,7 +1,6 @@
 ///
 /// Advent of Code day 6: All the lanternfish
 ///
-
 use cached::proc_macro::cached;
 use std::collections::HashMap;
 
@@ -40,10 +39,10 @@ fn g(i: usize, t: usize) -> usize {
 
 pub fn get_input() -> Vec<usize> {
     include_str!("../../data/6.txt")
-            .trim()
-            .split(',')
-            .map(|c| c.parse::<usize>().unwrap())
-            .collect()
+        .trim()
+        .split(',')
+        .map(|c| c.parse::<usize>().unwrap())
+        .collect()
 }
 
 pub fn part_1(input: &[usize]) -> usize {
@@ -51,9 +50,7 @@ pub fn part_1(input: &[usize]) -> usize {
     for i in 0..8 {
         growth.insert(i, g(i, 80));
     }
-    input.iter()
-        .map(|i| growth.get(i).unwrap())
-        .sum()
+    input.iter().map(|i| growth.get(i).unwrap()).sum()
 }
 
 pub fn part_2(input: &[usize]) -> usize {
@@ -61,7 +58,5 @@ pub fn part_2(input: &[usize]) -> usize {
     for i in 0..8 {
         growth.insert(i, g(i, 256));
     }
-    input.iter()
-        .map(|i| growth.get(i).unwrap())
-        .sum()
+    input.iter().map(|i| growth.get(i).unwrap()).sum()
 }

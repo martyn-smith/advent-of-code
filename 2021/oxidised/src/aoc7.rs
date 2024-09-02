@@ -7,13 +7,15 @@ fn triangle(n: usize) -> usize {
 }
 
 fn cost(n: usize, input: &[usize]) -> usize {
-    input.iter()
+    input
+        .iter()
         .map(|&i| (n as i32 - i as i32).abs() as usize)
         .sum()
 }
 
 fn tri_cost(n: usize, input: &[usize]) -> usize {
-    input.iter()
+    input
+        .iter()
         .map(|&i| triangle((n as i32 - i as i32).abs() as usize))
         .sum()
 }
@@ -30,15 +32,15 @@ pub fn part_1(input: &[usize]) -> usize {
     let mut input = input.to_owned();
     input.sort_unstable();
     let median = input[input.len() / 2];
-    (median - 1 ..= median + 1)
+    (median - 1..=median + 1)
         .map(|n| cost(n, &input))
         .min()
         .unwrap()
 }
 
 pub fn part_2(input: &[usize]) -> usize {
-     let mean = input.iter().sum::<usize>() / input.len();
-     (mean - 1 ..= mean + 1)
+    let mean = input.iter().sum::<usize>() / input.len();
+    (mean - 1..=mean + 1)
         .map(|n| tri_cost(n, input))
         .min()
         .unwrap()

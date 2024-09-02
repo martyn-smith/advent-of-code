@@ -1,7 +1,6 @@
 ///
 /// Advent of Code day 4: Squid Bingo!
 ///
-
 use ndarray::{Array, Array2};
 
 const BOARD_SIZE: usize = 5;
@@ -9,17 +8,18 @@ const BOARD_SIZE: usize = 5;
 #[derive(Debug, Clone)]
 pub struct Board {
     board: Array2<Option<usize>>,
-    picked: Vec<usize>
+    picked: Vec<usize>,
 }
 
 impl Board {
     fn new(b: &str) -> Self {
-        let n = b.split_whitespace()
-                 .map(|c| c.parse::<usize>().ok())
-                 .collect();
+        let n = b
+            .split_whitespace()
+            .map(|c| c.parse::<usize>().ok())
+            .collect();
         Self {
             board: Array::from_shape_vec((BOARD_SIZE, BOARD_SIZE), n).unwrap(),
-            picked: vec![]
+            picked: vec![],
         }
     }
 
@@ -55,17 +55,14 @@ impl Board {
 pub fn get_input() -> (Vec<usize>, Vec<Board>) {
     let mut groups = include_str!("../../data/4.txt").split("\n\n");
 
-    let cmd = groups.next().unwrap()
-                    .split(',')
-                    .map(|c| c.parse::<usize>().unwrap())
-                    .collect();
+    let cmd = groups
+        .next()
+        .unwrap()
+        .split(',')
+        .map(|c| c.parse::<usize>().unwrap())
+        .collect();
 
-    let boards = groups
-                    .map(|b|
-                        {
-                            Board::new(b)
-                        })
-                    .collect();
+    let boards = groups.map(|b| Board::new(b)).collect();
 
     (cmd, boards)
 }

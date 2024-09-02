@@ -1,28 +1,28 @@
-use ndarray::{Array,Array2};
 use itertools::iproduct;
+use ndarray::{Array, Array2};
 use std::cmp::max;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Player {
     position: usize,
-    score: usize
+    score: usize,
 }
 
 struct QPlayer {
     /* columns (first axis!) are scores. rows (second axis!) are positions. */
-    p_scores: Array2<usize>
+    p_scores: Array2<usize>,
 }
 
 struct Die {
     position: Option<usize>,
-    rolls: usize
+    rolls: usize,
 }
 
 impl Player {
     fn new(position: usize) -> Self {
         Player {
             position: position - 1,
-            score: 0
+            score: 0,
         }
     }
 
@@ -38,7 +38,7 @@ impl Die {
     fn new() -> Self {
         Die {
             position: None,
-            rolls: 0
+            rolls: 0,
         }
     }
 
@@ -52,22 +52,22 @@ impl Die {
         self.position.unwrap() + 1
     }
 
-   fn q_roll(&self) -> [usize; 7] {
+    fn q_roll(&self) -> [usize; 7] {
         /*
-        * combinations and probabilities for three three-sided die:
-        *
-        * x  |  P
-        * -------
-        * 3  |  1
-        * 4  |  3
-        * 5  |  6
-        * 6  |  7
-        * 7  |  6
-        * 8  |  3
-        * 9  |  1
-        *
-        */
-       [1, 3, 6, 7, 6, 3, 1]
+         * combinations and probabilities for three three-sided die:
+         *
+         * x  |  P
+         * -------
+         * 3  |  1
+         * 4  |  3
+         * 5  |  6
+         * 6  |  7
+         * 7  |  6
+         * 8  |  3
+         * 9  |  1
+         *
+         */
+        [1, 3, 6, 7, 6, 3, 1]
     }
 
     fn dq_roll(&self) -> [usize; 1] {
@@ -78,22 +78,18 @@ impl Die {
 
 impl QPlayer {
     fn from(p: Player) -> Self {
-        let mut p_scores = Array::zeros((10,21));
+        let mut p_scores = Array::zeros((10, 21));
         p_scores[[p.position, 0]] = 1;
-        QPlayer {
-            p_scores
-        }
+        QPlayer { p_scores }
     }
 
     fn q_play(&mut self, die: &Die) -> usize {
         let mut wins = 0;
-        let mut new_scores = Array::zeros((10,21));
+        let mut new_scores = Array::zeros((10, 21));
         //10 rows, each representing a position. 21 columns, each a score
         //first element is position (0..10), second is score
-        for (p, s) in iproduct!(0..self.p_scores.nrows(),
-                                0..self.p_scores.ncols()) {
-
-            let amplitude = self.p_scores[[p,s]];
+        for (p, s) in iproduct!(0..self.p_scores.nrows(), 0..self.p_scores.ncols()) {
+            let amplitude = self.p_scores[[p, s]];
             if amplitude > 0 {
                 //actually play the game
                 let outcomes = die.q_roll();
@@ -103,7 +99,7 @@ impl QPlayer {
                     if score > 20 {
                         wins += amplitude * next;
                     } else {
-                        new_scores[[position,score]] += amplitude * next;
+                        new_scores[[position, score]] += amplitude * next;
                     }
                 }
             }

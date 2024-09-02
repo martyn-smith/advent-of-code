@@ -1,7 +1,7 @@
+use itertools::Itertools;
 ///
 /// Advent of Code day 8: seven-segment displays make a pretty graph
 ///
-
 /*
  * Starts out as a bipartite graph with 7! (5040) possibilities (?)
  * Given we always have all 10 numbers present, a deterministic solution should be possible.
@@ -23,19 +23,16 @@
  * x->f can be determined as being in 1 and not being c.
  * x->g is the remainder
  */
+use std::collections::HashMap;
 
-use std::collections::{HashMap};
-use itertools::Itertools;
-
-const NUMBERS: [&str; 10] = ["abcefg", "cf", "acdeg", "acdfg", "bcdf",
-                                     "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"];
+const NUMBERS: [&str; 10] = [
+    "abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg",
+];
 
 pub type Display = (Vec<String>, Vec<String>);
 
 fn count_1478(line: &[String]) -> usize {
-    line.iter()
-        .filter(|&l| by_len(l).is_some())
-        .count()
+    line.iter().filter(|&l| by_len(l).is_some()).count()
 }
 
 fn by_len(s: &str) -> Option<usize> {
@@ -44,37 +41,37 @@ fn by_len(s: &str) -> Option<usize> {
         3 => Some(7),
         4 => Some(4),
         7 => Some(8),
-        _ => None
+        _ => None,
     }
 }
 
 fn intersect(x: &str, y: &str) -> usize {
-    x.chars()
-        .filter(|&c| y.contains(c))
-        .count()
+    x.chars().filter(|&c| y.contains(c)).count()
 }
 
 fn by_intersection(x: &str, nums: &[Option<&str>; 10]) -> usize {
-    match (intersect(x, nums[1].unwrap()),
-           intersect(x, nums[4].unwrap()),
-           intersect(x, nums[7].unwrap()),
-           x.len()) {
-        (2,3,3,6) => 0,
-        (_,_,_,2) => 1,
-        (1,2,2,5) => 2,
-        (2,3,3,5) => 3,
-        (_,_,_,4) => 4,
-        (1,3,2,5) => 5,
-        (1,3,2,6) => 6,
-        (_,_,_,3) => 7,
-        (_,_,_,7) => 8,
-        (2,4,3,6) => 9,
-        _ => unreachable!()
+    match (
+        intersect(x, nums[1].unwrap()),
+        intersect(x, nums[4].unwrap()),
+        intersect(x, nums[7].unwrap()),
+        x.len(),
+    ) {
+        (2, 3, 3, 6) => 0,
+        (_, _, _, 2) => 1,
+        (1, 2, 2, 5) => 2,
+        (2, 3, 3, 5) => 3,
+        (_, _, _, 4) => 4,
+        (1, 3, 2, 5) => 5,
+        (1, 3, 2, 6) => 6,
+        (_, _, _, 3) => 7,
+        (_, _, _, 7) => 8,
+        (2, 4, 3, 6) => 9,
+        _ => unreachable!(),
     }
 }
 
 fn solve(line: &[String]) -> HashMap<&str, usize> {
-    let mut nums : [Option<&str>; 10] = [None; 10];
+    let mut nums: [Option<&str>; 10] = [None; 10];
     let mut seg = HashMap::new();
     for l in line.iter() {
         if let Some(i) = by_len(&l[..]) {
@@ -82,7 +79,7 @@ fn solve(line: &[String]) -> HashMap<&str, usize> {
         }
     }
 
-    for i in [0,2,3,5,6,9].iter() {
+    for i in [0, 2, 3, 5, 6, 9].iter() {
         for l in line.iter() {
             if by_intersection(l, &nums) == *i {
                 nums[*i] = Some(&l[..]);
@@ -97,34 +94,43 @@ fn solve(line: &[String]) -> HashMap<&str, usize> {
 }
 fn get_line(l: &str) -> Display {
     let mut s = l.split('|');
-    let samples = s.next().unwrap().trim().split(' ').map(|s| s.chars().sorted().collect::<String>());
-    let values = s.next().unwrap().trim().split(' ').map(|s| s.chars().sorted().collect::<String>());
+    let samples = s
+        .next()
+        .unwrap()
+        .trim()
+        .split(' ')
+        .map(|s| s.chars().sorted().collect::<String>());
+    let values = s
+        .next()
+        .unwrap()
+        .trim()
+        .split(' ')
+        .map(|s| s.chars().sorted().collect::<String>());
     (samples.collect(), values.collect())
 }
 
 pub fn get_input() -> Vec<(Vec<String>, Vec<String>)> {
     include_str!("../../data/8.txt")
-                    .lines()
-                    .map(|l| get_line(l))
-                    .collect()
+        .lines()
+        .map(|l| get_line(l))
+        .collect()
 }
 
 pub fn part_1(input: &[Display]) -> usize {
-    input
-        .iter()
-        .map(|l| count_1478(&l.1))
-        .sum()
+    input.iter().map(|l| count_1478(&l.1)).sum()
 }
 
 pub fn part_2(input: &[Display]) -> usize {
-    input.iter().map(|l| {
-        let m = solve(&l.0);
-        let mut s = String::new();
-        for k in l.1.iter() {
-            let v = m.get(&k[..]).unwrap();
-            s.push_str(&v.to_string()[..]);
-        }
-        s.parse::<usize>().unwrap()
-    })
-    .sum()
+    input
+        .iter()
+        .map(|l| {
+            let m = solve(&l.0);
+            let mut s = String::new();
+            for k in l.1.iter() {
+                let v = m.get(&k[..]).unwrap();
+                s.push_str(&v.to_string()[..]);
+            }
+            s.parse::<usize>().unwrap()
+        })
+        .sum()
 }

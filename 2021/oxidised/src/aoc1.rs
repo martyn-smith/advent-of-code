@@ -10,15 +10,14 @@ pub fn get_input() -> Vec<usize> {
 }
 
 pub fn part_1(input: &[usize]) -> usize {
-    input.windows(2)
-        .filter(|&p| p[0] < p[1])
-        .count()
+    input.windows(2).filter(|&p| p[0] < p[1]).count()
 }
 
 pub fn part_2(input: &[usize]) -> usize {
-    let sums = input.windows(3)
-                 .map(|t| t.iter().sum())
-                 .collect::<Vec<usize>>();
+    let sums = input
+        .windows(3)
+        .map(|t| t.iter().sum())
+        .collect::<Vec<usize>>();
 
     part_1(&sums)
 }

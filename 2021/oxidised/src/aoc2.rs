@@ -9,7 +9,7 @@ fn get_vector(l: &str) -> (i32, i32) {
         "backward" => (-1, 0),
         "up" => (0, -1),
         "down" => (0, 1),
-        _ => unreachable!()
+        _ => unreachable!(),
     };
     let mag = l.next().unwrap().parse::<i32>().unwrap();
     (sign.0 * mag, sign.1 * mag)
@@ -21,7 +21,7 @@ fn aim(pos: (i32, i32, i32), v: (i32, i32)) -> (i32, i32, i32) {
         (false, true) => (pos.0, pos.1, pos.2 + v.1),
         //adjust pos
         (true, false) => (pos.0 + v.0, pos.1 + (pos.2 * v.0), pos.2),
-        _ => unreachable!()
+        _ => unreachable!(),
     }
 }
 
@@ -33,13 +33,13 @@ pub fn get_input() -> Vec<(i32, i32)> {
 }
 
 pub fn part_1(input: &[(i32, i32)]) -> usize {
-    let pos = input.iter()
-                    .fold((0i32, 0i32), |pos, v| (pos.0 + v.0, pos.1 + v.1));
+    let pos = input
+        .iter()
+        .fold((0i32, 0i32), |pos, v| (pos.0 + v.0, pos.1 + v.1));
     (pos.0 * pos.1) as usize
 }
 
 pub fn part_2(input: &[(i32, i32)]) -> usize {
-    let pos = input.iter()
-                    .fold((0i32, 0i32, 0i32), |pos, &v| aim(pos, v));
+    let pos = input.iter().fold((0i32, 0i32, 0i32), |pos, &v| aim(pos, v));
     (pos.0 * pos.1) as usize
 }

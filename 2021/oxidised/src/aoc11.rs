@@ -16,7 +16,7 @@ fn flash(input: &mut Array2<u8>) -> usize {
         let l = reset.len();
         for (i, j) in iproduct!(1..i_max, 1..j_max) {
             if input[[i, j]] > 9 {
-                reset.push((i,j));
+                reset.push((i, j));
                 input[[i - 1, j - 1]] += 1;
                 input[[i - 1, j]] += 1;
                 input[[i - 1, j + 1]] += 1;
@@ -32,7 +32,7 @@ fn flash(input: &mut Array2<u8>) -> usize {
         for j in 1..j_max {
             let i = 0;
             if input[[i, j]] > 9 {
-                reset.push((i,j));
+                reset.push((i, j));
                 input[[i, j - 1]] += 1;
                 input[[i, j]] = 0;
                 input[[i, j + 1]] += 1;
@@ -44,7 +44,7 @@ fn flash(input: &mut Array2<u8>) -> usize {
         for j in 1..j_max {
             let i = i_max;
             if input[[i, j]] > 9 {
-                reset.push((i,j));
+                reset.push((i, j));
                 input[[i - 1, j - 1]] += 1;
                 input[[i - 1, j]] += 1;
                 input[[i - 1, j + 1]] += 1;
@@ -57,7 +57,7 @@ fn flash(input: &mut Array2<u8>) -> usize {
         for i in 1..i_max {
             let j = 0;
             if input[[i, j]] > 9 {
-                reset.push((i,j));
+                reset.push((i, j));
                 input[[i - 1, j]] += 1;
                 input[[i - 1, j + 1]] += 1;
                 input[[i, j]] = 0;
@@ -69,7 +69,7 @@ fn flash(input: &mut Array2<u8>) -> usize {
         for i in 1..i_max {
             let j = j_max;
             if input[[i, j]] > 9 {
-                reset.push((i,j));
+                reset.push((i, j));
                 input[[i - 1, j - 1]] += 1;
                 input[[i - 1, j]] += 1;
                 input[[i, j - 1]] += 1;
@@ -80,28 +80,28 @@ fn flash(input: &mut Array2<u8>) -> usize {
         }
         //corners
         if input[[0, 0]] > 9 {
-            reset.push((0,0));
+            reset.push((0, 0));
             input[[0, 0]] = 0;
             input[[0, 1]] += 1;
             input[[1, 0]] += 1;
             input[[1, 1]] += 1;
         }
         if input[[0, j_max]] > 9 {
-            reset.push((0,j_max));
+            reset.push((0, j_max));
             input[[0, j_max - 1]] += 1;
             input[[0, j_max]] = 0;
             input[[1, j_max - 1]] += 1;
             input[[1, j_max]] += 1;
         }
         if input[[i_max, 0]] > 9 {
-            reset.push((i_max,0));
+            reset.push((i_max, 0));
             input[[i_max - 1, 0]] += 1;
             input[[i_max - 1, 1]] += 1;
             input[[i_max, 0]] = 0;
             input[[i_max, 1]] += 1;
         }
         if input[[i_max, j_max]] > 9 {
-            reset.push((i_max,j_max));
+            reset.push((i_max, j_max));
             input[[i_max - 1, j_max - 1]] += 1;
             input[[i_max - 1, j_max]] += 1;
             input[[i_max, j_max - 1]] += 1;
@@ -112,8 +112,8 @@ fn flash(input: &mut Array2<u8>) -> usize {
         }
     }
     let flashes = reset.len();
-    for (i,j) in reset.drain(0..) {
-        input[[i,j]] = 0;
+    for (i, j) in reset.drain(0..) {
+        input[[i, j]] = 0;
     }
     flashes
 }
@@ -134,7 +134,6 @@ pub fn part_1(input: &Array2<u8>) -> usize {
     let mut pts = input.clone();
     (0..100u8).map(|_| flash(&mut pts)).sum()
 }
-
 
 pub fn part_2(input: &Array2<u8>) -> usize {
     let mut pts = input.clone();

@@ -1,24 +1,22 @@
+use std::collections::HashMap;
 ///
 /// Advent of Code day 14: exponential polymeriseration
 ///
-
 use std::iter::FromIterator;
-use std::collections::HashMap;
 use std::ops::Index;
-
 
 const LETTERS: &str = "ABCDEFGHIJKLNOPQRSTUVWXYZ";
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct Pair {
-    ch: [char; 2]
+    ch: [char; 2],
 }
 
 impl Pair {
     fn new(s: &str) -> Self {
         let mut w = s.chars();
         Pair {
-            ch: [w.next().unwrap(), w.next().unwrap()]
+            ch: [w.next().unwrap(), w.next().unwrap()],
         }
     }
 
@@ -38,34 +36,34 @@ impl Index<usize> for Pair {
         match i {
             0 => &self.ch[0],
             1 => &self.ch[1],
-            _ => panic!("invalid index {} for pair", i)
+            _ => panic!("invalid index {} for pair", i),
         }
     }
 }
 
 #[derive(Clone, Debug)]
 pub struct Counts {
-    cts: HashMap<Pair, usize>
+    cts: HashMap<Pair, usize>,
 }
 
 impl Counts {
     fn new(l: &str) -> Self {
         let mut cts = HashMap::new();
         for i in 0..=l.len() - 2 {
-            let p = Pair::new(&l[i..i+2]);
+            let p = Pair::new(&l[i..i + 2]);
             if let Some(n) = cts.get_mut(&p) {
                 *n += 1;
             } else {
                 cts.insert(p, 1);
             }
         }
-        Counts{cts}
+        Counts { cts }
     }
 }
 
 struct Reaction {
     pin: Pair,
-    pout: (Pair, Pair)
+    pout: (Pair, Pair),
 }
 
 impl Reaction {
@@ -73,25 +71,27 @@ impl Reaction {
         let mut s = l.split(" -> ");
         let pin = Pair::new(s.next().unwrap());
         let cout = s.next().unwrap();
-        let pout = (Pair::new(&format!("{}{}", pin[0], cout)[..]),
-                    Pair::new(&format!("{}{}", cout, pin[1])[..]));
-        Reaction {
-            pin,
-            pout
-        }
+        let pout = (
+            Pair::new(&format!("{}{}", pin[0], cout)[..]),
+            Pair::new(&format!("{}{}", cout, pin[1])[..]),
+        );
+        Reaction { pin, pout }
     }
 }
 
 fn get_char_count(c: char, counts: &Counts) -> usize {
-    counts.cts.iter()
-        .map(|(pair, count)|
-             if pair.both(c) {
-                    *count
-             } else if pair.contains(c) {
-                    *count / 2
-             } else {
-                 0
-             })
+    counts
+        .cts
+        .iter()
+        .map(|(pair, count)| {
+            if pair.both(c) {
+                *count
+            } else if pair.contains(c) {
+                *count / 2
+            } else {
+                0
+            }
+        })
         .sum()
 }
 
@@ -107,18 +107,16 @@ fn polymerise(mut counts: Counts, reactions: &HashMap<Pair, (Pair, Pair)>) -> Co
             }
         }
     }
-    Counts{cts: next}
+    Counts { cts: next }
 }
 
 pub fn get_input() -> (Counts, HashMap<Pair, (Pair, Pair)>) {
     let mut s = include_str!("../../data/14.txt").split("\n\n");
     let template = Counts::new(s.next().unwrap());
-    let reactions = HashMap::from_iter(
-                            s.next().unwrap().lines().map(|l| {
-                                let r = Reaction::new(l);
-                                (r.pin, r.pout)
-                            })
-                        );
+    let reactions = HashMap::from_iter(s.next().unwrap().lines().map(|l| {
+        let r = Reaction::new(l);
+        (r.pin, r.pout)
+    }));
     (template, reactions)
 }
 
@@ -129,30 +127,29 @@ pub fn get_input() -> (Counts, HashMap<Pair, (Pair, Pair)>) {
 pub fn part_1(input: &(Counts, HashMap<Pair, (Pair, Pair)>)) -> usize {
     let count_0 = input.0.clone();
     let reactions = &input.1;
-    let count_n = (0..10usize)
-                    .fold(count_0, |counts, _| {
-                        //println!("after step {}: {}", i + 1, count.cts.values().sum::<usize>() + 1);
-                        polymerise(counts, reactions)
-                    });
+    let count_n = (0..10usize).fold(count_0, |counts, _| {
+        //println!("after step {}: {}", i + 1, count.cts.values().sum::<usize>() + 1);
+        polymerise(counts, reactions)
+    });
 
-    let counts = LETTERS.chars()
-                        .map(|c| get_char_count(c, &count_n))
-                        .filter(|&n| n > 0)
-                        .collect::<Vec<usize>>();
+    let counts = LETTERS
+        .chars()
+        .map(|c| get_char_count(c, &count_n))
+        .filter(|&n| n > 0)
+        .collect::<Vec<usize>>();
     counts.iter().max().unwrap() - counts.iter().min().unwrap() + 1
 }
 
 pub fn part_2(input: &(Counts, HashMap<Pair, (Pair, Pair)>)) -> usize {
     let count_0 = input.0.clone();
     let reactions = &input.1;
-    let count_n = (0..40usize)
-                    .fold(count_0, |counts, _| polymerise(counts, reactions));
+    let count_n = (0..40usize).fold(count_0, |counts, _| polymerise(counts, reactions));
 
-    let counts = LETTERS.chars()
-                        .map(|c| get_char_count(c, &count_n))
-                        .filter(|&n| n > 0)
-                        .collect::<Vec<usize>>();
+    let counts = LETTERS
+        .chars()
+        .map(|c| get_char_count(c, &count_n))
+        .filter(|&n| n > 0)
+        .collect::<Vec<usize>>();
 
     counts.iter().max().unwrap() - counts.iter().min().unwrap() - 1
 }
-

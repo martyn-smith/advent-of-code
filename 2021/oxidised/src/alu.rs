@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 #[derive(Clone, Debug)]
 pub enum MaybeInt {
     Value(isize),
-    Register(char)
+    Register(char),
 }
 
 #[derive(Clone, Debug)]
@@ -13,7 +13,7 @@ pub enum Op {
     Add(char, MaybeInt),
     Mod(char, MaybeInt),
     Div(char, MaybeInt),
-    Eql(char, MaybeInt)
+    Eql(char, MaybeInt),
 }
 
 #[allow(clippy::upper_case_acronyms)]
@@ -22,7 +22,7 @@ pub struct ALU {
     w: isize,
     x: isize,
     y: isize,
-    z: isize
+    z: isize,
 }
 
 impl MaybeInt {
@@ -43,12 +43,27 @@ impl Op {
         let second = s.next();
         match op {
             "inp" => Self::Inp(first.chars().next().unwrap()),
-            "mul" => Self::Mul(first.chars().next().unwrap(), MaybeInt::new(second.unwrap())),
-            "add" => Self::Add(first.chars().next().unwrap(), MaybeInt::new(second.unwrap())),
-            "mod" => Self::Mod(first.chars().next().unwrap(), MaybeInt::new(second.unwrap())),
-            "div" => Self::Div(first.chars().next().unwrap(), MaybeInt::new(second.unwrap())),
-            "eql" => Self::Eql(first.chars().next().unwrap(), MaybeInt::new(second.unwrap())),
-            _ => panic!("couldn't parse input: {}", l)
+            "mul" => Self::Mul(
+                first.chars().next().unwrap(),
+                MaybeInt::new(second.unwrap()),
+            ),
+            "add" => Self::Add(
+                first.chars().next().unwrap(),
+                MaybeInt::new(second.unwrap()),
+            ),
+            "mod" => Self::Mod(
+                first.chars().next().unwrap(),
+                MaybeInt::new(second.unwrap()),
+            ),
+            "div" => Self::Div(
+                first.chars().next().unwrap(),
+                MaybeInt::new(second.unwrap()),
+            ),
+            "eql" => Self::Eql(
+                first.chars().next().unwrap(),
+                MaybeInt::new(second.unwrap()),
+            ),
+            _ => panic!("couldn't parse input: {}", l),
         }
     }
 }
@@ -60,7 +75,7 @@ impl ALU {
             'x' => &mut self.x,
             'y' => &mut self.y,
             'z' => &mut self.z,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 
@@ -72,7 +87,7 @@ impl ALU {
                 'x' => self.x,
                 'y' => self.y,
                 'z' => self.z,
-                _ => unreachable!()
+                _ => unreachable!(),
             },
         }
     }
@@ -95,33 +110,33 @@ impl ALU {
                     let i = input.pop().unwrap();
                     let register = self.get_register(r);
                     *register = i as isize;
-                },
+                }
                 Op::Mul(a, b) => {
                     let i = self.get_value(b);
                     let register = self.get_register(a);
                     *register *= i;
-                },
+                }
                 Op::Add(a, b) => {
                     let i = self.get_value(b);
                     let register = self.get_register(a);
                     *register += i;
-                },
+                }
                 Op::Mod(a, b) => {
                     let i = self.get_value(b);
                     let register = self.get_register(a);
                     *register %= i;
-                },
+                }
                 Op::Div(a, b) => {
                     let i = self.get_value(b);
                     let register = self.get_register(a);
                     *register /= i;
-                },
+                }
                 Op::Eql(a, b) => {
                     let i = self.get_value(b);
                     let register = self.get_register(a);
-                    *register = if *register == i {1} else {0};
+                    *register = if *register == i { 1 } else { 0 };
                 }
-           }
+            }
         }
         self.z
     }

@@ -1,4 +1,4 @@
-use super::alu::{ALU, Op};
+use super::alu::{Op, ALU};
 
 fn vectorise(n: &usize) -> Vec<u8> {
     n.to_string()

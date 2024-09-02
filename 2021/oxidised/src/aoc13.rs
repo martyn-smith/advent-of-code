@@ -1,7 +1,6 @@
 ///
 /// Advent of Code day 13: Origami
 ///
-
 use std::collections::HashSet;
 
 pub type Paper = HashSet<(usize, usize)>;
@@ -19,7 +18,7 @@ fn fold(manual: &mut Paper, f: Fold) {
                     to_replace.push((old, new));
                 }
             }
-        },
+        }
         (None, Some(y)) => {
             for m in manual.iter() {
                 if m.1 > y {
@@ -28,8 +27,8 @@ fn fold(manual: &mut Paper, f: Fold) {
                     to_replace.push((old, new));
                 }
             }
-        },
-        _ => unreachable!()
+        }
+        _ => unreachable!(),
     }
     for r in to_replace.drain(0..) {
         manual.remove(&r.0);
@@ -46,7 +45,7 @@ pub fn get_input() -> (Paper, FoldList) {
         let mut c = l.split(',');
         let x = c.next().unwrap().parse::<usize>().unwrap();
         let y = c.next().unwrap().parse::<usize>().unwrap();
-        coords.insert((x,y));
+        coords.insert((x, y));
     }
     for l in s.next().unwrap().lines() {
         let mut c = l.split('=');
@@ -55,7 +54,7 @@ pub fn get_input() -> (Paper, FoldList) {
         let tuple = match axis {
             'x' => (Some(pos), None),
             'y' => (None, Some(pos)),
-             _ => panic!("I couldn't correctly parse {}", l)
+            _ => panic!("I couldn't correctly parse {}", l),
         };
         splits.push(tuple);
     }
@@ -78,7 +77,7 @@ pub fn part_2(input: &(Paper, FoldList)) {
     for y in 0..=y_max {
         let mut line = String::new();
         for x in 0..=x_max {
-            line.push( if manual.contains(&(x,y)) {'#'} else {' '});
+            line.push(if manual.contains(&(x, y)) { '#' } else { ' ' });
         }
         println!("{}", line);
     }

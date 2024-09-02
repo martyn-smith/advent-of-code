@@ -1,15 +1,14 @@
 ///
 /// Advent of Code day 5: lines of dodgy magma
 ///
-
-use itertools::{Either}; //Itertools
+use itertools::Either; //Itertools
 use std::collections::HashSet;
 
 #[derive(Debug, PartialEq)]
 enum Direction {
     Horizontal,
     Vertical,
-    Diagonal
+    Diagonal,
 }
 
 #[derive(Debug, Clone)]
@@ -23,19 +22,20 @@ impl Line {
         let mut l = l.split(" -> ");
         let mut start = l.next().unwrap().split(',');
         let mut end = l.next().unwrap().split(',');
-        let mut x = (start.next().unwrap().parse::<usize>().unwrap(),
-                     end.next().unwrap().parse::<usize>().unwrap());
-        let mut y = (start.next().unwrap().parse::<usize>().unwrap(),
-                     end.next().unwrap().parse::<usize>().unwrap());
+        let mut x = (
+            start.next().unwrap().parse::<usize>().unwrap(),
+            end.next().unwrap().parse::<usize>().unwrap(),
+        );
+        let mut y = (
+            start.next().unwrap().parse::<usize>().unwrap(),
+            end.next().unwrap().parse::<usize>().unwrap(),
+        );
         //simplify by making sure x always increases
         if x.0 > x.1 {
             x = (x.1, x.0);
             y = (y.1, y.0);
         }
-        Self {
-            x,
-            y
-        }
+        Self { x, y }
     }
 
     fn direction(&self) -> Direction {
@@ -59,17 +59,21 @@ impl Line {
                         twice.insert((x, y));
                     }
                 }
-            },
+            }
             Direction::Vertical => {
                 //let pts = (self.x.0..=self.x.1).rev().zip(std::iter::repeat(self.y.0));
-                let y_rng = if self.y.1 < self.y.0 {self.y.1..=self.y.0} else {self.y.0..=self.y.1};
+                let y_rng = if self.y.1 < self.y.0 {
+                    self.y.1..=self.y.0
+                } else {
+                    self.y.0..=self.y.1
+                };
                 let x = self.x.0;
                 for y in y_rng {
                     if !once.insert((x, y)) {
                         twice.insert((x, y));
                     }
                 }
-            },
+            }
             Direction::Diagonal => {
                 let rev = self.y.1 < self.y.0;
                 let x_rng = self.x.0..=self.x.1;
@@ -78,7 +82,7 @@ impl Line {
                 } else {
                     Either::Left(self.y.0..=self.y.1)
                 };
-                for (x,y) in x_rng.zip(y_rng) {
+                for (x, y) in x_rng.zip(y_rng) {
                     if !once.insert((x, y)) {
                         twice.insert((x, y));
                     }
@@ -92,9 +96,7 @@ impl Line {
         //         twice.insert((x,y));
         //     }
         // }
-
     }
-
 }
 
 pub fn get_input() -> Vec<Line> {
@@ -106,7 +108,9 @@ pub fn get_input() -> Vec<Line> {
 
 pub fn part_1(input: &[Line]) -> usize {
     let (mut once, mut twice) = (HashSet::new(), HashSet::new());
-    let lines = input.iter().filter(|&l| l.direction() != Direction::Diagonal);
+    let lines = input
+        .iter()
+        .filter(|&l| l.direction() != Direction::Diagonal);
     for l in lines {
         l.draw(&mut once, &mut twice);
     }

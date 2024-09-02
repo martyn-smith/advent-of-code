@@ -5,40 +5,42 @@
 //used as a bit of a hack, Rust only has an integer log() as nightly.
 const MAX_BASE: u16 = 12;
 
-fn count_ones(pos:u16, input: &[u16]) -> usize {
-    input.iter()
-         .filter(|&i| (i >> pos) & 1 == 1)
-         .count()
+fn count_ones(pos: u16, input: &[u16]) -> usize {
+    input.iter().filter(|&i| (i >> pos) & 1 == 1).count()
 }
 
-fn count_zeros(pos:u16, input: &[u16]) -> usize {
-    input.iter()
-          .filter(|&i| (i >> pos) & 1 == 0)
-          .count()
+fn count_zeros(pos: u16, input: &[u16]) -> usize {
+    input.iter().filter(|&i| (i >> pos) & 1 == 0).count()
 }
 
 fn most_common(pos: u16, input: &[u16]) -> u16 {
-    if count_ones(pos, input) >= count_zeros(pos, input) {1} else {0}
+    if count_ones(pos, input) >= count_zeros(pos, input) {
+        1
+    } else {
+        0
+    }
 }
 
 fn least_common(pos: u16, input: &[u16]) -> u16 {
-    if count_ones(pos, input) < count_zeros(pos, input) {1} else {0}
+    if count_ones(pos, input) < count_zeros(pos, input) {
+        1
+    } else {
+        0
+    }
 }
 
 fn epsilon(input: &[u16]) -> usize {
-    (0..MAX_BASE)
-        .fold(0usize, |acc, pos| {
-            let r = least_common(pos, input);
-            acc + (r << pos) as usize
-        })
+    (0..MAX_BASE).fold(0usize, |acc, pos| {
+        let r = least_common(pos, input);
+        acc + (r << pos) as usize
+    })
 }
 
 fn gamma(input: &[u16]) -> usize {
-    (0..MAX_BASE)
-        .fold(0usize, |acc, pos| {
-            let r = most_common(pos, input);
-            acc + (r << pos) as usize
-        })
+    (0..MAX_BASE).fold(0usize, |acc, pos| {
+        let r = most_common(pos, input);
+        acc + (r << pos) as usize
+    })
 }
 
 fn oxygen(input: &[u16]) -> usize {
