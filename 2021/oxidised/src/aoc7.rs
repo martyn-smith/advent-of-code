@@ -9,14 +9,14 @@ fn triangle(n: usize) -> usize {
 fn cost(n: usize, input: &[usize]) -> usize {
     input
         .iter()
-        .map(|&i| (n as i32 - i as i32).abs() as usize)
+        .map(|&i| (n as isize - i as isize).unsigned_abs())
         .sum()
 }
 
 fn tri_cost(n: usize, input: &[usize]) -> usize {
     input
         .iter()
-        .map(|&i| triangle((n as i32 - i as i32).abs() as usize))
+        .map(|&i| triangle((n as isize - i as isize).unsigned_abs()))
         .sum()
 }
 

@@ -28,7 +28,7 @@ fn aim(pos: (i32, i32, i32), v: (i32, i32)) -> (i32, i32, i32) {
 pub fn get_input() -> Vec<(i32, i32)> {
     include_str!("../../data/2.txt")
         .lines()
-        .map(|l| get_vector(l))
+        .map(get_vector)
         .collect()
 }
 

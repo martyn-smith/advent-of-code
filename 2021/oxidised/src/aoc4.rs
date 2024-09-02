@@ -62,7 +62,7 @@ pub fn get_input() -> (Vec<usize>, Vec<Board>) {
         .map(|c| c.parse::<usize>().unwrap())
         .collect();
 
-    let boards = groups.map(|b| Board::new(b)).collect();
+    let boards = groups.map(Board::new).collect();
 
     (cmd, boards)
 }

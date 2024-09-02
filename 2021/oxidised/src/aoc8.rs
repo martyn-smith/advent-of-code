@@ -112,7 +112,7 @@ fn get_line(l: &str) -> Display {
 pub fn get_input() -> Vec<(Vec<String>, Vec<String>)> {
     include_str!("../../data/8.txt")
         .lines()
-        .map(|l| get_line(l))
+        .map(get_line)
         .collect()
 }
 

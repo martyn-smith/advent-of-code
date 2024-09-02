@@ -7,6 +7,13 @@ fn parse<'a>(mut b: impl Iterator<Item = &'a bool>, n: u8) -> u16 {
 #[derive(Debug)]
 enum PacketType {
     Literal(usize),
+    Sum(Vec<Packet>),
+    Product(Vec<Packet>),
+    Minimum(Vec<Packet>),
+    Maximum(Vec<Packet>),
+    GT(Vec<Packet>),
+    LT(Vec<Packet>),
+    EQ(Vec<Packet>),
     Operator(Vec<Packet>),
 }
 
@@ -74,7 +81,8 @@ impl Packet {
     fn score(&self) -> usize {
         match &self.p {
             PacketType::Literal(_) => self.v as usize,
-            PacketType::Operator(pt) => self.v as usize + pt.iter().map(|pkt| pkt.score() as usize).sum::<usize>()
+            PacketType::Operator(pt) => self.v as usize + pt.iter().map(|pkt| pkt.score()).sum::<usize>(),
+            _ => todo!()
         }
     }
 }
@@ -85,7 +93,7 @@ pub fn get_input() -> Vec<bool> {
     let raw = include_str!("../../data/16.txt").trim();
     raw.chars()
         .map(|c| u8::from_str_radix(&c.to_string(), 16).expect("invalid digit"))
-        .map(|quad| {
+        .flat_map(|quad| {
             vec![
                 quad >> 3 & 1 != 0,
                 quad >> 2 & 1 != 0,
@@ -93,7 +101,6 @@ pub fn get_input() -> Vec<bool> {
                 quad & 1 != 0,
             ]
         })
-        .flatten()
         .collect::<Vec<_>>()
 }
 

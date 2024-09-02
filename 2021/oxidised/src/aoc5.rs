@@ -102,7 +102,7 @@ impl Line {
 pub fn get_input() -> Vec<Line> {
     include_str!("../../data/5.txt")
         .lines()
-        .map(|l| Line::new(l))
+        .map(Line::new)
         .collect()
 }
 
