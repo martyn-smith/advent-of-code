@@ -10,6 +10,7 @@ fn total_volume(dimensions: &[isize; 6]) -> usize {
         * (dimensions[5] - dimensions[4]) as usize
 }
 
+#[allow(clippy::nonminimal_bool)]
 fn intersects(point: [isize; 6], limits: [isize; 6]) -> bool {
     /*
      * six combinations, not including a "full eclipse":
@@ -18,8 +19,8 @@ fn intersects(point: [isize; 6], limits: [isize; 6]) -> bool {
     (point[0] > limits[0] && point[0] < limits[1] || point[1] > limits[0] && point[0] < limits[1])
         && (point[2] > limits[2] && point[2] < limits[3]
             || point[3] > limits[2] && point[2] < limits[3])
-        && (point[4] > limits[4] && point[2] < limits[5]
-            || point[4] > limits[4] && point[2] < limits[5])
+        && (point[4] > limits[4] && point[4] < limits[5]
+            || point[5] > limits[4] && point[4] < limits[5])
 }
 
 fn additive_volume(limits: [isize; 6], cmds: &[Command]) -> usize {
