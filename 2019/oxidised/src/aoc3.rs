@@ -107,10 +107,7 @@ fn get_wire(line: &str) -> Vec<Point> {
 
 pub fn get_input() -> (Vec<Point>, Vec<Point>) {
     let input = include_str!("../../data/3.txt");
-    let wires = input
-        .lines()
-        .map(get_wire)
-        .collect::<Vec<Vec<Point>>>();
+    let wires = input.lines().map(get_wire).collect::<Vec<Vec<Point>>>();
     (wires[0].clone(), wires[1].clone())
 }
 

@@ -26,18 +26,16 @@ fn count_asteroids(point: (usize, usize), asteroid_map: &Array2<bool>) -> usize 
     sight_line.len()
 }
 
-fn rotate(
-    asteroid_map: &mut Array2<bool>,
-    point: (usize, usize),
-) -> Option<(usize, usize)> {
+fn rotate(asteroid_map: &mut Array2<bool>, point: (usize, usize)) -> Option<(usize, usize)> {
     //start by pointing straight up ((0,-1))
     //handle right and left halves separately, dealing with cardinals (-1,0) and (1,0) discretely.
     let mut polars = Vec::<(f64, f64, usize, usize)>::new();
     for c in iproduct!(0..asteroid_map.nrows(), 0..asteroid_map.ncols()) {
-       let angle = (point.0 as f64 - c.0 as f64).atan2(point.1 as f64 - c.1 as f64);
-       let distance = ((point.0 as f64 - c.0 as f64).abs().powi(2)
-                      + (point.1 as f64 - c.1 as f64).abs().powi(2)).sqrt();
-       polars.push((angle, distance, c.0, c.1));
+        let angle = (point.0 as f64 - c.0 as f64).atan2(point.1 as f64 - c.1 as f64);
+        let distance = ((point.0 as f64 - c.0 as f64).abs().powi(2)
+            + (point.1 as f64 - c.1 as f64).abs().powi(2))
+        .sqrt();
+        polars.push((angle, distance, c.0, c.1));
     }
     polars.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
     dbg!(&polars);

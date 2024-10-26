@@ -104,12 +104,7 @@ pub fn get_input() -> Menu {
 
     for l in include_str!("../../data/14.vsmall.txt").lines() {
         let mut s = l.split(" => ");
-        let inputs = s
-            .next()
-            .unwrap()
-            .split(',')
-            .map(Order::from_str)
-            .collect();
+        let inputs = s.next().unwrap().split(',').map(Order::from_str).collect();
         let output = Order::from_str(s.next().unwrap());
         recipes.insert(output.name, (output.qty, inputs));
     }
