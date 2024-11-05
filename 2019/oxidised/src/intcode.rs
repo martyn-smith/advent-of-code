@@ -24,45 +24,45 @@ impl Computer {
     }
 
     fn add(&mut self, program: &mut Program) -> Option<isize> {
-        let mode_args = program.intcodes[self.ptr] / 100;
-        let a = self.get_value(program, self.ptr + 1, mode_args % 10);
-        let b = self.get_value(program, self.ptr + 2, (mode_args / 10) % 10);
-        let i = self.get_pointer(program, self.ptr + 3, (mode_args / 100) % 10) as usize;
+        let modes = self.get_modes(program, self.ptr);
+        let a = self.get_value(program, self.ptr + 1, modes[0]);
+        let b = self.get_value(program, self.ptr + 2, modes[1]);
+        let i = self.get_pointer(program, self.ptr + 3, modes[2]);
         program.write(i, a + b);
         self.ptr += 4;
         None
     }
 
     fn mul(&mut self, program: &mut Program) -> Option<isize> {
-        let mode_args = program.intcodes[self.ptr] / 100;
-        let a = self.get_value(program, self.ptr + 1, mode_args % 10);
-        let b = self.get_value(program, self.ptr + 2, (mode_args / 10) % 10);
-        let i = self.get_pointer(program, self.ptr + 3, (mode_args / 100) % 10) as usize;
+        let modes = self.get_modes(program, self.ptr);
+        let a = self.get_value(program, self.ptr + 1, modes[0]);
+        let b = self.get_value(program, self.ptr + 2, modes[1]);
+        let i = self.get_pointer(program, self.ptr + 3, modes[2]);
         program.write(i, a * b);
         self.ptr += 4;
         None
     }
 
     fn input(&mut self, program: &mut Program, input: isize) -> Option<isize> {
-        let mode_arg = program.intcodes[self.ptr] / 100;
-        let i = self.get_pointer(program, self.ptr + 1, mode_arg % 10) as usize;
+        let modes = self.get_modes(program, self.ptr);
+        let i = self.get_pointer(program, self.ptr + 1, modes[0]);
         program.write(i, input);
         self.ptr += 2;
         None
     }
 
     fn output(&mut self, program: &mut Program) -> Option<isize> {
-        let mode_arg = program.intcodes[self.ptr] / 100;
-        let output = self.get_value(program, self.ptr + 1, mode_arg);
+        let modes = self.get_modes(program, self.ptr);
+        let output = self.get_value(program, self.ptr + 1, modes[0]);
         self.ptr += 2;
         Some(output)
     }
 
     fn jt(&mut self, program: &mut Program) -> Option<isize> {
         //Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
-        let mode_args = program.intcodes[self.ptr] / 100;
-        let a = self.get_value(program, self.ptr + 1, mode_args % 10);
-        let b = self.get_value(program, self.ptr + 2, (mode_args / 10) % 10);
+        let modes = self.get_modes(program, self.ptr);
+        let a = self.get_value(program, self.ptr + 1, modes[0]);
+        let b = self.get_value(program, self.ptr + 2, modes[1]);
         if a != 0 {
             self.ptr = b as usize;
         } else {
@@ -75,9 +75,9 @@ impl Computer {
         // Opcode 6 is jump-if-false: if the first parameter is zero,
         // it sets the instruction pointer to the value from the second parameter.
         // Otherwise, it does nothing.
-        let mode_args = program.intcodes[self.ptr] / 100;
-        let a = self.get_value(program, self.ptr + 1, mode_args % 10);
-        let b = self.get_value(program, self.ptr + 2, (mode_args / 10) % 10);
+        let modes = self.get_modes(program, self.ptr);
+        let a = self.get_value(program, self.ptr + 1, modes[0]);
+        let b = self.get_value(program, self.ptr + 2, modes[1]);
         if a == 0 {
             self.ptr = b as usize;
         } else {
@@ -88,32 +88,29 @@ impl Computer {
 
     fn lt(&mut self, program: &mut Program) -> Option<isize> {
         // Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
-        let mode_args = program.intcodes[self.ptr] / 100;
-        let a = self.get_value(program, self.ptr + 1, mode_args % 10);
-        let b = self.get_value(program, self.ptr + 2, (mode_args / 10) % 10);
-        let w = self.get_pointer(program, self.ptr + 3, (mode_args / 100) % 10) as usize;
-        if w >= program.intcodes.len() {
-            program.intcodes.resize(w + 1, 0);
-        }
-        program.intcodes[w] = if a < b { 1 } else { 0 };
+        let modes = self.get_modes(program, self.ptr);
+        let a = self.get_value(program, self.ptr + 1, modes[0]);
+        let b = self.get_value(program, self.ptr + 2, modes[1]);
+        let i = self.get_pointer(program, self.ptr + 3, modes[2]);
+        program.write(i, if a < b { 1 } else { 0 });
         self.ptr += 4;
         None
     }
 
     fn eq(&mut self, program: &mut Program) -> Option<isize> {
         // Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
-        let mode_args = program.intcodes[self.ptr] / 100;
-        let a = self.get_value(program, self.ptr + 1, mode_args % 10);
-        let b = self.get_value(program, self.ptr + 2, (mode_args / 10) % 10);
-        let i = self.get_pointer(program, self.ptr + 3, (mode_args / 100) % 10) as usize;
+        let modes = self.get_modes(program, self.ptr);
+        let a = self.get_value(program, self.ptr + 1, modes[0]);
+        let b = self.get_value(program, self.ptr + 2, modes[1]);
+        let i = self.get_pointer(program, self.ptr + 3, modes[2]);
         program.write(i, if a == b { 1 } else { 0 });
         self.ptr += 4;
         None
     }
 
     fn rb(&mut self, program: &mut Program) -> Option<isize> {
-        let mode_arg = program.intcodes[self.ptr] / 100;
-        let a = self.get_value(program, self.ptr + 1, mode_arg);
+        let modes = self.get_modes(program, self.ptr);
+        let a = self.get_value(program, self.ptr + 1, modes[0]);
         self.base += a;
         self.ptr += 2;
         None
@@ -122,6 +119,14 @@ impl Computer {
     fn halt(&mut self) -> Option<isize> {
         self.halted = true;
         None
+    }
+
+    fn get_modes(&self, program: &Program, pos: usize) -> [isize; 3] {
+        let mode_args = program.intcodes[pos] / 100;
+        let first = mode_args % 10;
+        let second = (mode_args / 10) % 10;
+        let third = (mode_args / 100) % 10;
+        [first, second, third]
     }
 
     fn get_value(&self, program: &Program, pos: usize, mode_arg: isize) -> isize {
@@ -143,12 +148,12 @@ impl Computer {
         }
     }
 
-    fn get_pointer(&self, program: &Program, pos: usize, mode_arg: isize) -> isize {
+    fn get_pointer(&self, program: &Program, pos: usize, mode_arg: isize) -> usize {
         match mode_arg {
             //position mode
-            0 => program.intcodes[pos],
+            0 => program.intcodes[pos] as usize,
             //relative mode
-            2 => self.base + program.intcodes[pos],
+            2 => (self.base + program.intcodes[pos]) as usize,
             _ => {
                 panic!();
             }
@@ -205,12 +210,6 @@ impl Computer {
             }
         }
         Ok(outputs)
-    }
-}
-
-impl From<Vec<isize>> for Program {
-    fn from(intcodes: Vec<isize>) -> Self {
-        Self { intcodes }
     }
 }
 

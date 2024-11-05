@@ -61,7 +61,7 @@ pub fn part_1(intcodes: &[isize]) -> usize {
 pub fn part_2(intcodes: &[isize]) -> usize {
     let mut intcodes = intcodes.to_owned();
     intcodes[0] = 2;
-    let mut program = Program::from(intcodes);
+    let mut program = Program::from(&intcodes[..]);
     let mut computer = Computer::new();
     let mut command = 0;
     let mut paddle = 0isize;
