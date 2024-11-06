@@ -24,6 +24,7 @@ impl Computer {
     }
 
     fn add(&mut self, program: &mut Program) -> Option<isize> {
+        // Opcode 1 adds two integers, storing the result in the third parameter.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
@@ -34,6 +35,7 @@ impl Computer {
     }
 
     fn mul(&mut self, program: &mut Program) -> Option<isize> {
+        // Opcode 2 multiplies two integers, storing the result in the third parameter.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
@@ -44,6 +46,7 @@ impl Computer {
     }
 
     fn input(&mut self, program: &mut Program, input: isize) -> Option<isize> {
+        // Opcode 3 writes an input to the first parameter.
         let modes = self.get_modes(program, self.ptr);
         let i = self.get_pointer(program, self.ptr + 1, modes[0]);
         program.write(i, input);
@@ -52,6 +55,7 @@ impl Computer {
     }
 
     fn output(&mut self, program: &mut Program) -> Option<isize> {
+        // Opcode 4 outputs from the first parameter.
         let modes = self.get_modes(program, self.ptr);
         let output = self.get_value(program, self.ptr + 1, modes[0]);
         self.ptr += 2;
@@ -59,7 +63,9 @@ impl Computer {
     }
 
     fn jt(&mut self, program: &mut Program) -> Option<isize> {
-        //Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+        // Opcode 5 is jump-if-true: if the first parameter is non-zero, 
+        // it sets the instruction pointer to the value from the second parameter. 
+        // Otherwise, it does nothing.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
@@ -87,7 +93,9 @@ impl Computer {
     }
 
     fn lt(&mut self, program: &mut Program) -> Option<isize> {
-        // Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+        // Opcode 7 is less than: if the first parameter is less than the second parameter, 
+        // it stores 1 in the position given by the third parameter. 
+        // Otherwise, it stores 0.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
@@ -98,7 +106,9 @@ impl Computer {
     }
 
     fn eq(&mut self, program: &mut Program) -> Option<isize> {
-        // Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+        // Opcode 8 is equals: if the first parameter is equal to the second parameter,
+        // it stores 1 in the position given by the third parameter. 
+        // Otherwise, it stores 0.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
@@ -117,6 +127,7 @@ impl Computer {
     }
 
     fn halt(&mut self) -> Option<isize> {
+        // Opcode 99 halts the CPU.
         self.halted = true;
         None
     }
