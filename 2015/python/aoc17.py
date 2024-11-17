@@ -2,7 +2,7 @@ from itertools import combinations
 
 total = 150
 
-with open("data/17.txt", "r") as f:
+with open("../data/17.txt", "r") as f:
     data = list(int(l) for i, l in enumerate(f.readlines()))
 
 

@@ -4,7 +4,7 @@ Advent of Code day 12: JSON-loading
 
 import json
 
-with open("data/12.txt") as f:
+with open("../data/12.txt") as f:
     items = [json.loads(line) for line in f.readlines()]
 
 

@@ -19,7 +19,7 @@ def nice_or_naughty_2(line):
     return non_overlap.search(line) and sandwich.search(line)
 
 
-with open("data/5.txt") as f:
+with open("../data/5.txt") as f:
     lines = f.readlines()
 
 

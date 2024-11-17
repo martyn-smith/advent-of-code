@@ -30,7 +30,7 @@ def traverse(start: str, path: dict, remaining: dict):
             pass
 
 
-with open("data/9.txt") as f:
+with open("../data/9.txt") as f:
     for line in f.readlines():
         start_town = line.split(" to ")[0]
         end_town = line.split(" to ")[1].split(" = ")[0]
