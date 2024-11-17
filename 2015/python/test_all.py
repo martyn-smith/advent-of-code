@@ -31,6 +31,7 @@ def test_day_12():
     assert aoc12.part_1() == 156366
     assert aoc12.part_2() == 96852
 
+
 def test_day_17():
     import aoc17
 

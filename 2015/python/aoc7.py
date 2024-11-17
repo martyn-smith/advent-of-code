@@ -7,7 +7,7 @@ def maybe_int(x):
     return int(x) if x.isdigit() else x
 
 
-with open("data/7.txt", "r") as f:
+with open("../data/7.txt", "r") as f:
     for line in f.read().splitlines():
         lhs, gate_id = line.split(" -> ")
         if "NOT" in lhs:

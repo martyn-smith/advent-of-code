@@ -1,6 +1,7 @@
 """
 Advent of Code day 8: difference between in-memory string and representation
 """
+
 with open("data/8.txt", "r") as f:
     raws = f.readlines()
     literals = [eval(r) for r in raws]

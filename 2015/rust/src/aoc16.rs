@@ -47,10 +47,7 @@ impl Sue {
                 attrs.insert(description[idx..start - 2].to_string(), val);
             }
         }
-        Self {
-            id,
-            attrs
-        }
+        Self { id, attrs }
     }
 
     fn hunt(&self, reference: &Sue) -> bool {

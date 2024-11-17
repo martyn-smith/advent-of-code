@@ -1,6 +1,7 @@
 """
 Advent of Code day 9: pathfinding.
 """
+
 from itertools import permutations
 from random import choice
 from copy import deepcopy

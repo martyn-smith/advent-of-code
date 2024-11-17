@@ -1,6 +1,7 @@
 """
 Advent of Code day 5: naughty/nice strings
 """
+
 import re
 
 vowels = re.compile(r"([aeiou].*){3}")
