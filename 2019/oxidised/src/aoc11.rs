@@ -1,4 +1,4 @@
-use super::intcode::{FromStr, Intcode};
+use crate::intcode::{Computer, FromStr, Program};
 use std::collections::HashMap;
 
 #[derive(Debug, Copy, Clone)]
@@ -30,34 +30,38 @@ impl Direction {
 }
 
 struct Robot {
-    computer: Intcode,
+    computer: Computer,
+    program: Program,
     position: (isize, isize),
     direction: Direction,
 }
 
 impl Robot {
-    fn new(computer: &Intcode) -> Self {
+    fn new(program: &Program) -> Self {
         Robot {
-            computer: computer.clone(),
+            computer: Computer::new(),
+            program: program.clone(),
             position: (0, 0),
             direction: Direction::North,
         }
     }
 
     fn step(&mut self, hull: &mut HashMap<(isize, isize), bool>) -> Option<bool> {
-        let input = match hull.get(&self.position) {
+        let mut input = vec![match hull.get(&self.position) {
             Some(&b) => {
                 if b {
-                    1
+                    1isize
                 } else {
                     0
                 }
             }
             None => 0,
-        };
+        }];
         let output = (
-            self.computer.step(vec![input])?,
-            self.computer.step(vec![])?,
+            self.computer
+                .next(&mut self.program, Some(&mut input))
+                .unwrap()?,
+            self.computer.next(&mut self.program, None).unwrap()?,
         );
         let painted = match output.0 {
             0 => hull.insert(self.position, false).is_none(),
@@ -93,20 +97,20 @@ impl Robot {
     }
 }
 
-pub fn get_input() -> Intcode {
+pub fn get_input() -> Program {
     let program = include_str!("../../data/11.txt");
-    Intcode::from_str(program).unwrap()
+    Program::from_str(program).unwrap()
 }
 
-pub fn part_1(computer: &Intcode) -> usize {
-    let mut robot = Robot::new(computer);
+pub fn part_1(program: &Program) -> usize {
+    let mut robot = Robot::new(program);
     let mut hull = HashMap::new();
     while robot.step(&mut hull).is_some() {}
     hull.len()
 }
 
-pub fn part_2(computer: &Intcode) -> usize {
-    let mut robot = Robot::new(computer);
+pub fn part_2(program: &Program) -> usize {
+    let mut robot = Robot::new(program);
     let mut hull = HashMap::new();
     hull.insert((0, 0), true);
     while robot.step(&mut hull).is_some() {}

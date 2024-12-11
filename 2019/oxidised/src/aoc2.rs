@@ -2,9 +2,11 @@
 /// Advent of Code day 2: 1202 Error
 ///
 /*
- * The first Intcode-based problem
+ * The first Intcode-based problem.
+ * This appears to be the only one where the program is relevant,
+ * so the solution must own the program as a primitive throughout.
  */
-use super::intcode::{From, Intcode};
+use crate::intcode::{Computer, From, Program};
 use itertools::Itertools;
 
 pub fn get_input() -> Vec<isize> {
@@ -19,9 +21,10 @@ pub fn part_1(program: &[isize]) -> usize {
     let mut program = program.to_owned();
     program[1] = 12;
     program[2] = 2;
-    let mut computer = Intcode::from(&program[..]);
-    computer.run(vec![]).unwrap();
-    computer.intcodes[0] as usize
+    let mut program = Program::from(&program[..]);
+    let mut computer = Computer::new();
+    computer.run(&mut program, None).unwrap();
+    program.intcodes[0] as usize
 }
 
 pub fn part_2(program: &[isize]) -> usize {
@@ -32,8 +35,9 @@ pub fn part_2(program: &[isize]) -> usize {
         let mut program = program.to_owned();
         program[1] = noun;
         program[2] = verb;
-        let mut candidate = Intcode::from(&program[..]);
-        candidate.run(vec![]).unwrap();
+        let mut candidate = Program::from(&program[..]);
+        let mut computer = Computer::new();
+        computer.run(&mut candidate, None).unwrap();
         if candidate.intcodes[0] as usize == target {
             return (noun * 100 + verb) as usize;
         }

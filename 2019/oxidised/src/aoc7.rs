@@ -1,9 +1,11 @@
-use super::intcode::{FromStr, Intcode};
+use crate::intcode::{Computer, FromStr, Program};
+use anyhow::Result;
 use itertools::Itertools;
 
 struct Amplifier {
     phase: usize,
-    computer: Intcode,
+    program: Program,
+    computer: Computer,
     first_run: bool,
 }
 
@@ -12,33 +14,33 @@ struct AmpChain {
 }
 
 impl Amplifier {
-    fn new(computer: &Intcode, phase: usize) -> Self {
+    fn new(program: &Program, phase: usize) -> Self {
         Amplifier {
             phase,
-            computer: computer.clone(),
+            program: program.clone(),
+            computer: Computer::new(),
             first_run: true,
         }
     }
 
     fn run(&mut self, input: Option<isize>) -> Option<isize> {
-        let inputs = match self.first_run {
+        let mut inputs = match self.first_run {
             true => {
                 self.first_run = false;
                 vec![input?, self.phase as isize]
             }
             false => vec![input?],
         };
-        self.computer.step(inputs)
+        self.computer
+            .next(&mut self.program, Some(&mut inputs))
+            .unwrap()
     }
 }
 
 impl AmpChain {
-    fn new(computer: &Intcode, phases: Vec<usize>) -> Self {
+    fn new(program: &Program, phases: Vec<usize>) -> Self {
         AmpChain {
-            amps: phases
-                .iter()
-                .map(|&p| Amplifier::new(computer, p))
-                .collect(),
+            amps: phases.iter().map(|&p| Amplifier::new(program, p)).collect(),
         }
     }
 
@@ -57,29 +59,29 @@ impl AmpChain {
     }
 }
 
-pub fn get_input() -> Intcode {
-    Intcode::from_str(include_str!("../../data/7.txt")).unwrap()
+pub fn get_input() -> Program {
+    Program::from_str(include_str!("../../data/7.txt")).unwrap()
 }
 
-pub fn part_1(computer: &Intcode) -> usize {
+pub fn part_1(program: &Program) -> usize {
     let amp_count = 5;
     (0..amp_count)
         .permutations(amp_count)
         .map(|phases| {
-            let mut a = AmpChain::new(computer, phases);
+            let mut a = AmpChain::new(program, phases);
             a.run_open(Some(0)).unwrap() as usize
         })
         .max()
         .unwrap()
 }
 
-pub fn part_2(computer: &Intcode) -> usize {
+pub fn part_2(program: &Program) -> usize {
     let amp_count = 5;
     let offset = 5;
     (offset..amp_count + offset)
         .permutations(amp_count)
         .map(|phases| {
-            let mut a = AmpChain::new(computer, phases);
+            let mut a = AmpChain::new(program, phases);
             a.run_closed().unwrap() as usize
         })
         .max()
