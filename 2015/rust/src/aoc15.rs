@@ -57,7 +57,7 @@ struct Cookie<'a> {
 
 impl<'a> Cookie<'a> {
     fn new(amounts: Vec<usize>, input: &'a [Ingredient]) -> Self {
-        let ingredients = input.iter().zip(amounts.into_iter()).collect::<Vec<_>>();
+        let ingredients = input.iter().zip(amounts).collect::<Vec<_>>();
         Self { ingredients }
     }
 
@@ -190,11 +190,10 @@ pub fn part_2(input: &[Ingredient]) -> isize {
     let options = get_combinations(n, TOTAL);
     options
         .into_iter()
-        .map(|o| {
+        .filter_map(|o| {
             let c = Cookie::new(o, input);
             c.score_with_calories()
         })
-        .flatten()
         .max()
         .unwrap()
 }

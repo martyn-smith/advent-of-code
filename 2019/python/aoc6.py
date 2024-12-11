@@ -2,7 +2,7 @@
 Advent of Code day 6: orbit-based tree traversal.
 """
 
-with open("data/6.txt") as f:
+with open("../data/6.txt") as f:
     orbits = [line.strip("\n").split(")") for line in f.readlines()]
 
 

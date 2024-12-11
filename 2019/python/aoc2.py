@@ -15,7 +15,7 @@ def gravity_assist(noun, verb):
 
     opcodes = {1: add, 2: multiply, 99: terminate}
 
-    with open("data/2.txt") as f:
+    with open("../data/2.txt") as f:
         codes = [int(c) for c in f.read().strip("\n").split(",")]
         codes[1], codes[2] = noun, verb
 

@@ -11,7 +11,7 @@ def get_1478(sample: list[str]) -> int:
     )
 
 
-with open("data/8.txt") as f:
+with open("../data/8.txt") as f:
     lines = [get_display(l.rstrip()) for l in f.readlines()]
 
 

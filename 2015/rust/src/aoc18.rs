@@ -1,22 +1,23 @@
-/// 
+use itertools::iproduct;
+///
 /// Advent of Code day 18: Game of Life
 ///
-
 use ndarray::{Array, Array2};
-use itertools::iproduct;
 //use std::fs;
 
 #[cfg(debug_assertions)]
 fn print(grid: &Array2<bool>) {
-    let pic = grid.rows().into_iter()
-            .fold("\n".to_string(), 
-                |out, r| {
-                    format!("{}\n{}", out,
-                        r.iter().fold(String::new(), 
-                            |out, &elem| format!("{}{}", out, if elem {'#'} else {'.'})
-                        )
-                    )
-                });
+    let pic = grid.rows().into_iter().fold("\n".to_string(), |out, r| {
+        format!(
+            "{}\n{}",
+            out,
+            r.iter().fold(String::new(), |out, &elem| format!(
+                "{}{}",
+                out,
+                if elem { '#' } else { '.' }
+            ))
+        )
+    });
     println!("{}", pic);
 }
 
@@ -93,20 +94,20 @@ fn step(grid: &mut Array2<bool>) {
             ],
         );
     }
-    for c in iproduct!(1..w-1, 1..h-1) {
-       grid[[c.0, c.1]] = compute(
-           grid[[c.0, c.1]],
-           vec![
-               prev[[c.0 - 1, c.1 - 1]],
-               prev[[c.0 - 1, c.1]],
-               prev[[c.0 - 1, c.1 + 1]],
-               prev[[c.0, c.1 - 1]],
-               prev[[c.0, c.1 + 1]],
-               prev[[c.0 + 1, c.1 - 1]],
-               prev[[c.0 + 1, c.1]],
-               prev[[c.0 + 1, c.1 + 1]],
-           ],
-       );
+    for c in iproduct!(1..w - 1, 1..h - 1) {
+        grid[[c.0, c.1]] = compute(
+            grid[[c.0, c.1]],
+            vec![
+                prev[[c.0 - 1, c.1 - 1]],
+                prev[[c.0 - 1, c.1]],
+                prev[[c.0 - 1, c.1 + 1]],
+                prev[[c.0, c.1 - 1]],
+                prev[[c.0, c.1 + 1]],
+                prev[[c.0 + 1, c.1 - 1]],
+                prev[[c.0 + 1, c.1]],
+                prev[[c.0 + 1, c.1 + 1]],
+            ],
+        );
     }
 }
 

@@ -1,4 +1,4 @@
-with open("data/8.txt") as f:
+with open("../data/8.txt") as f:
     image = f.read()
     width = 25
     height = 6

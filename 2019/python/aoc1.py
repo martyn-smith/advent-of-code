@@ -16,7 +16,7 @@ def get_recursive_fuel(module_mass):
     return fuel
 
 
-with open("data/1.txt") as f:
+with open("../data/1.txt") as f:
     lines = f.readlines()
 
 

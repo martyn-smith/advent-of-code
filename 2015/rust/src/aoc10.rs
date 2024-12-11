@@ -27,7 +27,7 @@ fn play_game(input: &str, reps: usize) -> usize {
             }
         }
         next += &format!("{}{}", counter, cursor.unwrap())[..];
-        prev = next.clone();
+        prev.clone_from(&next);
     }
     next.len()
 }
