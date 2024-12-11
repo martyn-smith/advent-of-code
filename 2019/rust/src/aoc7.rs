@@ -1,5 +1,4 @@
 use crate::intcode::{Computer, FromStr, Program};
-use anyhow::Result;
 use itertools::Itertools;
 
 struct Amplifier {

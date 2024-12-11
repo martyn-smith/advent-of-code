@@ -1,5 +1,5 @@
 use crate::intcode;
-use crate::intcode::{asciify, FromStr, Program};
+use crate::intcode::{ascii, FromStr, Program};
 use itertools::iproduct;
 use ndarray::Array;
 
@@ -9,9 +9,7 @@ pub fn get_input() -> Program {
 
 pub fn part_1(program: &Program) -> usize {
     let program = program.clone();
-    let output = intcode::solve(program, None).unwrap();
-    let _pic = asciify!(output);
-    //some weirdness with input data here - lines is one too high when read directly from String ?!
+    let _pic = intcode::ascii(program, None).unwrap();
     let pic = include_str!("../../data/pic.txt");
     let width = pic.lines().next().unwrap().len();
     let depth = pic.lines().count();

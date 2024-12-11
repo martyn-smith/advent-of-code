@@ -264,12 +264,9 @@ pub fn solve(mut program: Program, inputs: Option<Vec<isize>>) -> Result<Vec<isi
 }
 
 // convenience for problems that require ASCII output.
-// TODO: consider if a function might be more useful. We can't implement std::fmt::Display directly
-// due to orphan rule and it's most likely not worth a wrapper type.
-macro_rules! asciify {
-    ($out:expr) => {{
-        String::from_utf8($out.iter().map(|&c| c as u8).collect()).unwrap()
-    }};
+pub fn ascii(mut program: Program, inputs: Option<Vec<isize>>) -> Result<String> {
+    let empty = vec![];
+    let mut inputs = inputs.unwrap_or(empty);
+    let mut computer = Computer::new();
+    Ok(computer.run(&mut program, Some(&mut inputs))?.into_iter().map(|c| char::from(c as u8)).collect::<String>())
 }
-
-pub(crate) use asciify;
