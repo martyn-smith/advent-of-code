@@ -1,5 +1,6 @@
 use anyhow::{bail, Context, Result};
 pub use std::convert::From;
+pub use std::ops::{Index, IndexMut};
 pub use std::str::FromStr;
 
 #[derive(Clone)]
@@ -29,7 +30,7 @@ impl Computer {
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
-        program.write(i, a + b);
+        program[i] = a + b;
         self.ptr += 4;
         None
     }
@@ -40,7 +41,7 @@ impl Computer {
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
-        program.write(i, a * b);
+        program[i] = a * b;
         self.ptr += 4;
         None
     }
@@ -49,7 +50,7 @@ impl Computer {
         // Opcode 3 writes an input to the first parameter.
         let modes = self.get_modes(program, self.ptr);
         let i = self.get_pointer(program, self.ptr + 1, modes[0]);
-        program.write(i, input);
+        program[i] = input;
         self.ptr += 2;
         None
     }
@@ -63,8 +64,8 @@ impl Computer {
     }
 
     fn jt(&mut self, program: &mut Program) -> Option<isize> {
-        // Opcode 5 is jump-if-true: if the first parameter is non-zero, 
-        // it sets the instruction pointer to the value from the second parameter. 
+        // Opcode 5 is jump-if-true: if the first parameter is non-zero,
+        // it sets the instruction pointer to the value from the second parameter.
         // Otherwise, it does nothing.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
@@ -93,27 +94,27 @@ impl Computer {
     }
 
     fn lt(&mut self, program: &mut Program) -> Option<isize> {
-        // Opcode 7 is less than: if the first parameter is less than the second parameter, 
-        // it stores 1 in the position given by the third parameter. 
+        // Opcode 7 is less than: if the first parameter is less than the second parameter,
+        // it stores 1 in the position given by the third parameter.
         // Otherwise, it stores 0.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
-        program.write(i, if a < b { 1 } else { 0 });
+        program[i] = if a < b { 1 } else { 0 };
         self.ptr += 4;
         None
     }
 
     fn eq(&mut self, program: &mut Program) -> Option<isize> {
         // Opcode 8 is equals: if the first parameter is equal to the second parameter,
-        // it stores 1 in the position given by the third parameter. 
+        // it stores 1 in the position given by the third parameter.
         // Otherwise, it stores 0.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         let b = self.get_value(program, self.ptr + 2, modes[1]);
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
-        program.write(i, if a == b { 1 } else { 0 });
+        program[i] = if a == b { 1 } else { 0 };
         self.ptr += 4;
         None
     }
@@ -245,12 +246,20 @@ impl FromStr for Program {
     }
 }
 
-impl Program {
-    fn write(&mut self, idx: usize, val: isize) {
-        if idx >= self.intcodes.len() {
-            self.intcodes.resize(idx + 1, 0);
+impl Index<usize> for Program {
+    type Output = isize;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.intcodes[index]
+    }
+}
+
+impl IndexMut<usize> for Program {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        if index >= self.intcodes.len() {
+            self.intcodes.resize(index + 1, 0);
         }
-        self.intcodes[idx] = val;
+        &mut self.intcodes[index]
     }
 }
 
@@ -268,5 +277,9 @@ pub fn ascii(mut program: Program, inputs: Option<Vec<isize>>) -> Result<String>
     let empty = vec![];
     let mut inputs = inputs.unwrap_or(empty);
     let mut computer = Computer::new();
-    Ok(computer.run(&mut program, Some(&mut inputs))?.into_iter().map(|c| char::from(c as u8)).collect::<String>())
+    Ok(computer
+        .run(&mut program, Some(&mut inputs))?
+        .into_iter()
+        .map(|c| char::from(c as u8))
+        .collect::<String>())
 }
