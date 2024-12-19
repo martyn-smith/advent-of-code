@@ -15,6 +15,11 @@ pub struct Guard {
     direction: Direction,
 }
 
+enum WalkResult {
+    OutOfBounds(HashSet::<Guard>),
+    CycleDetected(HashSet::<Guard>)
+}
+
 impl Guard {
     fn new(input: &str) -> Self {
         let (pos, direction) = input
@@ -37,146 +42,69 @@ impl Guard {
         Self { pos, direction }
     }
 
-    fn walk(&mut self, maze: &Array2<bool>) -> usize {
-        let mut visited = HashSet::<(usize, usize)>::new();
-        while (self.pos.0 > 0 && self.pos.0 < maze.nrows() - 1)
-            && (self.pos.1 > 0 && self.pos.1 < maze.ncols() - 1)
-        {
-            visited.insert(self.pos);
-            match self.direction {
-                Direction::Up => {
-                    if maze[[self.pos.0 - 1, self.pos.1]] {
-                        self.direction = Direction::Right;
-                    } else {
-                        self.pos.0 -= 1;
+    fn walk(&mut self, maze: &Array2<bool>) -> WalkResult {
+        let mut visited = HashSet::<Guard>::new();
+        loop {
+            if (self.pos.0 == 0 || self.pos.0 == maze.nrows() - 1)
+                || (self.pos.1 == 0 || self.pos.1 == maze.ncols() - 1)
+            {
+                visited.insert(self.clone());
+                return WalkResult::OutOfBounds(visited);
+            } else if visited.contains(&self) {
+                //dbg!(&visited);
+                return WalkResult::CycleDetected(visited);
+            } else {
+                visited.insert(self.clone());
+                match self.direction {
+                    Direction::Up => {
+                        if maze[[self.pos.0 - 1, self.pos.1]] {
+                            self.direction = Direction::Right;
+                        } else {
+                            self.pos.0 -= 1;
+                        }
                     }
-                }
-                Direction::Down => {
-                    if maze[[self.pos.0 + 1, self.pos.1]] {
-                        self.direction = Direction::Left;
-                    } else {
-                        self.pos.0 += 1;
+                    Direction::Down => {
+                        if maze[[self.pos.0 + 1, self.pos.1]] {
+                            self.direction = Direction::Left;
+                        } else {
+                            self.pos.0 += 1;
+                        }
                     }
-                }
-                Direction::Left => {
-                    if maze[[self.pos.0, self.pos.1 - 1]] {
-                        self.direction = Direction::Up;
-                    } else {
-                        self.pos.1 -= 1;
+                    Direction::Left => {
+                        if maze[[self.pos.0, self.pos.1 - 1]] {
+                            self.direction = Direction::Up;
+                        } else {
+                            self.pos.1 -= 1;
+                        }
                     }
-                }
-                Direction::Right => {
-                    if maze[[self.pos.0, self.pos.1 + 1]] {
-                        self.direction = Direction::Down;
-                    } else {
-                        self.pos.1 += 1;
+                    Direction::Right => {
+                        if maze[[self.pos.0, self.pos.1 + 1]] {
+                            self.direction = Direction::Down;
+                        } else {
+                            self.pos.1 += 1;
+                        }
                     }
                 }
             }
         }
-        visited.insert(self.pos);
-        visited.len()
     }
 
-    fn walk_2(&mut self, maze: &Array2<bool>) -> usize {
-        let mut visited = HashSet::<(usize, usize)>::new();
-        while (self.pos.0 > 0 && self.pos.0 < maze.nrows() - 1)
-            && (self.pos.1 > 0 && self.pos.1 < maze.ncols() - 1)
-        {
-            visited.insert(self.pos);
-            match self.direction {
-                Direction::Up => {
-                    if maze[[self.pos.0 - 1, self.pos.1]] {
-                        self.direction = Direction::Right;
-                    } else {
-                        self.pos.0 -= 1;
-                    }
-                }
-                Direction::Down => {
-                    if maze[[self.pos.0 + 1, self.pos.1]] {
-                        self.direction = Direction::Left;
-                    } else {
-                        self.pos.0 += 1;
-                    }
-                }
-                Direction::Left => {
-                    if maze[[self.pos.0, self.pos.1 - 1]] {
-                        self.direction = Direction::Up;
-                    } else {
-                        self.pos.1 -= 1;
-                    }
-                }
-                Direction::Right => {
-                    if maze[[self.pos.0, self.pos.1 + 1]] {
-                        self.direction = Direction::Down;
-                    } else {
-                        self.pos.1 += 1;
-                    }
-                }
+}
+
+fn get_blockers(maze: &Array2<bool>, guard: &Guard, visited: HashSet<Guard>) -> HashSet<Guard> {
+    let mut cands = visited.clone();
+    cands.remove(&guard);
+    cands.into_iter()
+        .filter_map(|c| {
+            let mut m = maze.clone();
+            let mut g = guard.clone();
+            m[[c.pos.0, c.pos.1]] = true;
+            match g.walk(&m) {
+                WalkResult::OutOfBounds(_) => None,
+                WalkResult::CycleDetected(_) => Some(c)
             }
-        }
-        visited.insert(self.pos);
-        0
-        //    let cands = visited.into_iter()
-        //                .map(|r| [
-        //                    (r.0.checked_sub(1), r.1.checked_sub(1)),
-        //                    (r.0.checked_sub(1), r.1),
-        //                    (r.0.checked_sub(1), r.1 + 1),
-        //                    (r.0, r.1.checked_sub(1)),
-        //                    (r.0, r.1 + 1),
-        //                    (r.0 + 1, r.1.checked_sub(1)),
-        //                    (r.0 + 1, r.1),
-        //                    (r.0 + 1, r.1 + 1)
-        //                ].into_iter()
-        //                 .collect::<Vec<_>>()
-        //                    )
-        //                .flatten();
-        //    cands.into_iter()
-        //        .filter(|c| {
-        //        maze[[c.0, c.1]] = true;
-        //    let mut visited = HashSet::<(usize, usize)>::new();
-        //    while (self.pos.0 > 0 && self.pos.0 < maze.nrows() - 1)
-        //        && (self.pos.1 > 0 && self.pos.1 < maze.ncols() - 1) {
-        //            if visited.contains(self.pos) {
-        //                return false;
-        //            } else {
-        //            match self.direction {
-        //                Direction::Up => {
-        //                    if maze[[self.pos.0 - 1, self.pos.1]] {
-        //                        self.direction = Direction::Right;
-        //                    } else {
-        //                        self.pos.0 -= 1;
-        //                    }
-        //                },
-        //                Direction::Down => {
-        //                    if maze[[self.pos.0 + 1, self.pos.1]] {
-        //                        self.direction = Direction::Left;
-        //                    } else {
-        //                        self.pos.0 += 1;
-        //                    }
-        //                },
-        //                Direction::Left => {
-        //                    if maze[[self.pos.0, self.pos.1 - 1]] {
-        //                        self.direction = Direction::Up;
-        //                    } else {
-        //                        self.pos.1 -= 1;
-        //                    }
-        //                },
-        //                Direction::Right => {
-        //                    if maze[[self.pos.0, self.pos.1 + 1]] {
-        //                        self.direction = Direction::Down;
-        //                    } else {
-        //                        self.pos.1 += 1;
-        //                    }
-        //                }
-        //            }
-        //            true
-        //        }
-        //        }
-        //
-        //    }
-        //
-    }
+        })
+        .collect::<HashSet<_>>()
 }
 
 pub fn get_input() -> (Array2<bool>, Guard) {
@@ -195,10 +123,26 @@ pub fn get_input() -> (Array2<bool>, Guard) {
 
 pub fn part_1(input: &(Array2<bool>, Guard)) -> usize {
     let mut guard = input.1.clone();
-    guard.walk(&input.0)
+    if let WalkResult::OutOfBounds(path) = guard.walk(&input.0) {
+        path.into_iter()
+            .map(|g| g.pos)
+            .collect::<HashSet<_>>()
+            .len()
+    } else {
+        panic!()
+    }
 }
 
+// < 2002
 pub fn part_2(input: &(Array2<bool>, Guard)) -> usize {
     let mut guard = input.1.clone();
-    guard.walk_2(&input.0)
+    if let WalkResult::OutOfBounds(path) = guard.walk(&input.0) {
+        let blockers = get_blockers(&input.0, &input.1, path)
+            .into_iter()
+            .map(|g| g.pos)
+            .collect::<HashSet<_>>();
+        blockers.len()
+    } else {
+        panic!()
+    }
 }

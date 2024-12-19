@@ -1,30 +1,34 @@
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
-fn is_valid(job: &Vec<usize>, rules: &HashMap<usize, Vec<usize>>) -> bool {
-    (0..job.len() - 1).all(|i| is_satisfied(i, rules, &job))
+struct PageOrderError {
+    rule: (usize, usize),
+    violator: (usize, usize),
 }
 
-fn is_satisfied(i: usize, rules: &HashMap<usize, Vec<usize>>, job: &Vec<usize>) -> bool {
-    let n = job[i];
-    if let Some(reqs) = rules.get(&n) {
-        dbg!(&reqs);
-        reqs.into_iter().all(|r| job[i..].contains(&r))
-    } else {
-        true
-    }
+fn is_valid(job: &[usize], rules: &HashMap<usize, Vec<usize>>) -> bool {
+    (0..job.len() - 1).all(|i| {
+        let page = job[i];
+        if let Some(reqs) = rules.get(&page) {
+            reqs.iter()
+                .all(|r| job[..i].contains(r) || !job.contains(r))
+        } else {
+            true
+        }
+    })
 }
 
 pub fn get_input() -> (HashMap<usize, Vec<usize>>, Vec<Vec<usize>>) {
-    let mut input = include_str!("../../data/5.small.txt").split("\n\n");
+    let mut input = include_str!("../../data/5.txt").split("\n\n");
     let mut rules = HashMap::new();
     for l in input.next().unwrap().lines() {
         let mut s = l.split('|');
-        let r = s.next().unwrap().parse::<usize>().unwrap();
+        let b = s.next().unwrap().parse::<usize>().unwrap();
         let t = s.next().unwrap().parse::<usize>().unwrap();
         rules
-            .entry(r)
-            .and_modify(|req: &mut Vec<usize>| req.push(t))
-            .or_insert(vec![t]);
+            .entry(t)
+            .and_modify(|req: &mut Vec<usize>| req.push(b))
+            .or_insert(vec![b]);
     }
     let jobs = input
         .next()
@@ -40,6 +44,40 @@ pub fn get_input() -> (HashMap<usize, Vec<usize>>, Vec<Vec<usize>>) {
 }
 
 pub fn part_1(input: &(HashMap<usize, Vec<usize>>, Vec<Vec<usize>>)) -> usize {
-    dbg!(&input.1);
-    input.1.iter().filter(|j| is_valid(j, &input.0)).count()
+    let rules = &input.0;
+    let jobs = &input.1;
+    jobs.iter()
+        .filter_map(|j| {
+            if is_valid(j, rules) {
+                Some(j[j.len() / 2])
+            } else {
+                None
+            }
+        })
+        .sum::<usize>()
+}
+
+pub fn part_2(input: &(HashMap<usize, Vec<usize>>, Vec<Vec<usize>>)) -> usize {
+    let rules = &input.0;
+    let mut jobs = input.1.clone();
+    jobs.iter_mut()
+        .filter_map(|j| {
+            if !is_valid(j, rules) {
+                j.sort_by(|p1, p2| {
+                    if let Some(req) = rules.get(p1) {
+                        if req.contains(p2) {
+                            Ordering::Greater
+                        } else {
+                            Ordering::Less
+                        }
+                    } else {
+                        Ordering::Less
+                    }
+                });
+                Some(j[j.len() / 2])
+            } else {
+                None
+            }
+        })
+        .sum::<usize>()
 }
