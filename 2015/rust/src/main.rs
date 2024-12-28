@@ -11,6 +11,7 @@ mod aoc19;
 mod aoc2;
 mod aoc20;
 mod aoc21;
+mod aoc22;
 mod aoc3;
 mod aoc4;
 mod aoc6;

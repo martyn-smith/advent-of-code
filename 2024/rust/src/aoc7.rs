@@ -3,12 +3,11 @@ fn sums(mut component: Vec<usize>) -> Vec<usize> {
         1 => vec![component.pop().unwrap()],
         _ => {
             let c = component.pop().unwrap();
-            let add = sums(component.clone())
+            sums(component.clone())
                 .into_iter()
-                .map(|a| [a + c, a * c])
-                .flatten()
-                .collect::<Vec<_>>();
-            add
+                .flat_map(|a| [a + c, a * c])
+                //.flatten()
+                .collect::<Vec<_>>()
         }
     }
 }
@@ -18,22 +17,21 @@ fn concats(mut component: Vec<usize>) -> Vec<usize> {
         1 => vec![component.pop().unwrap()],
         _ => {
             let c = component.pop().unwrap();
-            let add = concats(component.clone())
+            concats(component.clone())
                 .into_iter()
-                .map(|a| [a + c, a * c, (a * 10_usize.pow(c.ilog(10) + 1)) + c])
-                .flatten()
-                .collect::<Vec<_>>();
-            add
+                .flat_map(|a| [a + c, a * c, (a * 10_usize.pow(c.ilog(10) + 1)) + c])
+                //.flatten()
+                .collect::<Vec<_>>()
         }
     }
 }
 
-fn is_valid_2(equation: &(usize, Vec<usize>)) -> bool {
+fn is_valid_sum(equation: &(usize, Vec<usize>)) -> bool {
     let tgt = equation.0;
     sums(equation.1.clone()).into_iter().any(|r| r == tgt)
 }
 
-fn is_valid_3(equation: &(usize, Vec<usize>)) -> bool {
+fn is_valid_concat(equation: &(usize, Vec<usize>)) -> bool {
     let tgt = equation.0;
     concats(equation.1.clone()).into_iter().any(|r| r == tgt)
 }
@@ -58,7 +56,7 @@ pub fn get_input() -> Vec<(usize, Vec<usize>)> {
 pub fn part_1(input: &Vec<(usize, Vec<usize>)>) -> usize {
     input
         .into_iter()
-        .filter(|&eq| is_valid_2(eq))
+        .filter(|&eq| is_valid_sum(eq))
         .map(|eq| eq.0)
         .sum::<usize>()
 }
@@ -66,7 +64,7 @@ pub fn part_1(input: &Vec<(usize, Vec<usize>)>) -> usize {
 pub fn part_2(input: &Vec<(usize, Vec<usize>)>) -> usize {
     input
         .into_iter()
-        .filter(|&eq| is_valid_3(eq))
+        .filter(|&eq| is_valid_concat(eq))
         .map(|eq| eq.0)
         .sum::<usize>()
 }

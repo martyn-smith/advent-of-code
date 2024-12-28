@@ -133,7 +133,6 @@ pub fn part_1(input: &(Array2<bool>, Guard)) -> usize {
     }
 }
 
-// < 2002
 pub fn part_2(input: &(Array2<bool>, Guard)) -> usize {
     let mut guard = input.1.clone();
     if let WalkResult::OutOfBounds(path) = guard.walk(&input.0) {
