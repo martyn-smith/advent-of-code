@@ -8,7 +8,7 @@ fn blink(stones: &mut LinkedList<usize>) {
         } else if val.ilog10() % 2 == 1 {
             to_split.push(i);
         } else {
-            *val = *val * 2024;
+            *val *= 2024;
         }
     }
     for i in to_split.into_iter() {

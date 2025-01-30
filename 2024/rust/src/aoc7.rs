@@ -53,17 +53,17 @@ pub fn get_input() -> Vec<(usize, Vec<usize>)> {
         .collect::<Vec<_>>()
 }
 
-pub fn part_1(input: &Vec<(usize, Vec<usize>)>) -> usize {
+pub fn part_1(input: &[(usize, Vec<usize>)]) -> usize {
     input
-        .into_iter()
+        .iter()
         .filter(|&eq| is_valid_sum(eq))
         .map(|eq| eq.0)
         .sum::<usize>()
 }
 
-pub fn part_2(input: &Vec<(usize, Vec<usize>)>) -> usize {
+pub fn part_2(input: &[(usize, Vec<usize>)]) -> usize {
     input
-        .into_iter()
+        .iter()
         .filter(|&eq| is_valid_concat(eq))
         .map(|eq| eq.0)
         .sum::<usize>()

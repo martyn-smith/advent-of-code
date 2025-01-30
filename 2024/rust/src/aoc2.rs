@@ -7,10 +7,9 @@ enum ReportState {
     Decreasing(usize),
 }
 
-fn walk(levels: &Vec<usize>) -> bool {
-    let mut l = levels.iter();
+fn walk(levels: &[usize]) -> bool {
     let mut state = None;
-    while let Some(&b) = l.next() {
+    for &b in levels.iter() {
         state = match state {
             None => Some(ReportState::First(b)),
             Some(ReportState::First(a)) => match b.cmp(&a) {
@@ -61,7 +60,7 @@ fn dampened_walk(levels: &Vec<usize>) -> bool {
         })
         .collect::<Vec<_>>();
     dampened.push(levels.to_owned());
-    dampened.iter().any(walk)
+    dampened.iter().any(|r| walk(r))
 }
 
 pub fn get_input() -> Vec<Vec<usize>> {
@@ -75,10 +74,10 @@ pub fn get_input() -> Vec<Vec<usize>> {
         .collect::<Vec<_>>()
 }
 
-pub fn part_1(input: &Vec<Vec<usize>>) -> usize {
+pub fn part_1(input: &[Vec<usize>]) -> usize {
     input.iter().filter(|r| walk(r)).count()
 }
 
-pub fn part_2(input: &Vec<Vec<usize>>) -> usize {
+pub fn part_2(input: &[Vec<usize>]) -> usize {
     input.iter().filter(|r| dampened_walk(r)).count()
 }

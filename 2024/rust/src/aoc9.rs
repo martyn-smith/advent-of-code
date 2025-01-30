@@ -51,7 +51,7 @@ pub fn part_1(input: &[Block]) -> usize {
     let mut disk = vec![None; input.iter().map(|b| (b.size + b.free)).sum::<usize>()];
     let mut i = 0usize;
     for b in input {
-        for j in i..i + b.size as usize {
+        for j in i..i + b.size {
             disk[j] = Some(b.id);
         }
         i += b.size + b.free;

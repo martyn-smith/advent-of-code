@@ -17,7 +17,7 @@ pub fn part_1(input: &(Vec<usize>, Vec<usize>)) -> usize {
     left.sort();
     right.sort();
     left.into_iter()
-        .zip(right.into_iter())
+        .zip(right)
         .map(|(l, r)| (l as i32 - r as i32).abs())
         .sum::<i32>() as usize
 }

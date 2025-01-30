@@ -16,8 +16,8 @@ pub struct Guard {
 }
 
 enum WalkResult {
-    OutOfBounds(HashSet::<Guard>),
-    CycleDetected(HashSet::<Guard>)
+    OutOfBounds(HashSet<Guard>),
+    CycleDetected(HashSet<Guard>),
 }
 
 impl Guard {
@@ -50,7 +50,7 @@ impl Guard {
             {
                 visited.insert(self.clone());
                 return WalkResult::OutOfBounds(visited);
-            } else if visited.contains(&self) {
+            } else if visited.contains(self) {
                 //dbg!(&visited);
                 return WalkResult::CycleDetected(visited);
             } else {
@@ -88,20 +88,20 @@ impl Guard {
             }
         }
     }
-
 }
 
 fn get_blockers(maze: &Array2<bool>, guard: &Guard, visited: HashSet<Guard>) -> HashSet<Guard> {
     let mut cands = visited.clone();
-    cands.remove(&guard);
-    cands.into_iter()
+    cands.remove(guard);
+    cands
+        .into_iter()
         .filter_map(|c| {
             let mut m = maze.clone();
             let mut g = guard.clone();
             m[[c.pos.0, c.pos.1]] = true;
             match g.walk(&m) {
                 WalkResult::OutOfBounds(_) => None,
-                WalkResult::CycleDetected(_) => Some(c)
+                WalkResult::CycleDetected(_) => Some(c),
             }
         })
         .collect::<HashSet<_>>()

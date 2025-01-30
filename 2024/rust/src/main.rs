@@ -4,13 +4,13 @@
 mod tests;
 
 mod aoc1;
+mod aoc11;
 mod aoc2;
 mod aoc4;
 mod aoc5;
 mod aoc6;
 mod aoc7;
 mod aoc9;
-mod aoc11;
 
 fn main() {
     let input = aoc9::get_input();

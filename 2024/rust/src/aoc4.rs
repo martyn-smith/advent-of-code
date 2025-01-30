@@ -1,4 +1,4 @@
-fn count_xmas(x: (usize, usize), board: &Vec<Vec<char>>) -> usize {
+fn count_xmas(x: (usize, usize), board: &[Vec<char>]) -> usize {
     let right = [
         (Some(x.0), Some(x.1)),
         (Some(x.0), Some(x.1 + 1)),
@@ -79,7 +79,7 @@ fn count_xmas(x: (usize, usize), board: &Vec<Vec<char>>) -> usize {
     .count()
 }
 
-fn count_x_mas(a: (usize, usize), board: &Vec<Vec<char>>) -> usize {
+fn count_x_mas(a: (usize, usize), board: &[Vec<char>]) -> usize {
     let up_left = [
         (Some(a.0 + 1), a.1.checked_sub(1)),
         (Some(a.0), Some(a.1)),
@@ -103,7 +103,7 @@ fn count_x_mas(a: (usize, usize), board: &Vec<Vec<char>>) -> usize {
     }
 }
 
-fn get(pos: (Option<usize>, Option<usize>), board: &Vec<Vec<char>>) -> Option<char> {
+fn get(pos: (Option<usize>, Option<usize>), board: &[Vec<char>]) -> Option<char> {
     let y = pos.0?;
     let x = pos.1?;
     let row = board.get(y)?;
@@ -121,7 +121,7 @@ pub fn get_input() -> Vec<Vec<char>> {
         .collect::<Vec<_>>()
 }
 
-pub fn part_1(input: &Vec<Vec<char>>) -> usize {
+pub fn part_1(input: &[Vec<char>]) -> usize {
     input
         .iter()
         .enumerate()
@@ -130,7 +130,7 @@ pub fn part_1(input: &Vec<Vec<char>>) -> usize {
                 .enumerate()
                 .filter_map(|(j, &c)| {
                     if c == 'X' {
-                        Some(count_xmas((i, j), &input))
+                        Some(count_xmas((i, j), input))
                     } else {
                         None
                     }
@@ -140,7 +140,7 @@ pub fn part_1(input: &Vec<Vec<char>>) -> usize {
         .sum::<usize>()
 }
 
-pub fn part_2(input: &Vec<Vec<char>>) -> usize {
+pub fn part_2(input: &[Vec<char>]) -> usize {
     input
         .iter()
         .enumerate()
@@ -149,7 +149,7 @@ pub fn part_2(input: &Vec<Vec<char>>) -> usize {
                 .enumerate()
                 .filter_map(|(j, &c)| {
                     if c == 'A' {
-                        Some(count_x_mas((i, j), &input))
+                        Some(count_x_mas((i, j), input))
                     } else {
                         None
                     }
