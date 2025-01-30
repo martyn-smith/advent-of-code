@@ -20,14 +20,15 @@ fn test_day_3() {
     assert_eq!(2572, aoc3::part_1(&input));
     assert_eq!(2631, aoc3::part_2(&input));
 }
-/*
-#[test]
-fn test_day_4() {
-    let input = aoc4::get_input();
-    assert_eq!(346386, aoc4::part_1(&input));
-    assert_eq!(9958218, aoc4::part_2(&input));
-}
-*/
+
+// ISSUE: this is rather slow.
+//#[test]
+//fn test_day_4() {
+//    let input = aoc4::get_input();
+//    assert_eq!(346386, aoc4::part_1(&input));
+//    assert_eq!(9958218, aoc4::part_2(&input));
+//}
+
 #[test]
 fn test_day_6() {
     let input = aoc6::get_input();
@@ -46,7 +47,7 @@ fn test_day_7() {
 fn test_day_8() {
     let input = aoc8::get_input();
     assert_eq!(1342, aoc8::part_1(&input));
-    assert_eq!(2074, aoc8::part_1(&input));
+    assert_eq!(2074, aoc8::part_2(&input));
 }
 
 #[test]

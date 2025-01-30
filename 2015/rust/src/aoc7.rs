@@ -55,32 +55,32 @@ impl Op {
                 }
             }
             MaybeInt::Unsolved(lhs) => {
-                if lhs.contains("Not") {
-                    let operands = lhs.split("Not ").collect::<Vec<&str>>();
+                if lhs.contains("NOT") {
+                    let operands = lhs.split("NOT ").collect::<Vec<&str>>();
                     Self {
                         op: OpCodes::Not,
                         val: vec![get_u16(gates, operands[1])],
                     }
-                } else if lhs.contains("And") {
-                    let operands = lhs.split(" And ").collect::<Vec<&str>>();
+                } else if lhs.contains("AND") {
+                    let operands = lhs.split(" AND ").collect::<Vec<&str>>();
                     Self {
                         op: OpCodes::And,
                         val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
                     }
-                } else if lhs.contains("Or") {
-                    let operands = lhs.split(" Or ").collect::<Vec<&str>>();
+                } else if lhs.contains("OR") {
+                    let operands = lhs.split(" OR ").collect::<Vec<&str>>();
                     Self {
                         op: OpCodes::Or,
                         val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
                     }
-                } else if lhs.contains("Lshift") {
-                    let operands = lhs.split(" Lshift ").collect::<Vec<&str>>();
+                } else if lhs.contains("LSHIFT") {
+                    let operands = lhs.split(" LSHIFT ").collect::<Vec<&str>>();
                     Self {
                         op: OpCodes::Lshift,
                         val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
                     }
-                } else if lhs.contains("Rshift") {
-                    let operands = lhs.split(" Rshift ").collect::<Vec<&str>>();
+                } else if lhs.contains("RSHIFT") {
+                    let operands = lhs.split(" RSHIFT ").collect::<Vec<&str>>();
                     Self {
                         op: OpCodes::Rshift,
                         val: vec![get_u16(gates, operands[0]), get_u16(gates, operands[1])],
@@ -97,30 +97,30 @@ impl Op {
 }
 
 fn collect_unsolved(query: &str) -> Vec<&str> {
-    if query.contains("Not") {
+    if query.contains("NOT") {
         query
-            .split("Not ")
+            .split("NOT ")
             .skip(1)
             .filter(|l| l.parse::<u16>().is_err())
             .collect::<Vec<&str>>()
-    } else if query.contains("And") {
+    } else if query.contains("AND") {
         query
-            .split(" And ")
+            .split(" AND ")
             .filter(|l| l.parse::<u16>().is_err())
             .collect::<Vec<&str>>()
-    } else if query.contains("Or") {
+    } else if query.contains("OR") {
         query
-            .split(" Or ")
+            .split(" OR ")
             .filter(|l| l.parse::<u16>().is_err())
             .collect::<Vec<&str>>()
-    } else if query.contains("Lshift") {
+    } else if query.contains("LSHIFT") {
         query
-            .split(" Lshift ")
+            .split(" LSHIFT ")
             .filter(|l| l.parse::<u16>().is_err())
             .collect::<Vec<&str>>()
-    } else if query.contains("Rshift") {
+    } else if query.contains("RSHIFT") {
         query
-            .split(" Rshift ")
+            .split(" RSHIFT ")
             .filter(|l| l.parse::<u16>().is_err())
             .collect::<Vec<&str>>()
     } else if query.parse::<u16>().is_err() {
