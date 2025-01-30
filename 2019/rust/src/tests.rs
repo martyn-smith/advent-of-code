@@ -92,7 +92,7 @@ fn test_day_13() {
 fn test_day_14() {
     let input = aoc14::get_input();
     assert_eq!(751038, aoc14::part_1(&input));
-    assert_eq!(2074843, aoc14::part_1(&input));
+    assert_eq!(2074843, aoc14::part_2(&input));
 }
 #[test]
 fn test_day_17() {
