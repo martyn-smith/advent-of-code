@@ -21,7 +21,13 @@ fn get_substituted(rules: &[[String; 2]], old: &str) -> HashSet<String> {
     new
 }
 
-// 201 < x < 209
+/*
+ * Greedy reduction gets you stuck on a Ca(F) sequence,
+ * adding a manual expansion step leads to an answer of 209, 2 too high.
+ * Not really sure if there's a deterministic way around that without
+ * hardcoding in that knowledge? Or we could use a GA,
+ * but that's not exactly performant.
+ */
 fn do_substitutions(rules: &[[String; 2]], old: &str) -> Result<usize> {
     let mut rules = rules.to_owned();
     let mut tgt = old.to_string();
@@ -31,50 +37,17 @@ fn do_substitutions(rules: &[[String; 2]], old: &str) -> Result<usize> {
     while tgt != "e" {
         let mut rnd_mutations = 0;
         for [k, v] in rules.iter().rev() {
-            //sleep(Duration::from_millis(100));
-            //println!("{}\n{} trying {} => {}", &tgt, mutations, k, v);
             rnd_mutations = tgt.matches(v).count();
             mutations += rnd_mutations;
             tgt = tgt.replace(v, k);
-
             //sleep(Duration::from_millis(100));
         }
         println!("===\n{}\n{} {}\n===", &tgt, mutations, rnd_mutations);
 
-        sleep(Duration::from_millis(100));
-        //if rnd_mutations == 0 {
-        //    dbg!(&tgt);
-        //    break;
-        //}
-        //if tgt.len() == old.len() {
-        //    return Err(anyhow!("mutation has grown string"));
-        //}
-        //if rnd_mutations == 0 {
-        //    mutations += rules.iter().flat_map(|[k, v]| {
-        //        rnd_mutations = tgt.matches(k).count();
-        //        tgt = tgt.replace(k, v);
-        //        do_substitutions(&rules, &tgt)
-        //    }).min().unwrap()
-        //}
+        //sleep(Duration::from_millis(100));
     }
     Ok(mutations)
 }
-//pub fn build(subs: &[[String; 2]], target: &str) -> (String, usize) {
-//    let mut out = target.to_string();
-//    let mut mutations = 0;
-//    while out != "e" {
-//        for s in subs.iter() {
-//            let next = out.replace(&s[1], &s[0]);
-//            if next != out {
-//                mutations += 1;
-//                out = next;
-//                dbg!(&out);
-//                dbg!(mutations);
-//            }
-//        }
-//    }
-//    (out, mutations)
-//}
 
 pub fn get_input() -> (Vec<[String; 2]>, String) {
     let mut input = include_str!("../../data/19.txt").split("\n\n");
@@ -100,6 +73,5 @@ pub fn part_1(input: &(Vec<[String; 2]>, String)) -> usize {
 }
 
 pub fn part_2(input: &(Vec<[String; 2]>, String)) -> usize {
-    //build(&input.0, &input.1.trim()).1
     do_substitutions(&input.0, &input.1).unwrap()
 }
