@@ -110,7 +110,7 @@ impl QPlayer {
 }
 
 pub fn get_input() -> [Player; 2] {
-    [Player::new(4), Player::new(8)]
+    [Player::new(10), Player::new(1)]
 }
 
 pub fn part_1(input: &[Player; 2]) -> usize {

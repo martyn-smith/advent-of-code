@@ -4,6 +4,20 @@
 use std::fmt;
 use std::fmt::{Display, Write};
 
+#[macro_export]
+macro_rules! blocks {
+    ($blocks:expr) => {{
+        use std::fmt::Write;
+        $blocks.iter().fold(
+            String::with_capacity($blocks.len() * 2),
+            |mut output, element| {
+                let _ = write!(output, "{}", element);
+                output
+            },
+        )
+    }};
+}
+
 #[derive(Clone, Debug)]
 pub struct Block {
     size: usize,
@@ -100,14 +114,6 @@ pub fn part_1(input: &[Block]) -> usize {
     checksum(&blocks)
 }
 
-// < 9819042852363
-// < 7752349556033
-// < 7324261373958
-// < 6761906415922
-// passes on example :-(
-// The solution by rafald1
-// (https://github.com/rafald1/advent_of_code_2024/blob/main/src/day_09_disk_fragmenter/part_2.rs)
-// solution works. But what?!
 // Done. This is such a painful approach, however.
 // I don't like using a mixture of .iter_mut() and [i] access but this may be the alternative,
 // and it's horrible in order to avoid bad accesses from length-changes.
@@ -128,14 +134,8 @@ pub fn part_2(input: &[Block]) -> usize {
                     blocks.insert(j + 1, f);
                     blocks[j + 1].free = blocks[j].free - blocks[j + 1].size;
                     blocks[j].free = 0;
+                    println!("{}", blocks!(blocks));
                     break 'b;
-                    //println!(
-                    //    "{}",
-                    //    blocks.iter().fold(String::new(), |mut out, e| {
-                    //        let _ = write!(&mut out, "{}", e);
-                    //        out
-                    //    })
-                    //);
                 }
             }
             if terminate {

@@ -1,5 +1,45 @@
 use std::collections::HashSet;
-use std::fmt::Write;
+
+#[macro_export]
+macro_rules! board {
+    ($width:expr, $depth:expr, $antinodes:expr, $antennae:expr) => {{
+        use std::fmt::Write;
+
+        (0..$depth).fold(String::new(), |mut board, r| {
+            let row = (0..$width).fold(String::new(), |mut rw, c| {
+                let e = if $antinodes.contains(&[c as i32, r as i32]) {
+                    '#'
+                } else if let Some(a) = $antennae.iter().find(|a| a.pos == [c, r]) {
+                    a.freq
+                } else {
+                    '.'
+                };
+                let _ = write!(&mut rw, "{}", e);
+                rw
+            });
+            let _ = writeln!(&mut board, "{}", row);
+            board
+        })
+    }};
+}
+//println!(
+//    "{}",
+//    (0..depth).fold(String::new(), |mut board, r| {
+//        let row = (0..width).fold(String::new(), |mut rw, c| {
+//            let e = if antinodes.contains(&[c as i32, r as i32]) {
+//                '#'
+//            } else if let Some(a) = antennae.iter().find(|a| a.pos == [c, r]) {
+//                a.freq
+//            } else {
+//                '.'
+//            };
+//            let _ = write!(&mut rw, "{}", e);
+//            rw
+//        });
+//        let _ = writeln!(&mut board, "{}", row);
+//        board
+//    })
+//);
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Antenna {
@@ -95,6 +135,7 @@ pub fn part_1(input: &([usize; 2], Vec<Antenna>)) -> usize {
         })
         .filter(|an| an[0] >= 0 && an[0] < width as i32 && an[1] >= 0 && an[1] < depth as i32)
         .collect::<HashSet<_>>();
+    println!("{}", board!(width, depth, antinodes, antennae));
 
     //println!(
     //    "{}",
@@ -137,23 +178,5 @@ pub fn part_2(input: &([usize; 2], Vec<Antenna>)) -> usize {
             .flatten()
         })
         .collect::<HashSet<_>>();
-    //println!(
-    //    "{}",
-    //    (0..depth).fold(String::new(), |mut board, r| {
-    //        let row = (0..width).fold(String::new(), |mut rw, c| {
-    //            let e = if antinodes.contains(&[c as i32, r as i32]) {
-    //                '#'
-    //            } else if let Some(a) = antennae.iter().find(|a| a.pos == [c, r]) {
-    //                a.freq
-    //            } else {
-    //                '.'
-    //            };
-    //            let _ = write!(&mut rw, "{}", e);
-    //            rw
-    //        });
-    //        let _ = writeln!(&mut board, "{}", row);
-    //        board
-    //    })
-    //);
     antinodes.len()
 }

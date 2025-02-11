@@ -26,5 +26,5 @@ mod tests;
 fn main() {
     let input = aoc16::get_input();
     println!("{}", aoc16::part_1(&input));
-    //println!("{}", aoc21::part_2(&input));
+    println!("{}", aoc16::part_2(&input));
 }
