@@ -104,13 +104,6 @@ pub fn part_1(input: &[Block]) -> usize {
     }
     let mut blocks = input.to_owned();
     compact(&mut blocks);
-    //println!(
-    //    "{}",
-    //    blocks.iter().fold(String::new(), |mut out, e| {
-    //        let _ = write!(&mut out, "{}", e);
-    //        out
-    //    })
-    //);
     checksum(&blocks)
 }
 

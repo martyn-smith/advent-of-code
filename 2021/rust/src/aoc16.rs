@@ -1,5 +1,5 @@
 ///
-/// Advent of Code day 16: get_u16 the input
+/// Advent of Code day 16: parse the input
 ///
 use anyhow::{anyhow, Context, Result};
 use std::convert::TryFrom;

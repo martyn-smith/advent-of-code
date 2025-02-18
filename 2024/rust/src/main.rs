@@ -4,6 +4,7 @@
 mod tests;
 
 mod aoc1;
+mod aoc10;
 mod aoc11;
 mod aoc2;
 mod aoc4;
