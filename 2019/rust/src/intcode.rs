@@ -8,6 +8,8 @@ pub struct Computer {
     ptr: usize,
     base: isize,
     halted: bool,
+    inputs: Vec<isize>,
+    outputs: Vec<isize>,
 }
 
 #[derive(Clone)]
@@ -21,10 +23,12 @@ impl Computer {
             ptr: 0,
             base: 0,
             halted: false,
+            inputs: vec![],
+            outputs: vec![],
         }
     }
 
-    fn add(&mut self, program: &mut Program) -> Option<isize> {
+    fn add(&mut self, program: &mut Program) {
         // Opcode 1 adds two integers, storing the result in the third parameter.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
@@ -32,10 +36,9 @@ impl Computer {
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
         program[i] = a + b;
         self.ptr += 4;
-        None
     }
 
-    fn mul(&mut self, program: &mut Program) -> Option<isize> {
+    fn mul(&mut self, program: &mut Program) {
         // Opcode 2 multiplies two integers, storing the result in the third parameter.
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
@@ -43,27 +46,30 @@ impl Computer {
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
         program[i] = a * b;
         self.ptr += 4;
-        None
     }
 
-    fn input(&mut self, program: &mut Program, input: isize) -> Option<isize> {
+    fn input(&mut self, program: &mut Program) -> Result<()> {
         // Opcode 3 writes an input to the first parameter.
+        let input = self
+            .inputs
+            .pop()
+            .context("no inputs available to Intcode")?;
         let modes = self.get_modes(program, self.ptr);
         let i = self.get_pointer(program, self.ptr + 1, modes[0]);
         program[i] = input;
         self.ptr += 2;
-        None
+        Ok(())
     }
 
-    fn output(&mut self, program: &mut Program) -> Option<isize> {
+    fn output(&mut self, program: &mut Program) {
         // Opcode 4 outputs from the first parameter.
         let modes = self.get_modes(program, self.ptr);
         let output = self.get_value(program, self.ptr + 1, modes[0]);
+        self.outputs.push(output);
         self.ptr += 2;
-        Some(output)
     }
 
-    fn jt(&mut self, program: &mut Program) -> Option<isize> {
+    fn jt(&mut self, program: &mut Program) {
         // Opcode 5 is jump-if-true: if the first parameter is non-zero,
         // it sets the instruction pointer to the value from the second parameter.
         // Otherwise, it does nothing.
@@ -75,10 +81,9 @@ impl Computer {
         } else {
             self.ptr += 3;
         }
-        None
     }
 
-    fn jf(&mut self, program: &mut Program) -> Option<isize> {
+    fn jf(&mut self, program: &mut Program) {
         // Opcode 6 is jump-if-false: if the first parameter is zero,
         // it sets the instruction pointer to the value from the second parameter.
         // Otherwise, it does nothing.
@@ -90,10 +95,9 @@ impl Computer {
         } else {
             self.ptr += 3;
         }
-        None
     }
 
-    fn lt(&mut self, program: &mut Program) -> Option<isize> {
+    fn lt(&mut self, program: &mut Program) {
         // Opcode 7 is less than: if the first parameter is less than the second parameter,
         // it stores 1 in the position given by the third parameter.
         // Otherwise, it stores 0.
@@ -103,10 +107,9 @@ impl Computer {
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
         program[i] = if a < b { 1 } else { 0 };
         self.ptr += 4;
-        None
     }
 
-    fn eq(&mut self, program: &mut Program) -> Option<isize> {
+    fn eq(&mut self, program: &mut Program) {
         // Opcode 8 is equals: if the first parameter is equal to the second parameter,
         // it stores 1 in the position given by the third parameter.
         // Otherwise, it stores 0.
@@ -116,21 +119,18 @@ impl Computer {
         let i = self.get_pointer(program, self.ptr + 3, modes[2]);
         program[i] = if a == b { 1 } else { 0 };
         self.ptr += 4;
-        None
     }
 
-    fn rb(&mut self, program: &mut Program) -> Option<isize> {
+    fn rb(&mut self, program: &mut Program) {
         let modes = self.get_modes(program, self.ptr);
         let a = self.get_value(program, self.ptr + 1, modes[0]);
         self.base += a;
         self.ptr += 2;
-        None
     }
 
-    fn halt(&mut self) -> Option<isize> {
+    fn halt(&mut self) {
         // Opcode 99 halts the CPU.
         self.halted = true;
-        None
     }
 
     fn get_modes(&self, program: &Program, pos: usize) -> [isize; 3] {
@@ -172,23 +172,49 @@ impl Computer {
         }
     }
 
-    fn step(&mut self, program: &mut Program, inputs: &mut Vec<isize>) -> Result<Option<isize>> {
-        let result = match program.intcodes[self.ptr] % 100 {
-            1 => self.add(program),
-            2 => self.mul(program),
-            3 => self.input(program, inputs.pop().context("ran out of inputs")?),
-            4 => self.output(program),
-            5 => self.jt(program),
-            6 => self.jf(program),
-            7 => self.lt(program),
-            8 => self.eq(program),
-            9 => self.rb(program),
-            99 => self.halt(),
+    fn step(&mut self, program: &mut Program) -> Result<()> {
+        match program.intcodes[self.ptr] % 100 {
+            1 => {
+                self.add(program);
+                Ok(())
+            }
+            2 => {
+                self.mul(program);
+                Ok(())
+            }
+            3 => self.input(program),
+            4 => {
+                self.output(program);
+                Ok(())
+            }
+            5 => {
+                self.jt(program);
+                Ok(())
+            }
+            6 => {
+                self.jf(program);
+                Ok(())
+            }
+            7 => {
+                self.lt(program);
+                Ok(())
+            }
+            8 => {
+                self.eq(program);
+                Ok(())
+            }
+            9 => {
+                self.rb(program);
+                Ok(())
+            }
+            99 => {
+                self.halt();
+                Ok(())
+            }
             _ => {
                 bail!("invalid opcode at {}", self.ptr);
             }
-        };
-        Ok(result)
+        }
     }
 
     //runs to first call to output
@@ -197,14 +223,13 @@ impl Computer {
         program: &mut Program,
         inputs: Option<&mut Vec<isize>>,
     ) -> Result<Option<isize>> {
-        let mut empty = vec![];
-        let inputs = inputs.unwrap_or(&mut empty);
-        while !self.halted {
-            if let Some(x) = self.step(program, inputs)? {
-                return Ok(Some(x));
-            }
+        if let Some(inp) = inputs {
+            self.inputs.append(inp);
         }
-        Ok(None)
+        while !self.halted && self.outputs.is_empty() {
+            self.step(program)?;
+        }
+        Ok(self.outputs.pop())
     }
 
     //run to halt
@@ -213,15 +238,13 @@ impl Computer {
         program: &mut Program,
         inputs: Option<&mut Vec<isize>>,
     ) -> Result<Vec<isize>> {
-        let mut empty = vec![];
-        let inputs = inputs.unwrap_or(&mut empty);
-        let mut outputs: Vec<isize> = vec![];
-        while !self.halted {
-            if let Some(x) = self.step(program, inputs)? {
-                outputs.push(x);
-            }
+        if let Some(inp) = inputs {
+            self.inputs.append(inp);
         }
-        Ok(outputs)
+        while !self.halted {
+            self.step(program)?;
+        }
+        Ok(self.outputs.to_owned())
     }
 }
 
